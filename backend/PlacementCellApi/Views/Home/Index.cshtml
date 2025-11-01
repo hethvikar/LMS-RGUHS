@@ -1,0 +1,105 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Placement Cell API</title>
+</head>
+<body>
+    <h2>WebRTC Teaching Demo</h2>
+    <p>Your ID: <span id="myId"></span></p>
+
+    <input id="targetId" placeholder="Target Connection ID" />
+    <button id="callBtn">Start Call</button>
+
+    <div style="margin-top:20px;">
+        <video id="localVideo" autoplay playsinline muted width="300"></video>
+        <video id="remoteVideo" autoplay playsinline width="300"></video>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/7.0.5/signalr.min.js"></script>
+    <script src="script.js"></script>
+
+    <script type="text/javascript">
+            const connection = new signalR.HubConnectionBuilder()
+            .withUrl("/signal")
+            .build();
+
+        let peerConnection;
+        let localStream;
+        let myId;
+
+        const servers = {
+            iceServers: [{ urls: "stun:stun.l.google.com:19302" }]
+        };
+
+        async function init() {
+            await connection.start();
+            console.log("SignalR connected.");
+
+            connection.on("ConnectionEstablished", id => {
+                myId = id;
+                document.getElementById("myId").textContent = id;
+            });
+
+            connection.on("ReceiveSignal", async (senderId, message) => {
+                const data = JSON.parse(message);
+                if (!peerConnection) createPeerConnection(senderId);
+
+                if (data.type === "offer") {
+                    await peerConnection.setRemoteDescription(data);
+                    const answer = await peerConnection.createAnswer();
+                    await peerConnection.setLocalDescription(answer);
+                    sendSignal(senderId, JSON.stringify(answer));
+                } else if (data.type === "answer") {
+                    await peerConnection.setRemoteDescription(data);
+                } else if (data.candidate) {
+                    await peerConnection.addIceCandidate(data);
+                }
+            });
+
+            document.getElementById("callBtn").onclick = startCall;
+        }
+
+        async function createPeerConnection(targetId) {
+            peerConnection = new RTCPeerConnection(servers);
+
+            peerConnection.onicecandidate = e => {
+                if (e.candidate) {
+                    sendSignal(targetId, JSON.stringify({ candidate: e.candidate }));
+                }
+            };
+
+            peerConnection.ontrack = e => {
+                document.getElementById("remoteVideo").srcObject = e.streams[0];
+            };
+
+            localStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+            document.getElementById("localVideo").srcObject = localStream;
+
+            localStream.getTracks().forEach(track => peerConnection.addTrack(track, localStream));
+        }
+
+        async function startCall() {
+            const targetId = document.getElementById("targetId").value;
+            if (!targetId) return alert("Enter target ID");
+
+            await createPeerConnection(targetId);
+
+            const offer = await peerConnection.createOffer();
+            await peerConnection.setLocalDescription(offer);
+            sendSignal(targetId, JSON.stringify(offer));
+        }
+
+        function sendSignal(targetId, message) {
+            connection.invoke("SendSignal", targetId, message);
+        }
+
+        init();
+    </script>
+</body>
+</html>
