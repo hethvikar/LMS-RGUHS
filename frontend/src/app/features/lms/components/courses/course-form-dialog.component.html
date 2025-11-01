@@ -1,0 +1,113 @@
+    <div class="course-form-dialog">
+      <div class="form-header">
+        <h1 class="form-title">Create New Course</h1>
+        <p class="form-subtitle">Fill in the details to create a new course</p>
+      </div>
+
+      <form [formGroup]="courseForm" (ngSubmit)="onSubmit()" class="course-form">
+        <div class="form-row">
+          <mat-form-field appearance="outline" class="form-field">
+            <mat-label>Course Title</mat-label>
+            <input matInput formControlName="title" placeholder="Enter course title">
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="form-field">
+            <mat-label>Category</mat-label>
+            <mat-select formControlName="category">
+              <mat-option value="programming">Programming</mat-option>
+              <mat-option value="design">Design</mat-option>
+              <mat-option value="business">Business</mat-option>
+              <mat-option value="data">Data Science</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+
+        <mat-form-field appearance="outline" class="form-field full-width">
+          <mat-label>Course Description</mat-label>
+          <textarea matInput formControlName="description" rows="4"
+                    placeholder="Describe what students will learn in this course"></textarea>
+        </mat-form-field>
+
+        <div class="form-row">
+          <mat-form-field appearance="outline" class="form-field">
+            <mat-label>Instructor Name</mat-label>
+            <input matInput formControlName="instructor" placeholder="Enter instructor name">
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="form-field">
+            <mat-label>Duration</mat-label>
+            <input matInput formControlName="duration" placeholder="e.g., 8 weeks">
+          </mat-form-field>
+        </div>
+
+        <div class="form-row">
+          <mat-form-field appearance="outline" class="form-field">
+            <mat-label>Maximum Students</mat-label>
+            <input matInput type="number" formControlName="maxStudents" placeholder="50">
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="form-field">
+            <mat-label>Course Status</mat-label>
+            <mat-select formControlName="status">
+              <mat-option value="upcoming">Upcoming</mat-option>
+              <mat-option value="active">Active</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+
+        <div class="form-row">
+          <mat-form-field appearance="outline" class="form-field">
+            <mat-label>Scheduled Date</mat-label>
+            <input matInput [matDatepicker]="scheduledDatePicker" formControlName="scheduledDate" placeholder="DD/YY/YYYY">
+            <mat-datepicker-toggle matSuffix [for]="scheduledDatePicker"></mat-datepicker-toggle>
+            <mat-datepicker #scheduledDatePicker></mat-datepicker>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="form-field">
+            <mat-label>Scheduled Time</mat-label>
+            <input matInput type="time" formControlName="scheduledTime" placeholder="HH:MM">
+          </mat-form-field>
+        </div>
+
+        <div class="video-upload-section">
+          <h3>Course Video</h3>
+          <div class="video-upload-container">
+            <input type="file" #videoInput accept="video/*" (change)="onVideoFileSelected($event)" style="display: none;">
+            <button mat-raised-button color="accent" type="button" (click)="videoInput.click()" *ngIf="!selectedVideoFile">
+              <mat-icon>video_file</mat-icon>
+              Upload Video (Max 10MB)
+            </button>
+
+            <div class="selected-video" *ngIf="selectedVideoFile">
+              <div class="video-info">
+                <mat-icon>video_file</mat-icon>
+                <span>{{ selectedVideoFile.name }}</span>
+                <span class="file-size">({{ (selectedVideoFile.size / (1024 * 1024)).toFixed(2) }} MB)</span>
+                <button mat-icon-button color="warn" (click)="removeVideo()">
+                  <mat-icon>delete</mat-icon>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-actions">
+          <button mat-button type="button" (click)="closeDialog()">
+            Cancel
+          </button>
+          <button mat-raised-button color="primary" type="submit" [disabled]="!courseForm.valid">
+            Create Course
+          </button>
+        </div>
+      </form>
+
+      <!-- Video Player Section -->
+      <div class="video-player-section" *ngIf="videoPreviewUrl">
+        <h3>Video Preview</h3>
+        <div class="video-player-container">
+          <video controls class="video-player" [src]="videoPreviewUrl">
+            Your browser does not support the video tag.
+          </video>
+        </div>
+      </div>
+    </div>

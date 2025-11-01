@@ -1,0 +1,100 @@
+/* Angular Calendar CSS */
+@import 'angular-calendar/scss/angular-calendar.scss';
+/* You can add global styles to this file, and also import other style files */
+
+html, body {
+  height: 100%;
+  font-size: 13px;
+}
+
+body {
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+  font-size: 13px;
+}
+
+/* Global typography reductions */
+h1 { font-size: 1.5rem !important; }
+h2 { font-size: 1.25rem !important; }
+h3 { font-size: 1.1rem !important; }
+h4 { font-size: 1rem !important; }
+h5 { font-size: 0.95rem !important; }
+h6 { font-size: 0.9rem !important; }
+p { font-size: 0.9rem !important; }
+
+/* Material Card overrides */
+mat-card-title { font-size: 1rem !important; }
+mat-card-subtitle { font-size: 0.85rem !important; }
+mat-card-content { font-size: 0.9rem !important; }
+
+/* Button and input reductions */
+button { font-size: 0.9rem !important; }
+input, textarea, select { font-size: 0.9rem !important; }
+
+/* Global Angular Material theme overrides can go here */
+
+/* Reduce padding for Material text field infixes */
+.mdc-text-field--outlined .mat-mdc-form-field-infix,
+.mdc-text-field--no-label .mat-mdc-form-field-infix {
+  padding-top: 8px !important;
+  padding-bottom: 8px !important;
+}
+
+/* Adjust matInput styling for smaller, centered inputs globally */
+.mat-mdc-form-field {
+  .mat-mdc-text-field-wrapper {
+    .mdc-text-field {
+      height: 40px !important; /* Reduce height */
+
+      .mdc-text-field__input {
+        height: 24px !important; /* Reduce input height */
+        padding: 4px 0 !important; /* Reduce vertical padding */
+        text-align: center !important; /* Center text by default */
+        display: flex !important;
+        align-items: center !important; /* Center text vertically */
+        justify-content: center !important; /* Center text horizontally */
+      }
+
+      /* Center placeholder text vertically and horizontally */
+      .mdc-text-field__input::placeholder,
+      .mdc-text-field__input::-webkit-input-placeholder,
+      .mdc-text-field__input::-moz-placeholder,
+      .mdc-text-field__input:-ms-input-placeholder {
+        text-align: center !important;
+        position: absolute !important;
+        left: 50% !important;
+        top: 50% !important;
+        transform: translate(-50%, -50%) !important;
+        width: 100% !important;
+        display: block !important;
+      }
+    }
+
+    /* Adjust focus state for center alignment */
+    .mdc-text-field--focused {
+      .mdc-text-field__input {
+        padding-top: 8px !important;
+        padding-bottom: 8px !important;
+      }
+    }
+  }
+
+  /* Reduce form field height */
+  .mat-mdc-form-field-flex {
+    height: 55px !important;
+  }
+
+  /* Adjust label positioning and centering */
+  .mat-mdc-form-field-label {
+    top: 12px !important;
+    text-align: center !important;
+    width: 100% !important;
+    left: 0 !important;
+    transform: none !important;
+  }
+
+  .mat-mdc-form-field-required-marker {
+    top: 12px !important;
+    right: 12px !important;
+  }
+}

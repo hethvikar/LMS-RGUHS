@@ -1,0 +1,339 @@
+
+    .interviews-container {
+      padding: 24px;
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    .interviews-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 32px;
+    }
+
+    .header-content h1 {
+      font-size: 2.5rem;
+      font-weight: 300;
+      margin-bottom: 8px;
+      color: #333;
+    }
+
+    .header-content p {
+      font-size: 1.2rem;
+      color: #666;
+      margin: 0;
+    }
+
+    .interviews-stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 16px;
+      margin-bottom: 32px;
+    }
+
+    .stat-card {
+      text-align: center;
+    }
+
+    .stat-content {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      padding: 16px 0;
+    }
+
+    .stat-icon {
+      font-size: 32px;
+      width: 32px;
+      height: 32px;
+    }
+
+    .stat-icon.scheduled { color: #2196f3; }
+    .stat-icon.completed { color: #4caf50; }
+    .stat-icon.today { color: #ff9800; }
+    .stat-icon.upcoming { color: #9c27b0; }
+
+    .stat-info h3 {
+      margin: 0;
+      font-size: 2rem;
+      font-weight: 500;
+      color: #333;
+    }
+
+    .stat-info p {
+      margin: 4px 0 0 0;
+      font-size: 0.9rem;
+      color: #666;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .interviews-table-card {
+      margin-top: 24px;
+    }
+
+    .interviews-table {
+      width: 100%;
+    }
+
+    .candidate-info {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .candidate-name {
+      font-weight: 500;
+      color: #333;
+    }
+
+    .candidate-email {
+      font-size: 0.85rem;
+      color: #666;
+    }
+
+    .datetime-info {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .datetime-info div:first-child {
+      font-weight: 500;
+      color: #333;
+    }
+
+    .datetime-info div:last-child {
+      font-size: 0.85rem;
+      color: #666;
+    }
+
+    .mat-mdc-chip {
+      font-size: 12px;
+      font-weight: 500;
+    }
+
+    .mat-mdc-chip.technical { background-color: #e3f2fd; color: #1976d2; }
+    .mat-mdc-chip.hr { background-color: #f3e5f5; color: #7b1fa2; }
+    .mat-mdc-chip.final { background-color: #e8f5e8; color: #2e7d32; }
+
+    .mat-mdc-chip.scheduled { background-color: #e3f2fd; color: #1976d2; }
+    .mat-mdc-chip.completed { background-color: #e8f5e8; color: #2e7d32; }
+    .mat-mdc-chip.cancelled { background-color: #ffebee; color: #d32f2f; }
+    .mat-mdc-chip.rescheduled { background-color: #fff3e0; color: #f57c00; }
+
+    .no-interviews {
+      text-align: center;
+      padding: 40px;
+      color: #666;
+    }
+
+    .no-data-icon {
+      font-size: 64px;
+      width: 64px;
+      height: 64px;
+      margin-bottom: 16px;
+      opacity: 0.5;
+    }
+
+    .interviews-views-card {
+      margin-top: 24px;
+    }
+
+    .tab-content {
+      padding: 24px 0;
+    }
+
+    .calendar-container {
+      .calendar-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 20px;
+        padding: 0 16px;
+
+        h3 {
+          margin: 0;
+          font-size: 1.5rem;
+          font-weight: 500;
+          color: #333;
+        }
+
+        button {
+          min-width: 40px;
+          height: 40px;
+        }
+      }
+
+      :deep(.cal-month-view) {
+        .cal-week-headers {
+          display: grid;
+          grid-template-columns: repeat(7, 1fr);
+          border: 1px solid #e0e0e0;
+          border-bottom: none;
+        }
+
+        .cal-week-headers .cal-header {
+          background-color: #f8f9fa;
+          border-right: 1px solid #e0e0e0;
+          padding: 12px 8px;
+          text-align: center;
+          font-weight: 500;
+          color: #666;
+
+          &:last-child {
+            border-right: none;
+          }
+        }
+        .cal-header {
+          display: none;
+        }
+
+        .cal-days {
+          border: 1px solid #e0e0e0;
+          border-bottom: none;
+        }
+
+        .cal-cell-row {
+          display: flex;
+        }
+
+        .cal-cell {
+          flex: 1;
+          border-right: 1px solid #e0e0e0;
+          border-bottom: 1px solid #e0e0e0;
+          min-height: 120px;
+          display: flex;
+          flex-direction: column;
+
+          &:last-child {
+            border-right: none;
+          }
+        }
+
+        .cal-cell-row:last-child .cal-cell {
+          border-bottom: none;
+        }
+
+        .cal-cell-top {
+          min-height: 40px;
+          padding: 8px;
+          border-bottom: 1px solid #e0e0e0;
+          background-color: #f8f9fa;
+
+          .cal-day-number {
+            font-size: 1.2rem;
+            font-weight: 500;
+            color: #333;
+          }
+        }
+
+        .cal-events {
+          flex: 1;
+          padding: 4px;
+          overflow-y: auto;
+
+          .cal-event {
+            background: #2196f3;
+            color: white;
+            padding: 4px 8px;
+            margin: 2px 0;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: opacity 0.2s;
+
+            &:hover {
+              opacity: 0.8;
+            }
+
+            .event-title {
+              display: block;
+              font-weight: 500;
+              white-space: nowrap;
+              overflow: hidden;
+              text-overflow: ellipsis;
+            }
+
+            .event-time {
+              display: block;
+              font-size: 0.7rem;
+              opacity: 0.9;
+            }
+          }
+        }
+
+        .cal-today {
+          .cal-cell-top {
+            background-color: #e3f2fd;
+          }
+        }
+
+        .cal-weekend {
+          .cal-cell-top {
+            background-color: #f5f5f5;
+          }
+        }
+
+      }
+    }
+
+    @media (max-width: 768px) {
+      .interviews-container {
+        padding: 16px;
+      }
+
+      .interviews-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 16px;
+      }
+
+      .interviews-stats {
+        grid-template-columns: 1fr;
+      }
+
+      .candidate-info,
+      .datetime-info {
+        flex-direction: row;
+        gap: 8px;
+      }
+
+      .calendar-container {
+        .calendar-header {
+          padding: 0 8px;
+
+          h3 {
+            font-size: 1.2rem;
+          }
+        }
+
+        :deep(.cal-month-view) {
+          .cal-cell-top {
+            min-height: 50px;
+            padding: 4px;
+
+            .cal-day-number {
+              font-size: 1rem;
+            }
+          }
+
+          .cal-events {
+            .cal-event {
+              padding: 2px 4px;
+              margin: 1px 0;
+              font-size: 0.7rem;
+
+              .event-title {
+                font-size: 0.75rem;
+              }
+
+              .event-time {
+                font-size: 0.65rem;
+              }
+            }
+          }
+        }
+      }
+    }
+  

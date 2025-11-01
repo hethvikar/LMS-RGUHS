@@ -1,0 +1,238 @@
+
+    <div class="assessment-container" *ngIf="!isSubmitted">
+      <div class="assessment-header">
+        <div class="header-content">
+          <h1>{{ assessment.title }}</h1>
+          <p>{{ assessment.courseName }}</p>
+        </div>
+        <div class="assessment-timer" *ngIf="assessment.duration">
+          
+          <span>{{ formatTime(timeRemaining) }}</span>
+        </div>
+      </div>
+
+      <div class="assessment-progress">
+        <div class="progress-info">
+          <span>Question {{ currentQuestionIndex + 1 }} of {{ assessment.totalQuestions }}</span>
+          <span>{{ getAnsweredQuestionsCount() }} answered</span>
+        </div>
+        <mat-progress-bar mode="determinate" [value]="getProgressPercentage()"></mat-progress-bar>
+      </div>
+
+      <mat-card class="question-card">
+        <mat-card-header>
+          <mat-card-title>Question {{ currentQuestionIndex + 1 }}</mat-card-title>
+          <mat-chip class="question-type">{{ getQuestionTypeText(currentQuestion.type) }}</mat-chip>
+        </mat-card-header>
+        <mat-card-content>
+          <div class="question-content">
+            <p class="question-text">{{ currentQuestion.question }}</p>
+
+            <!-- Multiple Choice -->
+            <div class="options" *ngIf="currentQuestion.type === 'multiple-choice'">
+              <mat-radio-group [(ngModel)]="currentAnswer" name="multipleChoice">
+                <mat-radio-button *ngFor="let option of currentQuestion.options; let i = index"
+                                [value]="i"
+                                class="option-radio">
+                  <span class="option-text">{{ option }}</span>
+                </mat-radio-button>
+              </mat-radio-group>
+            </div>
+
+            <!-- Multiple Select -->
+            <div class="options" *ngIf="currentQuestion.type === 'multiple-select'">
+              <div *ngFor="let option of currentQuestion.options; let i = index" class="option-checkbox">
+                <mat-checkbox [(ngModel)]="currentAnswer[i]" [name]="'checkbox' + i">
+                  <span class="option-text">{{ option }}</span>
+                </mat-checkbox>
+              </div>
+            </div>
+
+            <!-- True/False -->
+            <div class="options" *ngIf="currentQuestion.type === 'true-false'">
+              <mat-radio-group [(ngModel)]="currentAnswer" name="trueFalse">
+                <mat-radio-button [value]="true" class="option-radio">True</mat-radio-button>
+                <mat-radio-button [value]="false" class="option-radio">False</mat-radio-button>
+              </mat-radio-group>
+            </div>
+
+            <!-- Short Answer -->
+            <div class="short-answer" *ngIf="currentQuestion.type === 'short-answer'">
+              <mat-form-field appearance="outline" class="answer-field">
+                <mat-label>Your Answer</mat-label>
+                <input matInput [(ngModel)]="currentAnswer" name="shortAnswer" placeholder="Type your answer here...">
+              </mat-form-field>
+            </div>
+
+            <!-- Essay -->
+            <div class="essay-answer" *ngIf="currentQuestion.type === 'essay'">
+              <mat-form-field appearance="outline" class="answer-field">
+                <mat-label>Your Answer</mat-label>
+                <textarea matInput [(ngModel)]="currentAnswer" name="essayAnswer"
+                         rows="6" placeholder="Write your detailed answer here..."></textarea>
+              </mat-form-field>
+            </div>
+          </div>
+        </mat-card-content>
+        <mat-card-actions>
+          <button mat-button (click)="previousQuestion()" [disabled]="currentQuestionIndex === 0">
+            
+            Previous
+          </button>
+          <button mat-button (click)="saveAnswer()" *ngIf="!isAnswered(currentQuestionIndex)">
+            Save Answer
+          </button>
+          <button mat-button (click)="clearAnswer()" *ngIf="isAnswered(currentQuestionIndex)">
+            Clear Answer
+          </button>
+          <button mat-button (click)="nextQuestion()" [disabled]="currentQuestionIndex === assessment.totalQuestions - 1">
+            Next
+            
+          </button>
+        </mat-card-actions>
+      </mat-card>
+
+      <div class="question-navigation">
+        <div class="question-buttons">
+          <button mat-mini-fab
+                  *ngFor="let question of assessment.questions; let i = index"
+                  [class]="getQuestionButtonClass(i)"
+                  (click)="goToQuestion(i)"
+                  [matTooltip]="'Question ' + (i + 1)">
+            {{ i + 1 }}
+          </button>
+        </div>
+      </div>
+
+      <div class="assessment-actions">
+        <button mat-raised-button color="primary" (click)="submitAssessment()" [disabled]="!canSubmit()">
+          
+          Submit Assessment
+        </button>
+        <button mat-button (click)="saveProgress()">
+          
+          Save Progress
+        </button>
+      </div>
+    </div>
+
+    <!-- Submission Confirmation -->
+    <div class="submission-confirmation" *ngIf="showConfirmation">
+      <mat-card class="confirmation-card">
+        <mat-card-header>
+          <mat-card-title>Submit Assessment</mat-card-title>
+          
+        </mat-card-header>
+        <mat-card-content>
+          <p>Are you sure you want to submit this assessment?</p>
+          <div class="submission-summary">
+            <div class="summary-item">
+              <span>Questions Answered:</span>
+              <span>{{ getAnsweredQuestionsCount() }}/{{ assessment.totalQuestions }}</span>
+            </div>
+            <div class="summary-item">
+              <span>Time Remaining:</span>
+              <span>{{ formatTime(timeRemaining) }}</span>
+            </div>
+          </div>
+          <p class="warning-text">Once submitted, you cannot change your answers.</p>
+        </mat-card-content>
+        <mat-card-actions>
+          <button mat-button (click)="cancelSubmit()">Cancel</button>
+          <button mat-raised-button color="primary" (click)="confirmSubmit()">Submit</button>
+        </mat-card-actions>
+      </mat-card>
+    </div>
+
+    <!-- Results View -->
+    <div class="results-view" *ngIf="isSubmitted && results">
+      <div class="results-header">
+        <h1>Assessment Results</h1>
+        <div class="score-display">
+          <div class="score-circle" [class]="getScoreClass(results.score, assessment.passingScore)">
+            <div class="score-number">{{ results.score }}/{{ assessment.totalPoints }}</div>
+            <div class="score-percentage">{{ getScorePercentage(results.score, assessment.totalPoints) }}%</div>
+          </div>
+          <div class="score-status">
+            <mat-chip [class]="results.score >= assessment.passingScore ? 'passed' : 'failed'">
+              {{ results.score >= assessment.passingScore ? 'PASSED' : 'FAILED' }}
+            </mat-chip>
+          </div>
+        </div>
+      </div>
+
+      <mat-card class="results-summary">
+        <mat-card-content>
+          <div class="summary-grid">
+            <div class="summary-item">
+              
+              <div>
+                <div class="summary-label">Time Taken</div>
+                <div class="summary-value">{{ formatTime(results.timeTaken) }}</div>
+              </div>
+            </div>
+            <div class="summary-item">
+              
+              <div>
+                <div class="summary-label">Correct Answers</div>
+                <div class="summary-value">{{ results.correctAnswers }}/{{ assessment.totalQuestions }}</div>
+              </div>
+            </div>
+            <div class="summary-item">
+              
+              <div>
+                <div class="summary-label">Grade</div>
+                <div class="summary-value">{{ getLetterGrade(results.score, assessment.totalPoints) }}</div>
+              </div>
+            </div>
+            <div class="summary-item">
+              
+              <div>
+                <div class="summary-label">Submitted</div>
+                <div class="summary-value">{{ results.submittedAt | date:'medium' }}</div>
+              </div>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+      <mat-card class="question-review">
+        <mat-card-header>
+          <mat-card-title>Question Review</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <div class="question-review-item" *ngFor="let review of results.questionReviews; let i = index">
+            <div class="question-header">
+              <span class="question-number">Question {{ i + 1 }}</span>
+              <mat-chip [class]="review.isCorrect ? 'correct' : 'incorrect'">
+                {{ review.isCorrect ? 'Correct' : 'Incorrect' }}
+              </mat-chip>
+            </div>
+            <div class="question-text">{{ review.question }}</div>
+            <div class="answer-info">
+              <div class="your-answer">
+                <strong>Your Answer:</strong> {{ review.yourAnswer }}
+              </div>
+              <div class="correct-answer" *ngIf="!review.isCorrect">
+                <strong>Correct Answer:</strong> {{ review.correctAnswer }}
+              </div>
+              <div class="explanation" *ngIf="review.explanation">
+                <strong>Explanation:</strong> {{ review.explanation }}
+              </div>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+      <div class="results-actions">
+        <button mat-raised-button color="primary" (click)="retakeAssessment()" *ngIf="canRetake()">
+          
+          Retake Assessment
+        </button>
+        <button mat-button (click)="viewCourse()">
+          
+          Back to Course
+        </button>
+      </div>
+    </div>
+  

@@ -1,0 +1,508 @@
+
+    .profile-container {
+      padding: 24px;
+      max-width: 1400px;
+      margin: 0 auto;
+      background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+      min-height: 100vh;
+    }
+
+    .profile-header {
+      text-align: center;
+      margin-bottom: 40px;
+      background: white;
+      padding: 32px;
+      border-radius: 16px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    }
+
+    .profile-header h1 {
+      font-size: 2.8rem;
+      font-weight: 300;
+      margin-bottom: 16px;
+      color: #2c3e50;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .profile-header p {
+      font-size: 1.2rem;
+      color: #7f8c8d;
+      margin: 0;
+    }
+
+    .profile-content {
+      display: grid;
+      gap: 24px;
+    }
+
+    .profile-card {
+      margin-bottom: 24px;
+      border-radius: 16px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+      overflow: hidden;
+      background: white;
+    }
+
+    .profile-form {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .profile-tabs {
+      ::ng-deep .mat-mdc-tab-header {
+        background: #f8f9fa;
+        border-bottom: 2px solid #e9ecef;
+      }
+
+      ::ng-deep .mat-mdc-tab {
+        min-width: 160px;
+        font-weight: 500;
+        color: #495057;
+
+        &.mdc-tab--active {
+          color: #007bff;
+        }
+      }
+
+      ::ng-deep .mdc-tab-indicator__content {
+        background-color: #007bff;
+      }
+    }
+
+    .tab-content {
+      padding: 24px;
+    }
+
+    .form-section {
+      margin-bottom: 32px;
+
+      h3 {
+        font-size: 1.4rem;
+        font-weight: 600;
+        color: #2c3e50;
+        margin-bottom: 20px;
+        padding-bottom: 8px;
+        border-bottom: 2px solid #e9ecef;
+      }
+    }
+
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 24px;
+
+      h3 {
+        font-size: 1.4rem;
+        font-weight: 600;
+        color: #2c3e50;
+        margin: 0;
+      }
+
+      button {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-weight: 500;
+      }
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 16px;
+
+      &.full-width {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .relocation-checkbox {
+      margin-top: 16px;
+      margin-bottom: 16px;
+    }
+
+    // Card styles for dynamic sections
+    .employment-card, .education-card, .certification-card {
+      margin-bottom: 16px;
+      border: 1px solid #e9ecef;
+      border-radius: 12px;
+      background: #f8f9fa;
+
+      mat-card-content {
+        padding: 20px;
+      }
+
+      mat-card-actions {
+        padding: 8px 16px;
+        background: #f8f9fa;
+        border-top: 1px solid #e9ecef;
+      }
+    }
+
+    .add-skill-field {
+      flex: 1;
+      margin-top: 16px;
+    }
+
+    .add-skill-btn {
+      margin-top: 16px;
+      height: 56px;
+    }
+
+    mat-chip {
+      margin: 4px;
+      background: #007bff;
+      color: white;
+    }
+
+    // File upload section styles
+    .file-upload-section {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      padding: 16px;
+      border: 2px dashed #dee2e6;
+      border-radius: 8px;
+      background: #f8f9fa;
+      transition: all 0.3s ease;
+
+      &:hover {
+        border-color: #007bff;
+        background: #e7f3ff;
+      }
+
+      mat-label {
+        font-weight: 600;
+        color: #495057;
+        margin-bottom: 8px;
+      }
+
+      .upload-btn {
+        align-self: flex-start;
+        margin-top: 8px;
+      }
+
+      .file-name {
+        font-size: 0.9rem;
+        color: #28a745;
+        font-weight: 500;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+
+        &::before {
+          content: '📎';
+        }
+      }
+    }
+
+    // Profile actions styling
+    .profile-actions {
+      padding: 24px;
+      background: #f8f9fa;
+      border-top: 1px solid #e9ecef;
+      display: flex;
+      justify-content: center;
+
+      button {
+        min-width: 200px;
+        height: 48px;
+        font-size: 1rem;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        border-radius: 8px;
+        transition: all 0.3s ease;
+
+        &:hover {
+          transform: translateY(-2px);
+          box-shadow: 0 4px 12px rgba(0, 123, 255, 0.3);
+        }
+
+        &:disabled {
+          opacity: 0.6;
+          cursor: not-allowed;
+          transform: none;
+          box-shadow: none;
+        }
+      }
+    }
+
+    /* Upload Section Styles */
+    .upload-section {
+      background: #f8f9fa;
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 24px;
+    }
+
+    .additional-uploads {
+      display: grid;
+      gap: 20px;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    }
+
+    .upload-card {
+      background: white;
+      border: 1px solid #e9ecef;
+      border-radius: 12px;
+      padding: 20px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+      transition: all 0.3s ease;
+
+      &:hover {
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+        transform: translateY(-2px);
+      }
+
+      h4 {
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: #2c3e50;
+        margin: 0 0 8px 0;
+      }
+
+      p {
+        color: #6c757d;
+        font-size: 0.9rem;
+        margin: 0 0 16px 0;
+        line-height: 1.4;
+      }
+    }
+
+    .resume-upload-section {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .upload-info {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      padding: 12px;
+      background: #f5f5f5;
+      border-radius: 8px;
+    }
+
+    .upload-text {
+      flex: 1;
+    }
+
+    .upload-title {
+      margin: 0 0 4px 0;
+      font-weight: 600;
+      font-size: 0.95rem;
+      color: #333;
+    }
+
+    .upload-description {
+      margin: 0;
+      font-size: 0.8rem;
+      color: #666;
+    }
+
+    .file-input-wrapper {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .hidden-file-input {
+      display: none;
+    }
+
+    .selected-file {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      background: #e8f5e9;
+      border-radius: 6px;
+      color: #2e7d32;
+      font-size: 0.85rem;
+    }
+
+    .upload-message {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 12px;
+      border-radius: 6px;
+      font-size: 0.8rem;
+    }
+
+    .upload-message.success {
+      background: #e8f5e9;
+      color: #2e7d32;
+    }
+
+    .upload-message.error {
+      background: #ffebee;
+      color: #d32f2f;
+    }
+
+    .upload-progress {
+      height: 4px;
+      border-radius: 2px;
+    }
+
+    .upload-actions {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .upload-actions button {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    // Enhanced responsive design
+    @media (max-width: 1200px) {
+      .form-row {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .profile-tabs {
+        ::ng-deep .mat-mdc-tab {
+          min-width: 120px;
+          font-size: 0.9rem;
+        }
+      }
+    }
+
+    @media (max-width: 768px) {
+      .profile-container {
+        padding: 16px;
+        background: white;
+      }
+
+      .profile-header {
+        padding: 24px 16px;
+        margin-bottom: 24px;
+      }
+
+      .profile-header h1 {
+        font-size: 2.2rem;
+      }
+
+      .form-row {
+        grid-template-columns: 1fr;
+        gap: 12px;
+      }
+
+      .section-header {
+        flex-direction: column;
+        gap: 16px;
+        align-items: flex-start;
+
+        button {
+          width: 100%;
+          justify-content: center;
+        }
+      }
+
+      .profile-tabs {
+        ::ng-deep .mat-mdc-tab {
+          min-width: 100px;
+          font-size: 0.8rem;
+        }
+      }
+
+      .tab-content {
+        padding: 16px;
+      }
+
+      .employment-card, .education-card, .certification-card {
+        mat-card-content {
+          padding: 16px;
+        }
+      }
+
+      .additional-uploads {
+        grid-template-columns: 1fr;
+      }
+
+      .upload-card {
+        padding: 16px;
+      }
+
+      .upload-section {
+        padding: 16px;
+      }
+
+      .upload-info {
+        flex-direction: column;
+      }
+
+      .file-input-wrapper {
+        flex-direction: column;
+      }
+
+      .upload-actions {
+        flex-direction: column;
+      }
+
+      .upload-actions button {
+        width: 100%;
+      }
+
+      .profile-actions {
+        padding: 16px;
+
+        button {
+          width: 100%;
+          min-width: unset;
+        }
+      }
+    }
+
+    @media (max-width: 480px) {
+      .profile-header h1 {
+        font-size: 1.8rem;
+      }
+
+      .profile-header p {
+        font-size: 1rem;
+      }
+
+      .form-section h3, .section-header h3 {
+        font-size: 1.2rem;
+      }
+
+      .add-skill-field {
+        width: 100%;
+      }
+
+      .add-skill-btn {
+        width: 100%;
+        margin-top: 12px;
+      }
+
+      .upload-card {
+        padding: 12px;
+
+        h4 {
+          font-size: 1rem;
+        }
+
+        p {
+          font-size: 0.85rem;
+        }
+      }
+
+      .upload-section {
+        padding: 12px;
+      }
+    }
+  
+  

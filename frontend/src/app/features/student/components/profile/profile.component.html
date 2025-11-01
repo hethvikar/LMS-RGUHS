@@ -1,0 +1,438 @@
+
+    <div class="profile-container">
+      <div class="profile-header">
+        <h1>Student Profile</h1>
+        <p>Manage your personal, academic, and professional information</p>
+      </div>
+
+      <div class="profile-content">
+        <mat-card class="profile-card">
+          <mat-card-content>
+            <form [formGroup]="profileForm" class="profile-form">
+              <mat-tab-group class="profile-tabs">
+                <!-- Personal Information Tab -->
+                <mat-tab label="Personal Information">
+                  <div class="tab-content">
+                    <div class="form-section">
+                      <h3>Basic Information</h3>
+                      <div class="form-row">
+                        <mat-form-field appearance="outline">
+                          <mat-label>First Name</mat-label>
+                          <input matInput formControlName="firstName" placeholder="Enter your first name">
+                          <mat-error *ngIf="profileForm.get('firstName')?.invalid && profileForm.get('firstName')?.touched">
+                            First name is required
+                          </mat-error>
+                        </mat-form-field>
+                        <mat-form-field appearance="outline">
+                          <mat-label>Middle Name</mat-label>
+                          <input matInput formControlName="middleName" placeholder="Enter your middle name">
+                        </mat-form-field>
+                        <mat-form-field appearance="outline">
+                          <mat-label>Last Name</mat-label>
+                          <input matInput formControlName="lastName" placeholder="Enter your last name">
+                          <mat-error *ngIf="profileForm.get('lastName')?.invalid && profileForm.get('lastName')?.touched">
+                            Last name is required
+                          </mat-error>
+                        </mat-form-field>
+                      </div>
+
+                      <div class="form-row">
+                        <mat-form-field appearance="outline">
+                          <mat-label>Email Address</mat-label>
+                          <input matInput type="email" formControlName="email" placeholder="Enter your email">
+                          <mat-error *ngIf="profileForm.get('email')?.invalid && profileForm.get('email')?.touched">
+                            Please enter a valid email address
+                          </mat-error>
+                        </mat-form-field>
+                        <mat-form-field appearance="outline">
+                          <mat-label>Phone Number</mat-label>
+                          <input matInput formControlName="phone" placeholder="Enter your phone number">
+                          <mat-error *ngIf="profileForm.get('phone')?.invalid && profileForm.get('phone')?.touched">
+                            Phone number is required
+                          </mat-error>
+                        </mat-form-field>
+                        <mat-form-field appearance="outline">
+                          <mat-label>Alternate Phone Number</mat-label>
+                          <input matInput formControlName="alternatePhone" placeholder="Enter alternate phone number">
+                        </mat-form-field>
+                      </div>
+
+                      <div class="form-row">
+                        <mat-form-field appearance="outline">
+                          <mat-label>Location</mat-label>
+                          <input matInput formControlName="location" placeholder="Enter your current location">
+                          <mat-error *ngIf="profileForm.get('location')?.invalid && profileForm.get('location')?.touched">
+                            Location is required
+                          </mat-error>
+                        </mat-form-field>
+                        <mat-form-field appearance="outline">
+                          <mat-label>LinkedIn Profile</mat-label>
+                          <input matInput formControlName="linkedInProfile" placeholder="https://linkedin.com/in/yourprofile">
+                        </mat-form-field>
+                      </div>
+
+                      <div class="form-row">
+                        <mat-checkbox formControlName="openForRelocation" class="relocation-checkbox">
+                          Open for relocation
+                        </mat-checkbox>
+                      </div>
+
+                      <div class="form-row">
+                        <mat-form-field appearance="outline" class="full-width">
+                          <mat-label>Comments</mat-label>
+                          <textarea matInput formControlName="comments" rows="3" placeholder="Additional comments about yourself"></textarea>
+                        </mat-form-field>
+                      </div>
+                    </div>
+
+                    <div class="form-section">
+                      <h3>Skills & Technologies</h3>
+                      <mat-chip-set>
+                        <mat-chip *ngFor="let skill of skillsList" [removable]="true" (removed)="removeSkill(skill)">
+                          {{ skill }}
+                        </mat-chip>
+                      </mat-chip-set>
+                      <div class="form-row">
+                        <mat-form-field appearance="outline" class="add-skill-field">
+                          <mat-label>Add New Skill</mat-label>
+                          <input matInput [(ngModel)]="newSkill" [ngModelOptions]="{standalone: true}" (keyup.enter)="addSkill()" placeholder="Enter a skill">
+                        </mat-form-field>
+                        <button mat-raised-button color="primary" (click)="addSkill()" class="add-skill-btn">
+                          Add Skill
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </mat-tab>
+
+                <!-- Employment History Tab -->
+                <mat-tab label="Employment History">
+                  <div class="tab-content">
+                    <div class="section-header">
+                      <h3>Employment History</h3>
+                      <button mat-raised-button color="primary" (click)="addEmploymentHistory()">
+                        Add Employment
+                      </button>
+                    </div>
+
+                    <div formArrayName="employmentHistory">
+                      <mat-card *ngFor="let employment of employmentHistory.controls; let i = index" [formGroupName]="i" class="employment-card">
+                        <mat-card-content>
+                          <div class="form-row">
+                            <mat-form-field appearance="outline">
+                              <mat-label>Current Company</mat-label>
+                              <input matInput formControlName="currentCompany" placeholder="Enter company name">
+                              <mat-error *ngIf="employment.get('currentCompany')?.invalid && employment.get('currentCompany')?.touched">
+                                Company name is required
+                              </mat-error>
+                            </mat-form-field>
+                            <mat-form-field appearance="outline">
+                              <mat-label>Job Title</mat-label>
+                              <input matInput formControlName="jobTitle" placeholder="Enter job title">
+                              <mat-error *ngIf="employment.get('jobTitle')?.invalid && employment.get('jobTitle')?.touched">
+                                Job title is required
+                              </mat-error>
+                            </mat-form-field>
+                          </div>
+
+                          <div class="form-row">
+                            <mat-form-field appearance="outline">
+                              <mat-label>Experience (Years)</mat-label>
+                              <input matInput type="number" formControlName="experienceYears" placeholder="Years">
+                              <mat-error *ngIf="employment.get('experienceYears')?.invalid && employment.get('experienceYears')?.touched">
+                                Valid years required
+                              </mat-error>
+                            </mat-form-field>
+                            <mat-form-field appearance="outline">
+                              <mat-label>Experience (Months)</mat-label>
+                              <input matInput type="number" formControlName="experienceMonths" placeholder="Months" min="0" max="11">
+                              <mat-error *ngIf="employment.get('experienceMonths')?.invalid && employment.get('experienceMonths')?.touched">
+                                Valid months required (0-11)
+                              </mat-error>
+                            </mat-form-field>
+                          </div>
+
+                          <div class="form-row">
+                            <mat-form-field appearance="outline">
+                              <mat-label>Current CTC</mat-label>
+                              <input matInput formControlName="currentCTC" placeholder="Enter current CTC">
+                              <mat-error *ngIf="employment.get('currentCTC')?.invalid && employment.get('currentCTC')?.touched">
+                                Current CTC is required
+                              </mat-error>
+                            </mat-form-field>
+                            <mat-form-field appearance="outline">
+                              <mat-label>Notice Period</mat-label>
+                              <input matInput formControlName="noticePeriod" placeholder="e.g., 30 days, 2 months">
+                              <mat-error *ngIf="employment.get('noticePeriod')?.invalid && employment.get('noticePeriod')?.touched">
+                                Notice period is required
+                              </mat-error>
+                            </mat-form-field>
+                          </div>
+                        </mat-card-content>
+                        <mat-card-actions>
+                          <button mat-button color="warn" (click)="removeEmploymentHistory(i)">
+                            Remove
+                          </button>
+                        </mat-card-actions>
+                      </mat-card>
+                    </div>
+                  </div>
+                </mat-tab>
+
+                <!-- Education Tab -->
+                <mat-tab label="Education">
+                  <div class="tab-content">
+                    <div class="section-header">
+                      <h3>Education</h3>
+                      <button mat-raised-button color="primary" (click)="addEducation()">
+                        Add Education
+                      </button>
+                    </div>
+
+                    <div formArrayName="education">
+                      <mat-card *ngFor="let edu of education.controls; let i = index" [formGroupName]="i" class="education-card">
+                        <mat-card-content>
+                          <div class="form-row">
+                            <mat-form-field appearance="outline">
+                              <mat-label>University</mat-label>
+                              <input matInput formControlName="university" placeholder="Enter university name">
+                              <mat-error *ngIf="edu.get('university')?.invalid && edu.get('university')?.touched">
+                                University is required
+                              </mat-error>
+                            </mat-form-field>
+                            <mat-form-field appearance="outline">
+                              <mat-label>Degree</mat-label>
+                              <input matInput formControlName="degree" placeholder="e.g., Bachelor of Technology">
+                              <mat-error *ngIf="edu.get('degree')?.invalid && edu.get('degree')?.touched">
+                                Degree is required
+                              </mat-error>
+                            </mat-form-field>
+                          </div>
+
+                          <div class="form-row">
+                            <mat-form-field appearance="outline">
+                              <mat-label>Specialization</mat-label>
+                              <input matInput formControlName="specialization" placeholder="e.g., Computer Science">
+                            </mat-form-field>
+                            <mat-form-field appearance="outline">
+                              <mat-label>Completed Year</mat-label>
+                              <input matInput formControlName="completedYear" placeholder="e.g., 2024">
+                              <mat-error *ngIf="edu.get('completedYear')?.invalid && edu.get('completedYear')?.touched">
+                                Completion year is required
+                              </mat-error>
+                            </mat-form-field>
+                          </div>
+
+                          <div class="form-row">
+                            <mat-form-field appearance="outline">
+                              <mat-label>Percentage/GPA</mat-label>
+                              <input matInput type="number" step="0.01" formControlName="percentage" placeholder="Enter percentage or GPA">
+                              <mat-error *ngIf="edu.get('percentage')?.invalid && edu.get('percentage')?.touched">
+                                Valid percentage/GPA required
+                              </mat-error>
+                            </mat-form-field>
+                            <mat-form-field appearance="outline">
+                              <mat-label>Location</mat-label>
+                              <input matInput formControlName="location" placeholder="University location">
+                              <mat-error *ngIf="edu.get('location')?.invalid && edu.get('location')?.touched">
+                                Location is required
+                              </mat-error>
+                            </mat-form-field>
+                          </div>
+                        </mat-card-content>
+                        <mat-card-actions>
+                          <button mat-button color="warn" (click)="removeEducation(i)">
+                            Remove
+                          </button>
+                        </mat-card-actions>
+                      </mat-card>
+                    </div>
+                  </div>
+                </mat-tab>
+
+                <!-- Certifications Tab -->
+                <mat-tab label="Certifications">
+                  <div class="tab-content">
+                    <div class="section-header">
+                      <h3>Certifications</h3>
+                      <button mat-raised-button color="primary" (click)="addCertification()">
+                        Add Certification
+                      </button>
+                    </div>
+
+                    <div formArrayName="certifications">
+                      <mat-card *ngFor="let cert of certifications.controls; let i = index" [formGroupName]="i" class="certification-card">
+                        <mat-card-content>
+                          <div class="form-row">
+                            <mat-form-field appearance="outline">
+                              <mat-label>Certificate Name</mat-label>
+                              <input matInput formControlName="certificateName" placeholder="Enter certificate name">
+                              <mat-error *ngIf="cert.get('certificateName')?.invalid && cert.get('certificateName')?.touched">
+                                Certificate name is required
+                              </mat-error>
+                            </mat-form-field>
+                            <mat-form-field appearance="outline">
+                              <mat-label>Provider Name</mat-label>
+                              <input matInput formControlName="providerName" placeholder="e.g., Amazon Web Services">
+                              <mat-error *ngIf="cert.get('providerName')?.invalid && cert.get('providerName')?.touched">
+                                Provider name is required
+                              </mat-error>
+                            </mat-form-field>
+                          </div>
+
+                          <div class="form-row">
+                            <mat-form-field appearance="outline">
+                              <mat-label>Valid Till</mat-label>
+                              <input matInput [matDatepicker]="validTillPicker" formControlName="certificateValidTill" placeholder="Select expiry date">
+                              <mat-datepicker-toggle matSuffix [for]="validTillPicker"></mat-datepicker-toggle>
+                              <mat-datepicker #validTillPicker></mat-datepicker>
+                              <mat-error *ngIf="cert.get('certificateValidTill')?.invalid && cert.get('certificateValidTill')?.touched">
+                                Valid till date is required
+                              </mat-error>
+                            </mat-form-field>
+                          </div>
+
+                          <div class="form-row">
+                            <div class="file-upload-section">
+                              <mat-label>Upload Certificate</mat-label>
+                              <input type="file" #certFileInput (change)="onCertificationFileSelected($event, i)" accept=".pdf,.jpg,.jpeg,.png" class="hidden-file-input">
+                              <button mat-raised-button (click)="certFileInput.click()" class="upload-btn">
+                                Select File
+                              </button>
+                              <span *ngIf="cert.get('certificateFile')?.value" class="file-name">
+                                {{ cert.get('certificateFile')?.value?.name }}
+                              </span>
+                            </div>
+                          </div>
+                        </mat-card-content>
+                        <mat-card-actions>
+                          <button mat-button color="warn" (click)="removeCertification(i)">
+                            Remove
+                          </button>
+                        </mat-card-actions>
+                      </mat-card>
+                    </div>
+                  </div>
+                </mat-tab>
+
+                <!-- Documents & Uploads Tab -->
+                <mat-tab label="Documents & Uploads">
+                  <div class="tab-content">
+                    <div class="form-section">
+                      <h3>Resume</h3>
+                      <div class="upload-section">
+                        <div class="upload-info">
+                          <div class="upload-text">
+                            <p class="upload-title">Upload Your Resume</p>
+                            <p class="upload-description">Supported formats: PDF, DOC, DOCX (Max 5MB)</p>
+                          </div>
+                        </div>
+
+                        <div class="file-input-wrapper">
+                          <input
+                            type="file"
+                            #fileInput
+                            (change)="onResumeFileSelected($event)"
+                            accept=".pdf,.doc,.docx,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+                            class="hidden-file-input">
+                          <button
+                            mat-raised-button
+                            color="accent"
+                            (click)="fileInput.click()"
+                            [disabled]="isUploading">
+                            {{ resumeFileName ? 'Change File' : 'Select File' }}
+                          </button>
+                        </div>
+
+                        <div *ngIf="resumeFileName" class="selected-file">
+                          <span>{{ resumeFileName }}</span>
+                        </div>
+
+                        <div *ngIf="uploadMessage" class="upload-message" [class.success]="uploadSuccess" [class.error]="!uploadSuccess">
+                          <span>{{ uploadMessage }}</span>
+                        </div>
+
+                        <mat-progress-bar
+                          *ngIf="isUploading"
+                          mode="determinate"
+                          [value]="uploadProgress"
+                          class="upload-progress"></mat-progress-bar>
+
+                        <div class="upload-actions">
+                          <button
+                            mat-raised-button
+                            color="primary"
+                            (click)="uploadResume()"
+                            [disabled]="!resumeFile || isUploading">
+                            {{ isUploading ? 'Uploading...' : 'Upload Resume' }}
+                          </button>
+                          <button
+                            mat-button
+                            (click)="clearResumeUpload()"
+                            [disabled]="isUploading">
+                            Clear
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="form-section">
+                      <h3>Additional Documents</h3>
+                      <div class="additional-uploads">
+                        <div class="upload-card">
+                          <h4>Portfolio/Showcase</h4>
+                          <p>Upload your portfolio, project samples, or showcase documents</p>
+                          <div class="file-upload-section">
+                            <input type="file" #portfolioInput (change)="onPortfolioFileSelected($event)" accept=".pdf,.doc,.docx,.zip,.rar" class="hidden-file-input">
+                            <button mat-raised-button (click)="portfolioInput.click()" class="upload-btn">
+                              Select Portfolio File
+                            </button>
+                            <span *ngIf="portfolioFileName" class="file-name">
+                              {{ portfolioFileName }}
+                            </span>
+                          </div>
+                        </div>
+
+                        <div class="upload-card">
+                          <h4>Additional Certificates</h4>
+                          <p>Upload any additional certificates or achievements</p>
+                          <div class="file-upload-section">
+                            <input type="file" #additionalCertInput (change)="onAdditionalCertFileSelected($event)" accept=".pdf,.jpg,.jpeg,.png" class="hidden-file-input">
+                            <button mat-raised-button (click)="additionalCertInput.click()" class="upload-btn">
+                              Select Certificate File
+                            </button>
+                            <span *ngIf="additionalCertFileName" class="file-name">
+                              {{ additionalCertFileName }}
+                            </span>
+                          </div>
+                        </div>
+
+                        <div class="upload-card">
+                          <h4>Recommendation Letters</h4>
+                          <p>Upload recommendation letters from professors or employers</p>
+                          <div class="file-upload-section">
+                            <input type="file" #recommendationInput (change)="onRecommendationFileSelected($event)" accept=".pdf,.doc,.docx" class="hidden-file-input">
+                            <button mat-raised-button (click)="recommendationInput.click()" class="upload-btn">
+                              Select Recommendation File
+                            </button>
+                            <span *ngIf="recommendationFileName" class="file-name">
+                              {{ recommendationFileName }}
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </mat-tab>
+              </mat-tab-group>
+            </form>
+          </mat-card-content>
+          <mat-card-actions class="profile-actions">
+            <button mat-raised-button color="primary" (click)="updateProfile()" [disabled]="profileForm.invalid">
+              Update Profile
+            </button>
+          </mat-card-actions>
+        </mat-card>
+      </div>
+    </div>
+  

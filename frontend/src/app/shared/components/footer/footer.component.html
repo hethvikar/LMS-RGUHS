@@ -1,0 +1,105 @@
+<footer class="app-footer">
+  <div class="footer-content">
+    <div class="footer-main">
+      <div class="footer-brand">
+        <div class="brand-logo">
+          
+          <span class="brand-name">Placement Cell</span>
+        </div>
+        <p class="brand-description">
+          Empowering education through innovative technology and comprehensive learning solutions.
+        </p>
+        <div class="social-links">
+          <a *ngFor="let social of socialLinks"
+             [href]="social.url"
+             target="_blank"
+             rel="noopener noreferrer"
+             class="social-link"
+             [title]="social.platform">
+            
+          </a>
+        </div>
+      </div>
+
+      <div class="footer-links">
+        <div class="link-section">
+          <h4>Platform</h4>
+          <ul>
+            <li *ngFor="let link of platformLinks">
+              <a [href]="link.external ? link.route : null"
+                 [routerLink]="!link.external ? link.route : null"
+                 [target]="link.external ? '_blank' : undefined"
+                 [rel]="link.external ? 'noopener noreferrer' : null">
+                {{ link.label }}
+              </a>
+            </li>
+          </ul>
+        </div>
+
+        <div class="link-section">
+          <h4>Support</h4>
+          <ul>
+            <li *ngFor="let link of supportLinks">
+              <a [href]="link.external ? link.route : null"
+                 [routerLink]="!link.external ? link.route : null"
+                 [target]="link.external ? '_blank' : undefined"
+                 [rel]="link.external ? 'noopener noreferrer' : null">
+                {{ link.label }}
+              </a>
+            </li>
+          </ul>
+        </div>
+
+        <div class="link-section">
+          <h4>Company</h4>
+          <ul>
+            <li *ngFor="let link of companyLinks">
+              <a [href]="link.external ? link.route : null"
+                 [routerLink]="!link.external ? link.route : null"
+                 [target]="link.external ? '_blank' : undefined"
+                 [rel]="link.external ? 'noopener noreferrer' : null">
+                {{ link.label }}
+              </a>
+            </li>
+          </ul>
+        </div>
+
+        <div class="link-section">
+          <h4>Contact</h4>
+          <div class="contact-info">
+            <div class="contact-item">
+              
+              <span>support&#64;eduplatform.com</span>
+            </div>
+            <div class="contact-item">
+              
+              <span>+1 (555) 123-4567</span>
+            </div>
+            <div class="contact-item">
+              
+              <span>123 Education St, Learning City, LC 12345</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <div class="footer-bottom-content">
+        <div class="copyright">
+          <p>&copy; {{ currentYear }} Placement Cell. All rights reserved.</p>
+        </div>
+        <div class="footer-bottom-links">
+          <a href="/privacy" routerLink="/privacy">Privacy Policy</a>
+          <span class="separator">•</span>
+          <a href="/terms" routerLink="/terms">Terms of Service</a>
+          <span class="separator">•</span>
+          <a href="/cookies" routerLink="/cookies">Cookie Policy</a>
+        </div>
+        <div class="footer-version">
+          <span>v2.1.0</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>

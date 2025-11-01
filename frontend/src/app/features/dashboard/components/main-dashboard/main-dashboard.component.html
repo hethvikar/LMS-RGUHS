@@ -1,0 +1,70 @@
+
+    <div class="dashboard-container">
+      <div class="dashboard-header">
+        <h1>Welcome to Placement Cell System</h1>
+        <p>Manage your placement activities efficiently</p>
+      </div>
+
+      <div class="dashboard-grid">
+        <mat-card class="dashboard-card">
+          <mat-card-header>
+            <mat-card-title>Students</mat-card-title>
+            
+          </mat-card-header>
+          <mat-card-content>
+            <p>Manage student profiles and applications</p>
+          </mat-card-content>
+          <mat-card-actions>
+            <button mat-raised-button color="primary" (click)="navigateTo('/student/dashboard')">
+              View Students
+            </button>
+          </mat-card-actions>
+        </mat-card>
+
+        <mat-card class="dashboard-card">
+          <mat-card-header>
+            <mat-card-title>Companies</mat-card-title>
+            
+          </mat-card-header>
+          <mat-card-content>
+            <p>Manage company profiles and job postings</p>
+          </mat-card-content>
+          <mat-card-actions>
+            <button mat-raised-button color="primary" (click)="navigateTo('/company/dashboard')">
+              View Companies
+            </button>
+          </mat-card-actions>
+        </mat-card>
+
+        <mat-card class="dashboard-card">
+          <mat-card-header>
+            <mat-card-title>LMS</mat-card-title>
+            
+          </mat-card-header>
+          <mat-card-content>
+            <p>Access learning management system</p>
+          </mat-card-content>
+          <mat-card-actions>
+            <button mat-raised-button color="primary" (click)="navigateTo('/lms/dashboard')">
+              Access LMS
+            </button>
+          </mat-card-actions>
+        </mat-card>
+
+        <mat-card class="dashboard-card">
+          <mat-card-header>
+            <mat-card-title>Admin</mat-card-title>
+            
+          </mat-card-header>
+          <mat-card-content>
+            <p>System administration and settings</p>
+          </mat-card-content>
+          <mat-card-actions>
+            <button mat-raised-button color="primary" (click)="navigateTo('/admin/dashboard')">
+              Admin Panel
+            </button>
+          </mat-card-actions>
+        </mat-card>
+      </div>
+    </div>
+  

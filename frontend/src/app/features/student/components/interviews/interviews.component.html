@@ -1,0 +1,101 @@
+
+    <div class="interviews-container">
+      <div class="interviews-header">
+        <h1>My Interviews</h1>
+        <p>Track your upcoming and past interviews</p>
+      </div>
+
+      <div class="interviews-content">
+        <div class="upcoming-interviews" *ngIf="upcomingInterviews.length > 0">
+          <h2>Upcoming Interviews</h2>
+          <mat-card *ngFor="let interview of upcomingInterviews" class="interview-card">
+            <mat-card-header>
+              <mat-card-title>{{ interview.companyName }} - {{ interview.position }}</mat-card-title>
+              
+            </mat-card-header>
+            <mat-card-content>
+              <div class="interview-details">
+                <div class="detail-row">
+                  
+                  <span>{{ interview.interviewDate | date:'fullDate' }}</span>
+                </div>
+                <div class="detail-row">
+                  
+                  <span>{{ interview.interviewDate | date:'shortTime' }}</span>
+                </div>
+                <div class="detail-row">
+                  
+                  <span>{{ interview.location }}</span>
+                </div>
+                <div class="detail-row">
+                  
+                  <span>{{ interview.interviewer }}</span>
+                </div>
+                <div class="interview-type">
+                  <mat-chip [class]="getInterviewTypeClass(interview.interviewType)">
+                    {{ getInterviewTypeText(interview.interviewType) }}
+                  </mat-chip>
+                </div>
+              </div>
+            </mat-card-content>
+            <mat-card-actions>
+              <button mat-button color="primary" (click)="joinInterview(interview)">
+                
+                Join Interview
+              </button>
+              <button mat-button (click)="rescheduleInterview(interview)">
+                
+                Reschedule
+              </button>
+            </mat-card-actions>
+          </mat-card>
+        </div>
+
+        <div class="past-interviews" *ngIf="pastInterviews.length > 0">
+          <h2>Past Interviews</h2>
+          <mat-card *ngFor="let interview of pastInterviews" class="interview-card past">
+            <mat-card-header>
+              <mat-card-title>{{ interview.companyName }} - {{ interview.position }}</mat-card-title>
+              
+            </mat-card-header>
+            <mat-card-content>
+              <div class="interview-details">
+                <div class="detail-row">
+                  
+                  <span>{{ interview.interviewDate | date:'fullDate' }}</span>
+                </div>
+                <div class="detail-row">
+                  
+                  <span>{{ interview.location }}</span>
+                </div>
+                <div class="interview-type">
+                  <mat-chip [class]="getInterviewTypeClass(interview.interviewType)">
+                    {{ getInterviewTypeText(interview.interviewType) }}
+                  </mat-chip>
+                  <mat-chip class="status-chip" [class]="getStatusClass(interview.status)">
+                    {{ getStatusText(interview.status) }}
+                  </mat-chip>
+                </div>
+                <div class="interview-notes" *ngIf="interview.notes">
+                  <h4>Interview Notes:</h4>
+                  <p>{{ interview.notes }}</p>
+                </div>
+              </div>
+            </mat-card-content>
+            <mat-card-actions>
+              <button mat-button (click)="viewFeedback(interview)">
+                
+                View Feedback
+              </button>
+            </mat-card-actions>
+          </mat-card>
+        </div>
+
+        <div class="no-interviews" *ngIf="upcomingInterviews.length === 0 && pastInterviews.length === 0">
+          
+          <h3>No Interviews Yet</h3>
+          <p>You don't have any scheduled interviews. Keep applying to jobs!</p>
+        </div>
+      </div>
+    </div>
+  

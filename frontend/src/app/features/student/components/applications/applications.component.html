@@ -1,0 +1,124 @@
+
+    <div class="applications-container">
+      <div class="applications-header">
+        <h1>My Job Applications</h1>
+        <p>Track and manage your job applications</p>
+      </div>
+
+      <div class="applications-content">
+        <mat-card class="applications-card">
+          <mat-card-header>
+            <mat-card-title>Application History</mat-card-title>
+            
+          </mat-card-header>
+          <mat-card-content>
+            <table mat-table [dataSource]="applications" class="applications-table">
+              <!-- Company Column -->
+              <ng-container matColumnDef="company">
+                <th mat-header-cell *matHeaderCellDef>Company</th>
+                <td mat-cell *matCellDef="let application">{{ application.companyName }}</td>
+              </ng-container>
+
+              <!-- Position Column -->
+              <ng-container matColumnDef="position">
+                <th mat-header-cell *matHeaderCellDef>Position</th>
+                <td mat-cell *matCellDef="let application">{{ application.position }}</td>
+              </ng-container>
+
+              <!-- Applied Date Column -->
+              <ng-container matColumnDef="appliedDate">
+                <th mat-header-cell *matHeaderCellDef>Applied Date</th>
+                <td mat-cell *matCellDef="let application">{{ application.appliedDate | date:'short' }}</td>
+              </ng-container>
+
+              <!-- Status Column -->
+              <ng-container matColumnDef="status">
+                <th mat-header-cell *matHeaderCellDef>Status</th>
+                <td mat-cell *matCellDef="let application">
+                  <mat-chip [class]="getStatusClass(application.status)">
+                    {{ getStatusText(application.status) }}
+                  </mat-chip>
+                </td>
+              </ng-container>
+
+              <!-- Actions Column -->
+              <ng-container matColumnDef="actions">
+                <th mat-header-cell *matHeaderCellDef>Actions</th>
+                <td mat-cell *matCellDef="let application">
+                  <button mat-icon-button [matTooltip]="'View Details'" (click)="viewApplication(application)">
+                    
+                  </button>
+                  <button mat-icon-button [matTooltip]="'Withdraw Application'" (click)="withdrawApplication(application)" *ngIf="application.status === 'pending'">
+                    
+                  </button>
+                </td>
+              </ng-container>
+
+              <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+              <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+            </table>
+
+            <div class="no-applications" *ngIf="applications.length === 0">
+              
+              <h3>No Applications Yet</h3>
+              <p>You haven't applied to any jobs yet. Start exploring opportunities!</p>
+              <button mat-raised-button color="primary" (click)="browseJobs()">
+                
+                Browse Jobs
+              </button>
+            </div>
+          </mat-card-content>
+        </mat-card>
+
+        <div class="stats-cards" *ngIf="applications.length > 0">
+          <mat-card class="stat-card">
+            <mat-card-content>
+              <div class="stat-content">
+                
+                <div class="stat-info">
+                  <h3>{{ getStatusCount('pending') }}</h3>
+                  <p>Pending</p>
+                </div>
+              </div>
+            </mat-card-content>
+          </mat-card>
+
+          <mat-card class="stat-card">
+            <mat-card-content>
+              <div class="stat-content">
+                
+                <div class="stat-info">
+                  <h3>{{ getStatusCount('reviewed') }}</h3>
+                  <p>Reviewed</p>
+                </div>
+              </div>
+            </mat-card-content>
+          </mat-card>
+
+          <mat-card class="stat-card">
+            <mat-card-content>
+              <div class="stat-content">
+                
+                <div class="stat-info">
+                  <h3>{{ getStatusCount('interview') }}</h3>
+                  <p>Interview</p>
+                </div>
+              </div>
+            </mat-card-content>
+          </mat-card>
+
+          <mat-card class="stat-card">
+            <mat-card-content>
+              <div class="stat-content">
+                
+                <div class="stat-info">
+                  <h3>{{ getStatusCount('accepted') }}</h3>
+                  <p>Accepted</p>
+                </div>
+              </div>
+            </mat-card-content>
+          </mat-card>
+        </div>
+      </div>
+    </div>
+  

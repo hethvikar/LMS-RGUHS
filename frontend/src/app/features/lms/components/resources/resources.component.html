@@ -1,0 +1,184 @@
+
+    <div class="resources-container">
+      <div class="resources-header">
+        <div class="header-content">
+          <h1>Learning Resources</h1>
+          <p>Access study materials, documents, and learning aids</p>
+        </div>
+        <button mat-raised-button color="primary" (click)="uploadResource()">
+          
+          Upload Resource
+        </button>
+      </div>
+
+      <div class="resources-stats">
+        <mat-card class="stat-card">
+          <mat-card-content>
+            <div class="stat-content">
+              
+              <div class="stat-info">
+                <h3>{{ getResourceCount('document') }}</h3>
+                <p>Documents</p>
+              </div>
+            </div>
+          </mat-card-content>
+        </mat-card>
+
+        <mat-card class="stat-card">
+          <mat-card-content>
+            <div class="stat-content">
+              
+              <div class="stat-info">
+                <h3>{{ getResourceCount('video') }}</h3>
+                <p>Videos</p>
+              </div>
+            </div>
+          </mat-card-content>
+        </mat-card>
+
+        <mat-card class="stat-card">
+          <mat-card-content>
+            <div class="stat-content">
+              
+              <div class="stat-info">
+                <h3>{{ getResourceCount('presentation') }}</h3>
+                <p>Presentations</p>
+              </div>
+            </div>
+          </mat-card-content>
+        </mat-card>
+
+        <mat-card class="stat-card">
+          <mat-card-content>
+            <div class="stat-content">
+              
+              <div class="stat-info">
+                <h3>{{ resources.length }}</h3>
+                <p>Total Resources</p>
+              </div>
+            </div>
+          </mat-card-content>
+        </mat-card>
+      </div>
+
+      <mat-card class="resources-content">
+        <mat-card-content>
+          <mat-tab-group>
+            <mat-tab label="All Resources">
+              <div class="tab-content">
+                <mat-grid-list cols="4" rowHeight="300px" class="resources-grid">
+                  <mat-grid-tile *ngFor="let resource of resources">
+                    <mat-card class="resource-card">
+                      <mat-card-header>
+                        <mat-card-title>{{ resource.title }}</mat-card-title>
+                        
+                      </mat-card-header>
+                      <mat-card-content>
+                        <p class="resource-description">{{ resource.description }}</p>
+                        <div class="resource-details">
+                          <div class="detail-item" *ngIf="resource.courseName">
+                            
+                            <span>{{ resource.courseName }}</span>
+                          </div>
+                          <div class="detail-item" *ngIf="resource.fileSize">
+                            
+                            <span>{{ resource.fileSize }}</span>
+                          </div>
+                          <div class="detail-item">
+                            
+                            <span>{{ resource.downloads }} downloads</span>
+                          </div>
+                        </div>
+                        <div class="resource-tags">
+                          <mat-chip *ngFor="let tag of resource.tags.slice(0, 3)" [class]="getCategoryClass(resource.category)">
+                            {{ tag }}
+                          </mat-chip>
+                        </div>
+                      </mat-card-content>
+                      <mat-card-actions>
+                        <button mat-button (click)="viewResource(resource)" *ngIf="resource.viewUrl">
+                          
+                          View
+                        </button>
+                        <button mat-button (click)="downloadResource(resource)" *ngIf="resource.downloadUrl">
+                          
+                          Download
+                        </button>
+                        <button mat-button (click)="shareResource(resource)">
+                          
+                          Share
+                        </button>
+                      </mat-card-actions>
+                    </mat-card>
+                  </mat-grid-tile>
+                </mat-grid-list>
+              </div>
+            </mat-tab>
+
+            <mat-tab label="By Category">
+              <div class="tab-content">
+                <div class="category-section" *ngFor="let category of getCategories()">
+                  <h3>{{ category }}</h3>
+                  <div class="category-resources">
+                    <mat-card *ngFor="let resource of getResourcesByCategory(category)" class="resource-card compact">
+                      <mat-card-header>
+                        <mat-card-title>{{ resource.title }}</mat-card-title>
+                        
+                      </mat-card-header>
+                      <mat-card-content>
+                        <p class="resource-description">{{ resource.description }}</p>
+                        <div class="resource-meta">
+                          <span>{{ resource.type }}</span>
+                          <span>{{ resource.downloads }} downloads</span>
+                        </div>
+                      </mat-card-content>
+                      <mat-card-actions>
+                        <button mat-button (click)="viewResource(resource)" *ngIf="resource.viewUrl">
+                          
+                          View
+                        </button>
+                        <button mat-button (click)="downloadResource(resource)" *ngIf="resource.downloadUrl">
+                          
+                          Download
+                        </button>
+                      </mat-card-actions>
+                    </mat-card>
+                  </div>
+                </div>
+              </div>
+            </mat-tab>
+
+            <mat-tab label="Recent">
+              <div class="tab-content">
+                <div class="recent-resources">
+                  <mat-card *ngFor="let resource of getRecentResources()" class="resource-card recent">
+                    <mat-card-header>
+                      <mat-card-title>{{ resource.title }}</mat-card-title>
+                      
+                    </mat-card-header>
+                    <mat-card-content>
+                      <p class="resource-description">{{ resource.description }}</p>
+                      <div class="resource-meta">
+                        <span>Uploaded {{ resource.uploadDate | date:'short' }}</span>
+                        <span>{{ resource.downloads }} downloads</span>
+                      </div>
+                    </mat-card-content>
+                    <mat-card-actions>
+                      <button mat-button (click)="viewResource(resource)" *ngIf="resource.viewUrl">
+                        
+                        View
+                      </button>
+                      <button mat-button (click)="downloadResource(resource)" *ngIf="resource.downloadUrl">
+                        
+                        Download
+                      </button>
+                    </mat-card-actions>
+                  </mat-card>
+                </div>
+              </div>
+            </mat-tab>
+          </mat-tab-group>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  

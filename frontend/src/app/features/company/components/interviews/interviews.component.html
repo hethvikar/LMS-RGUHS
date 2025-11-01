@@ -1,0 +1,188 @@
+
+    <div class="interviews-container">
+      <div class="interviews-header">
+        <div class="header-content">
+          <h1>Interview Management</h1>
+          <p>Schedule and manage candidate interviews</p>
+        </div>
+        <button mat-raised-button color="primary" (click)="scheduleNewInterview()">
+          
+          Schedule Interview
+        </button>
+      </div>
+
+      <div class="interviews-stats">
+        <mat-card class="stat-card">
+          <mat-card-content>
+            <div class="stat-content">
+              
+              <div class="stat-info">
+                <h3>{{ getStatusCount('scheduled') }}</h3>
+                <p>Scheduled</p>
+              </div>
+            </div>
+          </mat-card-content>
+        </mat-card>
+
+        <mat-card class="stat-card">
+          <mat-card-content>
+            <div class="stat-content">
+              
+              <div class="stat-info">
+                <h3>{{ getStatusCount('completed') }}</h3>
+                <p>Completed</p>
+              </div>
+            </div>
+          </mat-card-content>
+        </mat-card>
+
+        <mat-card class="stat-card">
+          <mat-card-content>
+            <div class="stat-content">
+              
+              <div class="stat-info">
+                <h3>{{ getTodaysInterviews() }}</h3>
+                <p>Today</p>
+              </div>
+            </div>
+          </mat-card-content>
+        </mat-card>
+
+        <mat-card class="stat-card">
+          <mat-card-content>
+            <div class="stat-content">
+              
+              <div class="stat-info">
+                <h3>{{ getUpcomingInterviews() }}</h3>
+                <p>Upcoming</p>
+              </div>
+            </div>
+          </mat-card-content>
+        </mat-card>
+      </div>
+
+      <mat-card class="interviews-views-card">
+        <mat-card-content>
+          <mat-tab-group>
+            <mat-tab label="Table View">
+              <div class="tab-content">
+                <table mat-table [dataSource]="interviews" class="interviews-table">
+            <!-- Candidate Column -->
+            <ng-container matColumnDef="candidate">
+              <th mat-header-cell *matHeaderCellDef>Candidate</th>
+              <td mat-cell *matCellDef="let interview">
+                <div class="candidate-info">
+                  <div class="candidate-name">{{ interview.candidateName }}</div>
+                  <div class="candidate-email">{{ interview.candidateEmail }}</div>
+                </div>
+              </td>
+            </ng-container>
+
+            <!-- Position Column -->
+            <ng-container matColumnDef="position">
+              <th mat-header-cell *matHeaderCellDef>Position</th>
+              <td mat-cell *matCellDef="let interview">{{ interview.position }}</td>
+            </ng-container>
+
+            <!-- Date & Time Column -->
+            <ng-container matColumnDef="datetime">
+              <th mat-header-cell *matHeaderCellDef>Date & Time</th>
+              <td mat-cell *matCellDef="let interview">
+                <div class="datetime-info">
+                  <div>{{ interview.interviewDate | date:'shortDate' }}</div>
+                  <div>{{ interview.interviewDate | date:'shortTime' }}</div>
+                </div>
+              </td>
+            </ng-container>
+
+            <!-- Type Column -->
+            <ng-container matColumnDef="type">
+              <th mat-header-cell *matHeaderCellDef>Type</th>
+              <td mat-cell *matCellDef="let interview">
+                <mat-chip [class]="getTypeClass(interview.interviewType)">
+                  {{ getTypeText(interview.interviewType) }}
+                </mat-chip>
+              </td>
+            </ng-container>
+
+            <!-- Status Column -->
+            <ng-container matColumnDef="status">
+              <th mat-header-cell *matHeaderCellDef>Status</th>
+              <td mat-cell *matCellDef="let interview">
+                <mat-chip [class]="getStatusClass(interview.status)">
+                  {{ getStatusText(interview.status) }}
+                </mat-chip>
+              </td>
+            </ng-container>
+
+            <!-- Interviewer Column -->
+            <ng-container matColumnDef="interviewer">
+              <th mat-header-cell *matHeaderCellDef>Interviewer</th>
+              <td mat-cell *matCellDef="let interview">{{ interview.interviewer }}</td>
+            </ng-container>
+
+            <!-- Actions Column -->
+            <ng-container matColumnDef="actions">
+              <th mat-header-cell *matHeaderCellDef>Actions</th>
+              <td mat-cell *matCellDef="let interview">
+                <button mat-icon-button [matTooltip]="'View Details'" (click)="viewInterview(interview)">
+                  <mat-icon>visibility</mat-icon>
+                </button>
+                <button mat-icon-button [matTooltip]="'Join Interview'" (click)="joinInterview(interview)" *ngIf="interview.status === 'scheduled'">
+                  
+                </button>
+                <button mat-icon-button [matTooltip]="'Add Feedback'" (click)="addFeedback(interview)" *ngIf="interview.status === 'completed'">
+                  
+                </button>
+                <button mat-icon-button [matTooltip]="'Reschedule'" (click)="rescheduleInterview(interview)" *ngIf="interview.status !== 'completed'">
+                  
+                </button>
+                <button mat-icon-button [matTooltip]="'Cancel'" (click)="cancelInterview(interview)" *ngIf="interview.status === 'scheduled'">
+                  
+                </button>
+              </td>
+            </ng-container>
+
+                  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                  <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                </table>
+
+                <div class="no-interviews" *ngIf="interviews.length === 0">
+                  <mat-icon class="no-data-icon">event_busy</mat-icon>
+                  <h3>No Interviews Scheduled</h3>
+                  <p>Schedule your first interview to get started!</p>
+                  <button mat-raised-button color="primary" (click)="scheduleNewInterview()">
+                    <mat-icon>add</mat-icon>
+                    Schedule Interview
+                  </button>
+                </div>
+              </div>
+            </mat-tab>
+
+            <mat-tab label="Calendar View" *ngIf="false">
+              <div class="tab-content calendar-container">
+                <div class="calendar-header">
+                  <button mat-button (click)="previousMonth()">
+                    <mat-icon>chevron_left</mat-icon>
+                  </button>
+                  <h3>{{ viewDate | date:'MMMM yyyy' }}</h3>
+                  <button mat-button (click)="nextMonth()">
+                    <mat-icon>chevron_right</mat-icon>
+                  </button>
+                </div>
+
+                <mwl-calendar-month-view
+                  [viewDate]="viewDate"
+                  [events]="events"
+                  [activeDayIsOpen]="true"
+                  (dayClicked)="dayClicked($event)"
+                  (eventClicked)="eventClicked($event)">
+                </mwl-calendar-month-view>
+
+              </div>
+            </mat-tab>
+          </mat-tab-group>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  

@@ -1,0 +1,200 @@
+
+    <div class="candidates-container">
+      <div class="candidates-header">
+        <h1>Candidate Management</h1>
+        <p>Review applications and manage candidate pipeline</p>
+      </div>
+
+      <div class="candidates-stats">
+        <mat-card class="stat-card">
+          <mat-card-content>
+            <div class="stat-content">
+              
+              <div class="stat-info">
+                <h3>{{ getStatusCount('new') }}</h3>
+                <p>New Applications</p>
+              </div>
+            </div>
+          </mat-card-content>
+        </mat-card>
+
+        <mat-card class="stat-card">
+          <mat-card-content>
+            <div class="stat-content">
+              
+              <div class="stat-info">
+                <h3>{{ getStatusCount('shortlisted') }}</h3>
+                <p>Shortlisted</p>
+              </div>
+            </div>
+          </mat-card-content>
+        </mat-card>
+
+        <mat-card class="stat-card">
+          <mat-card-content>
+            <div class="stat-content">
+              
+              <div class="stat-info">
+                <h3>{{ getStatusCount('interviewed') }}</h3>
+                <p>Interviewed</p>
+              </div>
+            </div>
+          </mat-card-content>
+        </mat-card>
+
+        <mat-card class="stat-card">
+          <mat-card-content>
+            <div class="stat-content">
+              
+              <div class="stat-info">
+                <h3>{{ getStatusCount('hired') }}</h3>
+                <p>Hired</p>
+              </div>
+            </div>
+          </mat-card-content>
+        </mat-card>
+      </div>
+
+      <mat-card class="candidates-table-card">
+        <mat-card-content>
+          <mat-tab-group>
+            <mat-tab label="All Candidates">
+              <div class="tab-content">
+                <table mat-table [dataSource]="candidates" class="candidates-table">
+                  <!-- Name Column -->
+                  <ng-container matColumnDef="name">
+                    <th mat-header-cell *matHeaderCellDef>Name</th>
+                    <td mat-cell *matCellDef="let candidate">{{ candidate.name }}</td>
+                  </ng-container>
+
+                  <!-- Position Column -->
+                  <ng-container matColumnDef="position">
+                    <th mat-header-cell *matHeaderCellDef>Applied Position</th>
+                    <td mat-cell *matCellDef="let candidate">{{ candidate.appliedPosition }}</td>
+                  </ng-container>
+
+                  <!-- Applied Date Column -->
+                  <ng-container matColumnDef="appliedDate">
+                    <th mat-header-cell *matHeaderCellDef>Applied Date</th>
+                    <td mat-cell *matCellDef="let candidate">{{ candidate.appliedDate | date:'short' }}</td>
+                  </ng-container>
+
+                  <!-- Status Column -->
+                  <ng-container matColumnDef="status">
+                    <th mat-header-cell *matHeaderCellDef>Status</th>
+                    <td mat-cell *matCellDef="let candidate">
+                      <mat-chip [class]="getStatusClass(candidate.status)">
+                        {{ getStatusText(candidate.status) }}
+                      </mat-chip>
+                    </td>
+                  </ng-container>
+
+                  <!-- Experience Column -->
+                  <ng-container matColumnDef="experience">
+                    <th mat-header-cell *matHeaderCellDef>Experience</th>
+                    <td mat-cell *matCellDef="let candidate">{{ candidate.experience }}</td>
+                  </ng-container>
+
+                  <!-- Actions Column -->
+                  <ng-container matColumnDef="actions">
+                    <th mat-header-cell *matHeaderCellDef>Actions</th>
+                    <td mat-cell *matCellDef="let candidate">
+                      <button mat-icon-button [matTooltip]="'View Profile'" (click)="viewCandidate(candidate)">
+                        
+                      </button>
+                      <button mat-icon-button [matTooltip]="'Download Resume'" (click)="downloadResume(candidate)">
+                        
+                      </button>
+                      <button mat-icon-button [matTooltip]="'Schedule Interview'" (click)="scheduleInterview(candidate)" *ngIf="candidate.status !== 'hired' && candidate.status !== 'rejected'">
+                        
+                      </button>
+                      <button mat-icon-button [matTooltip]="'Update Status'" (click)="updateStatus(candidate)">
+                        
+                      </button>
+                    </td>
+                  </ng-container>
+
+                  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                  <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                </table>
+              </div>
+            </mat-tab>
+
+            <mat-tab label="Shortlisted">
+              <div class="tab-content">
+                <table mat-table [dataSource]="shortlistedCandidates" class="candidates-table">
+                  <ng-container matColumnDef="name">
+                    <th mat-header-cell *matHeaderCellDef>Name</th>
+                    <td mat-cell *matCellDef="let candidate">{{ candidate.name }}</td>
+                  </ng-container>
+                  <ng-container matColumnDef="position">
+                    <th mat-header-cell *matHeaderCellDef>Applied Position</th>
+                    <td mat-cell *matCellDef="let candidate">{{ candidate.appliedPosition }}</td>
+                  </ng-container>
+                  <ng-container matColumnDef="appliedDate">
+                    <th mat-header-cell *matHeaderCellDef>Applied Date</th>
+                    <td mat-cell *matCellDef="let candidate">{{ candidate.appliedDate | date:'short' }}</td>
+                  </ng-container>
+                  <ng-container matColumnDef="experience">
+                    <th mat-header-cell *matHeaderCellDef>Experience</th>
+                    <td mat-cell *matCellDef="let candidate">{{ candidate.experience }}</td>
+                  </ng-container>
+                  <ng-container matColumnDef="actions">
+                    <th mat-header-cell *matHeaderCellDef>Actions</th>
+                    <td mat-cell *matCellDef="let candidate">
+                      <button mat-icon-button [matTooltip]="'View Profile'" (click)="viewCandidate(candidate)">
+                        
+                      </button>
+                      <button mat-icon-button [matTooltip]="'Schedule Interview'" (click)="scheduleInterview(candidate)">
+                        
+                      </button>
+                    </td>
+                  </ng-container>
+
+                  <tr mat-header-row *matHeaderRowDef="shortlistedColumns"></tr>
+                  <tr mat-row *matRowDef="let row; columns: shortlistedColumns;"></tr>
+                </table>
+              </div>
+            </mat-tab>
+
+            <mat-tab label="Interviewed">
+              <div class="tab-content">
+                <table mat-table [dataSource]="interviewedCandidates" class="candidates-table">
+                  <ng-container matColumnDef="name">
+                    <th mat-header-cell *matHeaderCellDef>Name</th>
+                    <td mat-cell *matCellDef="let candidate">{{ candidate.name }}</td>
+                  </ng-container>
+                  <ng-container matColumnDef="position">
+                    <th mat-header-cell *matHeaderCellDef>Applied Position</th>
+                    <td mat-cell *matCellDef="let candidate">{{ candidate.appliedPosition }}</td>
+                  </ng-container>
+                  <ng-container matColumnDef="appliedDate">
+                    <th mat-header-cell *matHeaderCellDef>Applied Date</th>
+                    <td mat-cell *matCellDef="let candidate">{{ candidate.appliedDate | date:'short' }}</td>
+                  </ng-container>
+                  <ng-container matColumnDef="experience">
+                    <th mat-header-cell *matHeaderCellDef>Experience</th>
+                    <td mat-cell *matCellDef="let candidate">{{ candidate.experience }}</td>
+                  </ng-container>
+                  <ng-container matColumnDef="actions">
+                    <th mat-header-cell *matHeaderCellDef>Actions</th>
+                    <td mat-cell *matCellDef="let candidate">
+                      <button mat-icon-button [matTooltip]="'View Profile'" (click)="viewCandidate(candidate)">
+                        
+                      </button>
+                      <button mat-icon-button [matTooltip]="'Make Offer'" (click)="makeOffer(candidate)">
+                        
+                      </button>
+                    </td>
+                  </ng-container>
+
+                  <tr mat-header-row *matHeaderRowDef="interviewedColumns"></tr>
+                  <tr mat-row *matRowDef="let row; columns: interviewedColumns;"></tr>
+                </table>
+              </div>
+            </mat-tab>
+          </mat-tab-group>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  

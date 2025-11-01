@@ -1,0 +1,87 @@
+
+    <div class="calendar-container">
+      <div class="calendar-header">
+        <div class="header-left">
+          <button mat-raised-button color="primary" (click)="addEnrollment()">
+            
+            Add Enrollment
+          </button>
+          <mat-button-toggle-group [(ngModel)]="view" (change)="viewChange($event)">
+            <mat-button-toggle value="month">Month</mat-button-toggle>
+            <mat-button-toggle value="week">Week</mat-button-toggle>
+            <mat-button-toggle value="day">Day</mat-button-toggle>
+          </mat-button-toggle-group>
+        </div>
+        <div class="header-right">
+          <mat-form-field appearance="outline">
+            <mat-label>Filter by Status</mat-label>
+            <mat-select [(ngModel)]="statusFilter" (selectionChange)="filterEvents()">
+              <mat-option value="all">All Status</mat-option>
+              <mat-option value="enrolled">Enrolled</mat-option>
+              <mat-option value="completed">Completed</mat-option>
+              <mat-option value="upcoming">Upcoming</mat-option>
+              <mat-option value="cancelled">Cancelled</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+
+      <div class="calendar-content">
+        <mwl-calendar-month-view
+          *ngIf="view === 'month'"
+          [viewDate]="viewDate"
+          [events]="calendarEvents"
+          [refresh]="refresh"
+          [activeDayIsOpen]="activeDayIsOpen"
+          (dayClicked)="dayClicked($event.day)"
+          (eventClicked)="handleEvent($event.event)"
+          (eventTimesChanged)="eventTimesChanged($event)">
+        </mwl-calendar-month-view>
+
+        <mwl-calendar-week-view
+          *ngIf="view === 'week'"
+          [viewDate]="viewDate"
+          [events]="calendarEvents"
+          [refresh]="refresh"
+          (eventClicked)="handleEvent($event.event)"
+          (eventTimesChanged)="eventTimesChanged($event)">
+        </mwl-calendar-week-view>
+
+        <mwl-calendar-day-view
+          *ngIf="view === 'day'"
+          [viewDate]="viewDate"
+          [events]="calendarEvents"
+          [refresh]="refresh"
+          (eventClicked)="handleEvent($event.event)"
+          (eventTimesChanged)="eventTimesChanged($event)">
+        </mwl-calendar-day-view>
+      </div>
+
+      <div class="calendar-legend">
+        <div class="legend-item">
+          <div class="color-box enrolled"></div>
+          <span>Enrolled</span>
+        </div>
+        <div class="legend-item">
+          <div class="color-box completed"></div>
+          <span>Completed</span>
+        </div>
+        <div class="legend-item">
+          <div class="color-box upcoming"></div>
+          <span>Upcoming</span>
+        </div>
+        <div class="legend-item">
+          <div class="color-box cancelled"></div>
+          <span>Cancelled</span>
+        </div>
+        <div class="legend-item">
+          <div class="color-box assessment"></div>
+          <span>Assessment</span>
+        </div>
+        <div class="legend-item">
+          <div class="color-box interview"></div>
+          <span>Interview</span>
+        </div>
+      </div>
+    </div>
+  

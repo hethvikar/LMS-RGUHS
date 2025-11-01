@@ -1,0 +1,252 @@
+
+    .enrollment-container {
+      padding: 24px;
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    .enrollment-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 32px;
+    }
+
+    .header-content h1 {
+      font-size: 2.5rem;
+      font-weight: 300;
+      margin-bottom: 8px;
+      color: #333;
+    }
+
+    .header-content p {
+      font-size: 1.2rem;
+      color: #666;
+      margin: 0;
+    }
+
+    .enrollment-stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 16px;
+      margin-bottom: 32px;
+    }
+
+    .stat-card {
+      text-align: center;
+    }
+
+    .stat-content {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      padding: 16px 0;
+    }
+
+    .stat-icon {
+      font-size: 32px;
+      width: 32px;
+      height: 32px;
+    }
+
+    .stat-icon.total { color: #2196f3; }
+    .stat-icon.active { color: #4caf50; }
+    .stat-icon.completed { color: #9c27b0; }
+    .stat-icon.students { color: #ff9800; }
+
+    .stat-info h3 {
+      margin: 0;
+      font-size: 2rem;
+      font-weight: 500;
+      color: #333;
+    }
+
+    .stat-info p {
+      margin: 4px 0 0 0;
+      font-size: 0.9rem;
+      color: #666;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .enrollment-form {
+      margin-bottom: 24px;
+    }
+
+    .enrollment-form-content {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    .form-field {
+      width: 100%;
+    }
+
+    .form-actions {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .enrollments-content {
+      margin-top: 24px;
+    }
+
+    .tab-content {
+      padding: 24px 0;
+    }
+
+    .calendar-tab {
+      height: 800px;
+      display: flex;
+      flex-direction: column;
+
+      app-enrollment-calendar {
+        flex: 1;
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      }
+    }
+
+    .enrollments-table {
+      width: 100%;
+    }
+
+    .student-info {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .student-name {
+      font-weight: 500;
+      color: #333;
+    }
+
+    .student-id {
+      font-size: 0.85rem;
+      color: #666;
+    }
+
+    .course-info {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .course-title {
+      font-weight: 500;
+      color: #333;
+    }
+
+    .enrollment-date {
+      font-size: 0.85rem;
+      color: #666;
+    }
+
+    .progress-info {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .progress-bar {
+      width: 100px;
+      height: 8px;
+      background-color: #e0e0e0;
+      border-radius: 4px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background-color: #4caf50;
+      transition: width 0.3s ease;
+    }
+
+    .progress-text {
+      font-size: 14px;
+      font-weight: 500;
+      color: #333;
+      min-width: 35px;
+    }
+
+    .course-enrollments {
+      display: grid;
+      gap: 16px;
+    }
+
+    .course-card {
+      transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+    }
+
+    .course-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    .course-stats {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 12px;
+      font-size: 14px;
+      color: #666;
+    }
+
+    .enrolled-students {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+
+    .student-chip {
+      font-size: 12px;
+    }
+
+    .mat-mdc-chip.active { background-color: #e8f5e8; color: #2e7d32; }
+    .mat-mdc-chip.completed { background-color: #e8f5e8; color: #2e7d32; }
+    .mat-mdc-chip.dropped { background-color: #ffebee; color: #d32f2f; }
+
+    .mat-mdc-chip.active { background-color: #e3f2fd; color: #1976d2; }
+    .mat-mdc-chip.completed { background-color: #e8f5e8; color: #2e7d32; }
+    .mat-mdc-chip.dropped { background-color: #ffebee; color: #d32f2f; }
+
+    @media (max-width: 768px) {
+      .enrollment-container {
+        padding: 16px;
+      }
+
+      .enrollment-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 16px;
+      }
+
+      .enrollment-stats {
+        grid-template-columns: 1fr;
+      }
+
+      .form-row {
+        grid-template-columns: 1fr;
+      }
+
+      .progress-info {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+      }
+
+      .course-stats {
+        flex-direction: column;
+        gap: 4px;
+      }
+    }
+  

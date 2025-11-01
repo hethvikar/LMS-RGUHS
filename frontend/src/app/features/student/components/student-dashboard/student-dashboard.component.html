@@ -1,0 +1,68 @@
+<div class="student-dashboard-container">
+  <div class="dashboard-header">
+    <h1>Student Dashboard</h1>
+    <p>Manage your profile and applications</p>
+  </div>
+
+  <div class="dashboard-grid">
+    <mat-card class="dashboard-card">
+      <mat-card-header>
+        <mat-card-title>Profile</mat-card-title>
+        
+      </mat-card-header>
+      <mat-card-content>
+        <p>View and update your profile information</p>
+      </mat-card-content>
+      <mat-card-actions>
+        <button mat-raised-button color="primary" (click)="navigateToProfile()">
+          View Profile
+        </button>
+      </mat-card-actions>
+    </mat-card>
+
+    <mat-card class="dashboard-card">
+      <mat-card-header>
+        <mat-card-title>Job Applications</mat-card-title>
+        
+      </mat-card-header>
+      <mat-card-content>
+        <p>View and manage your job applications</p>
+      </mat-card-content>
+      <mat-card-actions>
+        <button mat-raised-button color="primary" (click)="navigateToApplications()">
+          View Applications
+        </button>
+      </mat-card-actions>
+    </mat-card>
+
+    <mat-card class="dashboard-card">
+      <mat-card-header>
+        <mat-card-title>Interviews</mat-card-title>
+        
+      </mat-card-header>
+      <mat-card-content>
+        <p>Check your upcoming interviews</p>
+      </mat-card-content>
+      <mat-card-actions>
+        <button mat-raised-button color="primary" (click)="navigateToInterviews()">
+          View Interviews
+        </button>
+      </mat-card-actions>
+    </mat-card>
+
+    <mat-card class="dashboard-card">
+      <mat-card-header>
+        <mat-card-title>Placement Status</mat-card-title>
+        
+      </mat-card-header>
+      <mat-card-content>
+        <p>Check your current placement status</p>
+      </mat-card-content>
+      <mat-card-actions>
+        <button mat-raised-button color="primary" (click)="navigateToPlacementStatus()">
+          View Status
+        </button>
+      </mat-card-actions>
+    </mat-card>
+  </div>
+</div>

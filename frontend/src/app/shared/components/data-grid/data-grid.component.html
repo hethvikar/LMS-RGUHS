@@ -1,0 +1,45 @@
+
+    <div class="data-grid-container">
+      <div class="grid-toolbar" *ngIf="showToolbar">
+        <div class="toolbar-left">
+          <button mat-raised-button color="primary" (click)="onAddNew()" *ngIf="enableAdd">
+            
+            Add New
+          </button>
+          <button mat-raised-button color="warn" (click)="onDeleteSelected()" *ngIf="enableDelete && selectedRows.length > 0">
+            
+            Delete Selected ({{ selectedRows.length }})
+          </button>
+        </div>
+        <div class="toolbar-right">
+          <mat-form-field appearance="outline" class="search-field">
+            <mat-label>Search</mat-label>
+            <input matInput (input)="onQuickFilterChanged($event)" placeholder="Search...">
+            
+          </mat-form-field>
+          <button mat-icon-button (click)="onExport()" *ngIf="enableExport">
+            
+          </button>
+        </div>
+      </div>
+
+      <ag-grid-angular
+        #agGrid
+        class="ag-theme-material"
+        [rowData]="rowData"
+        [columnDefs]="columnDefs"
+        [defaultColDef]="defaultColDef"
+        [pagination]="pagination"
+        [paginationPageSize]="paginationPageSize"
+        [paginationPageSizeSelector]="paginationPageSizeSelector"
+        [rowSelection]="rowSelection"
+        [suppressRowClickSelection]="true"
+        [animateRows]="true"
+        [enableCellTextSelection]="true"
+        [ensureDomOrder]="true"
+        (gridReady)="onGridReady($event)"
+        (rowClicked)="onRowClicked($event)"
+        (selectionChanged)="onSelectionChanged($event)">
+      </ag-grid-angular>
+    </div>
+  

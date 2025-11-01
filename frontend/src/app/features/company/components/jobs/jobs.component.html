@@ -1,0 +1,138 @@
+
+    <div class="jobs-container">
+      <div class="jobs-header">
+        <div class="header-content">
+          <h1>Job Postings</h1>
+          <p>Manage your job openings and track applications</p>
+        </div>
+        <button mat-raised-button color="primary" (click)="createNewJob()">
+          
+          Post New Job
+        </button>
+      </div>
+
+      <div class="jobs-stats">
+        <mat-card class="stat-card">
+          <mat-card-content>
+            <div class="stat-content">
+              
+              <div class="stat-info">
+                <h3>{{ getStatusCount('active') }}</h3>
+                <p>Active Jobs</p>
+              </div>
+            </div>
+          </mat-card-content>
+        </mat-card>
+
+        <mat-card class="stat-card">
+          <mat-card-content>
+            <div class="stat-content">
+              
+              <div class="stat-info">
+                <h3>{{ getTotalApplications() }}</h3>
+                <p>Total Applications</p>
+              </div>
+            </div>
+          </mat-card-content>
+        </mat-card>
+
+        <mat-card class="stat-card">
+          <mat-card-content>
+            <div class="stat-content">
+              
+              <div class="stat-info">
+                <h3>{{ getScheduledInterviews() }}</h3>
+                <p>Interviews Scheduled</p>
+              </div>
+            </div>
+          </mat-card-content>
+        </mat-card>
+      </div>
+
+      <mat-card class="jobs-table-card">
+        <mat-card-header>
+          <mat-card-title>All Job Postings</mat-card-title>
+          
+        </mat-card-header>
+        <mat-card-content>
+          <table mat-table [dataSource]="jobPostings" class="jobs-table">
+            <!-- Title Column -->
+            <ng-container matColumnDef="title">
+              <th mat-header-cell *matHeaderCellDef>Job Title</th>
+              <td mat-cell *matCellDef="let job">{{ job.title }}</td>
+            </ng-container>
+
+            <!-- Department Column -->
+            <ng-container matColumnDef="department">
+              <th mat-header-cell *matHeaderCellDef>Department</th>
+              <td mat-cell *matCellDef="let job">{{ job.department }}</td>
+            </ng-container>
+
+            <!-- Location Column -->
+            <ng-container matColumnDef="location">
+              <th mat-header-cell *matHeaderCellDef>Location</th>
+              <td mat-cell *matCellDef="let job">{{ job.location }}</td>
+            </ng-container>
+
+            <!-- Type Column -->
+            <ng-container matColumnDef="type">
+              <th mat-header-cell *matHeaderCellDef>Type</th>
+              <td mat-cell *matCellDef="let job">
+                <mat-chip [class]="getTypeClass(job.type)">
+                  {{ getTypeText(job.type) }}
+                </mat-chip>
+              </td>
+            </ng-container>
+
+            <!-- Status Column -->
+            <ng-container matColumnDef="status">
+              <th mat-header-cell *matHeaderCellDef>Status</th>
+              <td mat-cell *matCellDef="let job">
+                <mat-chip [class]="getStatusClass(job.status)">
+                  {{ getStatusText(job.status) }}
+                </mat-chip>
+              </td>
+            </ng-container>
+
+            <!-- Applications Column -->
+            <ng-container matColumnDef="applications">
+              <th mat-header-cell *matHeaderCellDef>Applications</th>
+              <td mat-cell *matCellDef="let job">{{ job.applicationsCount }}</td>
+            </ng-container>
+
+            <!-- Actions Column -->
+            <ng-container matColumnDef="actions">
+              <th mat-header-cell *matHeaderCellDef>Actions</th>
+              <td mat-cell *matCellDef="let job">
+                <button mat-icon-button [matTooltip]="'View Applications'" (click)="viewApplications(job)">
+                  
+                </button>
+                <button mat-icon-button [matTooltip]="'Edit Job'" (click)="editJob(job)">
+                  
+                </button>
+                <button mat-icon-button [matTooltip]="'Pause/Resume'" (click)="toggleJobStatus(job)">
+                  
+                </button>
+                <button mat-icon-button [matTooltip]="'Delete Job'" (click)="deleteJob(job)">
+                  
+                </button>
+              </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+          </table>
+
+          <div class="no-jobs" *ngIf="jobPostings.length === 0">
+            
+            <h3>No Job Postings Yet</h3>
+            <p>Create your first job posting to start attracting talent!</p>
+            <button mat-raised-button color="primary" (click)="createNewJob()">
+              
+              Create First Job
+            </button>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  

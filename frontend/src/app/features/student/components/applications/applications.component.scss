@@ -1,0 +1,140 @@
+
+    .applications-container {
+      padding: 24px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .applications-header {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+
+    .applications-header h1 {
+      font-size: 2.5rem;
+      font-weight: 300;
+      margin-bottom: 16px;
+      color: #333;
+    }
+
+    .applications-header p {
+      font-size: 1.2rem;
+      color: #666;
+    }
+
+    .applications-content {
+      display: grid;
+      gap: 24px;
+    }
+
+    .applications-card {
+      margin-bottom: 24px;
+    }
+
+    .applications-table {
+      width: 100%;
+    }
+
+    .mat-mdc-chip {
+      font-size: 12px;
+      font-weight: 500;
+    }
+
+    .mat-mdc-chip.pending {
+      background-color: #fff3e0;
+      color: #f57c00;
+    }
+
+    .mat-mdc-chip.reviewed {
+      background-color: #e3f2fd;
+      color: #1976d2;
+    }
+
+    .mat-mdc-chip.interview {
+      background-color: #f3e5f5;
+      color: #7b1fa2;
+    }
+
+    .mat-mdc-chip.rejected {
+      background-color: #ffebee;
+      color: #d32f2f;
+    }
+
+    .mat-mdc-chip.accepted {
+      background-color: #e8f5e8;
+      color: #2e7d32;
+    }
+
+    .no-applications {
+      text-align: center;
+      padding: 40px;
+      color: #666;
+    }
+
+    .no-data-icon {
+      font-size: 64px;
+      width: 64px;
+      height: 64px;
+      margin-bottom: 16px;
+      opacity: 0.5;
+    }
+
+    .stats-cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 16px;
+    }
+
+    .stat-card {
+      text-align: center;
+    }
+
+    .stat-content {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      padding: 16px 0;
+    }
+
+    .stat-icon {
+      font-size: 32px;
+      width: 32px;
+      height: 32px;
+    }
+
+    .stat-icon.pending { color: #f57c00; }
+    .stat-icon.reviewed { color: #1976d2; }
+    .stat-icon.interview { color: #7b1fa2; }
+    .stat-icon.accepted { color: #2e7d32; }
+
+    .stat-info h3 {
+      margin: 0;
+      font-size: 2rem;
+      font-weight: 500;
+      color: #333;
+    }
+
+    .stat-info p {
+      margin: 4px 0 0 0;
+      font-size: 0.9rem;
+      color: #666;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    @media (max-width: 768px) {
+      .applications-container {
+        padding: 16px;
+      }
+
+      .stats-cards {
+        grid-template-columns: 1fr;
+      }
+
+      .stat-content {
+        flex-direction: column;
+        gap: 8px;
+      }
+    }
+  

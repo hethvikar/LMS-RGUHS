@@ -1,0 +1,56 @@
+<h1 mat-dialog-title>Create Question</h1>
+
+<mat-dialog-content>
+  <form [formGroup]="questionForm" (ngSubmit)="onSave()">
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Question Text</mat-label>
+      <input matInput formControlName="questionText" placeholder="Enter your question" />
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Question Type</mat-label>
+      <mat-select formControlName="questionType" (selectionChange)="onQuestionTypeChange($event.value)">
+        <mat-option *ngFor="let type of questionTypes" [value]="type.value">{{ type.label }}</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Difficulty</mat-label>
+      <mat-select formControlName="difficulty">
+        <mat-option *ngFor="let level of difficultyLevels" [value]="level.value">{{ level.label }}</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <div
+      *ngIf="questionForm.get('questionType')?.value === 'mcq' || questionForm.get('questionType')?.value === 'true_false'">
+      <h4>Options</h4>
+      <div formArrayName="options">
+        <div *ngFor="let opt of options.controls; let i = index" class="option-row">
+          <mat-form-field appearance="outline" class="option-field">
+            <mat-label>Option {{ i + 1 }}</mat-label>
+            <input matInput [formControlName]="i" />
+          </mat-form-field>
+          <button mat-icon-button color="warn" *ngIf="questionForm.get('questionType')?.value === 'mcq'"
+            (click)="removeOption(i)">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </div>
+      </div>
+
+      <button mat-stroked-button color="primary" type="button"
+        *ngIf="questionForm.get('questionType')?.value === 'mcq'" (click)="addOption()">
+        <mat-icon>add</mat-icon> Add Option
+      </button>
+    </div>
+
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Correct Answer</mat-label>
+      <input matInput formControlName="correctAnswer" placeholder="Enter correct answer" />
+    </mat-form-field>
+  </form>
+</mat-dialog-content>
+
+<mat-dialog-actions>
+  <button mat-button (click)="onCancel()">Cancel</button>
+  <button mat-raised-button color="primary" (click)="onSave()" [disabled]="questionForm.invalid">Save</button>
+</mat-dialog-actions>

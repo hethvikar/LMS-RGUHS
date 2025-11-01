@@ -1,0 +1,123 @@
+
+    .jobs-container {
+      padding: 24px;
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    .jobs-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 32px;
+    }
+
+    .header-content h1 {
+      font-size: 2.5rem;
+      font-weight: 300;
+      margin-bottom: 8px;
+      color: #333;
+    }
+
+    .header-content p {
+      font-size: 1.2rem;
+      color: #666;
+      margin: 0;
+    }
+
+    .jobs-stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 16px;
+      margin-bottom: 32px;
+    }
+
+    .stat-card {
+      text-align: center;
+    }
+
+    .stat-content {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      padding: 16px 0;
+    }
+
+    .stat-icon {
+      font-size: 32px;
+      width: 32px;
+      height: 32px;
+    }
+
+    .stat-icon.active { color: #4caf50; }
+    .stat-icon.applications { color: #2196f3; }
+    .stat-icon.interviews { color: #ff9800; }
+
+    .stat-info h3 {
+      margin: 0;
+      font-size: 2rem;
+      font-weight: 500;
+      color: #333;
+    }
+
+    .stat-info p {
+      margin: 4px 0 0 0;
+      font-size: 0.9rem;
+      color: #666;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .jobs-table-card {
+      margin-top: 24px;
+    }
+
+    .jobs-table {
+      width: 100%;
+    }
+
+    .mat-mdc-chip {
+      font-size: 12px;
+      font-weight: 500;
+    }
+
+    .mat-mdc-chip.full-time { background-color: #e8f5e8; color: #2e7d32; }
+    .mat-mdc-chip.part-time { background-color: #fff3e0; color: #f57c00; }
+    .mat-mdc-chip.contract { background-color: #f3e5f5; color: #7b1fa2; }
+    .mat-mdc-chip.internship { background-color: #e3f2fd; color: #1976d2; }
+
+    .mat-mdc-chip.active { background-color: #e8f5e8; color: #2e7d32; }
+    .mat-mdc-chip.paused { background-color: #fff3e0; color: #f57c00; }
+    .mat-mdc-chip.closed { background-color: #ffebee; color: #d32f2f; }
+
+    .no-jobs {
+      text-align: center;
+      padding: 40px;
+      color: #666;
+    }
+
+    .no-data-icon {
+      font-size: 64px;
+      width: 64px;
+      height: 64px;
+      margin-bottom: 16px;
+      opacity: 0.5;
+    }
+
+    @media (max-width: 768px) {
+      .jobs-container {
+        padding: 16px;
+      }
+
+      .jobs-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 16px;
+      }
+
+      .jobs-stats {
+        grid-template-columns: 1fr;
+      }
+    }
+  

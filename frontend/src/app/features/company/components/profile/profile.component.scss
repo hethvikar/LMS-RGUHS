@@ -1,0 +1,103 @@
+
+    .profile-container {
+      padding: 24px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .profile-header {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+
+    .profile-header h1 {
+      font-size: 2.5rem;
+      font-weight: 300;
+      margin-bottom: 16px;
+      color: #333;
+    }
+
+    .profile-header p {
+      font-size: 1.2rem;
+      color: #666;
+    }
+
+    .profile-content {
+      display: grid;
+      gap: 24px;
+    }
+
+    .profile-card {
+      margin-bottom: 24px;
+    }
+
+    .profile-form {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    .full-width {
+      grid-column: 1 / -1;
+    }
+
+    .benefits-card {
+      margin-top: 24px;
+    }
+
+    .add-benefit-field {
+      width: 300px;
+      margin-top: 16px;
+    }
+
+    mat-chip {
+      margin: 4px;
+    }
+
+    // Verification status styles
+    .mat-icon.verified {
+      color: #4caf50 !important; // Green for verified
+    }
+
+    .mat-icon.failed {
+      color: #f44336 !important; // Red for failed
+    }
+
+    .mat-icon.pending {
+      color: #ff9800 !important; // Orange for pending
+      animation: spin 2s linear infinite;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    // Verification button styles
+    mat-form-field button[matSuffix] {
+      margin-right: 8px;
+    }
+
+    // Form field with verification
+    mat-form-field {
+      .mat-mdc-form-field-icon-suffix {
+        align-items: center;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .form-row {
+        grid-template-columns: 1fr;
+      }
+
+      .profile-container {
+        padding: 16px;
+      }
+    }
+  

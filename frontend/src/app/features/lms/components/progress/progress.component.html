@@ -1,0 +1,237 @@
+
+    <div class="progress-container">
+      <div class="progress-header">
+        <h1>My Learning Progress</h1>
+        <p>Track your learning journey and achievements</p>
+      </div>
+
+      <div class="progress-overview">
+        <mat-card class="overview-card">
+          <mat-card-header>
+            <mat-card-title>Overall Progress</mat-card-title>
+            
+          </mat-card-header>
+          <mat-card-content>
+            <div class="overall-stats">
+              <div class="stat-item">
+                <h2>{{ getOverallProgress() }}%</h2>
+                <p>Average Progress</p>
+              </div>
+              <div class="stat-item">
+                <h2>{{ getActiveCourses().length }}</h2>
+                <p>Active Courses</p>
+              </div>
+              <div class="stat-item">
+                <h2>{{ getCompletedCourses().length }}</h2>
+                <p>Completed Courses</p>
+              </div>
+              <div class="stat-item">
+                <h2>{{ getTotalHoursLearned() }}</h2>
+                <p>Hours Learned</p>
+              </div>
+            </div>
+            <div class="progress-bar-container">
+              <div class="progress-label">
+                <span>Overall Learning Progress</span>
+                <span>{{ getOverallProgress() }}%</span>
+              </div>
+              <mat-progress-bar mode="determinate" [value]="getOverallProgress()"></mat-progress-bar>
+            </div>
+          </mat-card-content>
+        </mat-card>
+      </div>
+
+      <mat-card class="progress-content">
+        <mat-card-content>
+          <mat-tab-group>
+            <mat-tab label="Course Progress">
+              <div class="tab-content">
+                <div class="courses-progress">
+                  <mat-card *ngFor="let course of courseProgress" class="course-progress-card">
+                    <mat-card-header>
+                      <mat-card-title>{{ course.courseName }}</mat-card-title>
+                      
+                    </mat-card-header>
+                    <mat-card-content>
+                      <div class="course-info">
+                        <div class="instructor">Instructor: {{ course.instructor }}</div>
+                        <div class="modules">{{ course.completedModules }}/{{ course.totalModules }} modules completed</div>
+                        <div class="last-accessed">Last accessed: {{ course.lastAccessed | date:'medium' }}</div>
+                        <div class="status-chip">
+                          <mat-chip [class]="getStatusClass(course.status)">
+                            {{ getStatusText(course.status) }}
+                          </mat-chip>
+                        </div>
+                      </div>
+                      <div class="course-progress-section">
+                        <div class="progress-label">
+                          <span>Course Progress</span>
+                          <span>{{ course.progressPercentage }}%</span>
+                        </div>
+                        <mat-progress-bar mode="determinate" [value]="course.progressPercentage"></mat-progress-bar>
+                        <div class="progress-details" *ngIf="course.nextMilestone">
+                          <small>Next: {{ course.nextMilestone }}</small>
+                        </div>
+                      </div>
+                      <div class="course-actions" *ngIf="course.status !== 'completed'">
+                        <button mat-button color="primary" (click)="continueCourse(course)">
+                          
+                          Continue Learning
+                        </button>
+                        <button mat-button (click)="viewCourseDetails(course)">
+                          
+                          Course Details
+                        </button>
+                      </div>
+                    </mat-card-content>
+                  </mat-card>
+                </div>
+              </div>
+            </mat-tab>
+
+            <mat-tab label="Learning Goals">
+              <div class="tab-content">
+                <div class="goals-section">
+                  <div class="goals-header">
+                    <h3>My Learning Goals</h3>
+                    <button mat-raised-button color="primary" (click)="addNewGoal()">
+                      
+                      Add Goal
+                    </button>
+                  </div>
+                  <div class="goals-list">
+                    <mat-card *ngFor="let goal of learningGoals" class="goal-card">
+                      <mat-card-header>
+                        <mat-card-title>{{ goal.title }}</mat-card-title>
+                        
+                      </mat-card-header>
+                      <mat-card-content>
+                        <p class="goal-description">{{ goal.description }}</p>
+                        <div class="goal-details">
+                          <div class="target-date">Target: {{ goal.targetDate | date:'mediumDate' }}</div>
+                          <div class="goal-category">
+                            <mat-chip [class]="getCategoryClass(goal.category)">
+                              {{ goal.category }}
+                            </mat-chip>
+                          </div>
+                        </div>
+                        <div class="goal-progress">
+                          <div class="progress-label">
+                            <span>Progress</span>
+                            <span>{{ goal.progress }}%</span>
+                          </div>
+                          <mat-progress-bar mode="determinate" [value]="goal.progress"></mat-progress-bar>
+                        </div>
+                      </mat-card-content>
+                      <mat-card-actions>
+                        <button mat-button (click)="updateGoalProgress(goal)" *ngIf="goal.status !== 'completed'">
+                          
+                          Update Progress
+                        </button>
+                        <button mat-button (click)="markGoalComplete(goal)" *ngIf="goal.status !== 'completed'">
+                          
+                          Mark Complete
+                        </button>
+                      </mat-card-actions>
+                    </mat-card>
+                  </div>
+                </div>
+              </div>
+            </mat-tab>
+
+            <mat-tab label="Certificates & Badges">
+              <div class="tab-content">
+                <div class="certificates-section">
+                  <h3>Certificates & Badges Gained</h3>
+                  <div class="certificates-grid">
+                    <mat-card *ngFor="let certificate of certificatesGained" class="certificate-card">
+                      <mat-card-content>
+                        <div class="certificate-header">
+                          <div class="certificate-icon">
+
+                          </div>
+                          <div class="certificate-info">
+                            <h4>{{ certificate.title }}</h4>
+                            <p class="certificate-provider">{{ certificate.provider }}</p>
+                          </div>
+                        </div>
+                        <div class="certificate-details">
+                          <p class="certificate-description">{{ certificate.description }}</p>
+                          <div class="certificate-meta">
+                            <span class="certificate-date">Earned: {{ certificate.earnedDate | date:'mediumDate' }}</span>
+                            <span class="certificate-type" [class]="'type-' + certificate.type.toLowerCase()">{{ certificate.type }}</span>
+                          </div>
+                        </div>
+                      </mat-card-content>
+                      <mat-card-actions>
+                        <button mat-button color="primary" (click)="viewCertificate(certificate)">
+                          View Certificate
+                        </button>
+                      </mat-card-actions>
+                    </mat-card>
+                  </div>
+                </div>
+              </div>
+            </mat-tab>
+
+            <mat-tab label="Statistics">
+              <div class="tab-content">
+                <div class="stats-section">
+                  <h3>Learning Statistics</h3>
+                  <div class="stats-grid">
+                    <mat-card class="stat-card">
+                      <mat-card-content>
+                        <div class="stat-content">
+                          
+                          <div class="stat-info">
+                            <h3>{{ getTotalStudyHours() }}</h3>
+                            <p>Total Study Hours</p>
+                          </div>
+                        </div>
+                      </mat-card-content>
+                    </mat-card>
+
+                    <mat-card class="stat-card">
+                      <mat-card-content>
+                        <div class="stat-content">
+                          
+                          <div class="stat-info">
+                            <h3>{{ getCurrentStreak() }}</h3>
+                            <p>Day Streak</p>
+                          </div>
+                        </div>
+                      </mat-card-content>
+                    </mat-card>
+
+                    <mat-card class="stat-card">
+                      <mat-card-content>
+                        <div class="stat-content">
+                          
+                          <div class="stat-info">
+                            <h3>{{ getAverageGrade() }}</h3>
+                            <p>Average Grade</p>
+                          </div>
+                        </div>
+                      </mat-card-content>
+                    </mat-card>
+
+                    <mat-card class="stat-card">
+                      <mat-card-content>
+                        <div class="stat-content">
+                          
+                          <div class="stat-info">
+                            <h3>{{ certificatesGained.length }}</h3>
+                            <p>Certificates & Badges</p>
+                          </div>
+                        </div>
+                      </mat-card-content>
+                    </mat-card>
+                  </div>
+                </div>
+              </div>
+            </mat-tab>
+          </mat-tab-group>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  

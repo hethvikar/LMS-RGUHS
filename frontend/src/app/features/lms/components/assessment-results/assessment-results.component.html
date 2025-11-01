@@ -1,0 +1,295 @@
+
+    <div class="assessment-results-container">
+      <div class="results-header">
+        <div class="header-content">
+          <h1>My Assessment Results</h1>
+          <p>View your assessment scores and performance</p>
+        </div>
+        <button mat-raised-button color="primary" (click)="downloadReport()">
+          
+          Download Report
+        </button>
+      </div>
+
+      <div class="results-overview">
+        <mat-card class="overview-card">
+          <mat-card-content>
+            <div class="overview-stats">
+              <div class="stat-item">
+                <h3>{{ getAverageScore() }}%</h3>
+                <p>Average Score</p>
+              </div>
+              <div class="stat-item">
+                <h3>{{ getPassedAssessments() }}</h3>
+                <p>Passed</p>
+              </div>
+              <div class="stat-item">
+                <h3>{{ getFailedAssessments() }}</h3>
+                <p>Failed</p>
+              </div>
+              <div class="stat-item">
+                <h3>{{ getTotalAssessments() }}</h3>
+                <p>Total Assessments</p>
+              </div>
+            </div>
+          </mat-card-content>
+        </mat-card>
+      </div>
+
+      <mat-card class="results-content">
+        <mat-card-content>
+          <mat-tab-group>
+            <mat-tab label="All Results">
+              <div class="tab-content">
+                <table mat-table [dataSource]="assessmentResults" class="results-table">
+                  <!-- Assessment Column -->
+                  <ng-container matColumnDef="assessment">
+                    <th mat-header-cell *matHeaderCellDef>Assessment</th>
+                    <td mat-cell *matCellDef="let result">
+                      <div class="assessment-info">
+                        <div class="assessment-title">{{ result.assessmentTitle }}</div>
+                        <div class="course-name">{{ result.courseName }}</div>
+                      </div>
+                    </td>
+                  </ng-container>
+
+                  <!-- Score Column -->
+                  <ng-container matColumnDef="score">
+                    <th mat-header-cell *matHeaderCellDef>Score</th>
+                    <td mat-cell *matCellDef="let result">
+                      <div class="score-info">
+                        <div class="score-display">
+                          <span class="score">{{ result.score }}/{{ result.maxScore }}</span>
+                          <span class="percentage">({{ result.percentage }}%)</span>
+                        </div>
+                        <div class="grade-display">
+                          <mat-chip [class]="getGradeClass(result.grade)">
+                            Grade: {{ result.grade }}
+                          </mat-chip>
+                        </div>
+                      </div>
+                    </td>
+                  </ng-container>
+
+                  <!-- Status Column -->
+                  <ng-container matColumnDef="status">
+                    <th mat-header-cell *matHeaderCellDef>Status</th>
+                    <td mat-cell *matCellDef="let result">
+                      <mat-chip [class]="getStatusClass(result.status)">
+                        {{ getStatusText(result.status) }}
+                      </mat-chip>
+                    </td>
+                  </ng-container>
+
+                  <!-- Submitted Column -->
+                  <ng-container matColumnDef="submitted">
+                    <th mat-header-cell *matHeaderCellDef>Submitted</th>
+                    <td mat-cell *matCellDef="let result">
+                      <div class="submission-info">
+                        <div>{{ result.submittedDate | date:'short' }}</div>
+                        <div class="attempts">Attempt {{ result.attempts }}/{{ result.maxAttempts }}</div>
+                      </div>
+                    </td>
+                  </ng-container>
+
+                  <!-- Actions Column -->
+                  <ng-container matColumnDef="actions">
+                    <th mat-header-cell *matHeaderCellDef>Actions</th>
+                    <td mat-cell *matCellDef="let result">
+                      <button mat-icon-button [matTooltip]="'View Details'" (click)="viewDetailedResult(result)">
+                        
+                      </button>
+                      <button mat-icon-button [matTooltip]="'Download Certificate'" (click)="downloadCertificate(result)" *ngIf="result.status === 'passed'">
+                        
+                      </button>
+                      <button mat-icon-button [matTooltip]="'Retake Assessment'" (click)="retakeAssessment(result)" *ngIf="canRetake(result)">
+                        
+                      </button>
+                      <button mat-icon-button [matTooltip]="'View Feedback'" (click)="viewFeedback(result)" *ngIf="result.instructorFeedback">
+                        
+                      </button>
+                    </td>
+                  </ng-container>
+
+                  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                  <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                </table>
+              </div>
+            </mat-tab>
+
+            <mat-tab label="Performance Analysis">
+              <div class="tab-content">
+                <div class="performance-analysis">
+                  <mat-card class="performance-card">
+                    <mat-card-header>
+                      <mat-card-title>Score Distribution</mat-card-title>
+                      
+                    </mat-card-header>
+                    <mat-card-content>
+                      <div class="score-distribution">
+                        <div class="distribution-item">
+                          <span class="range">90-100%</span>
+                          <mat-progress-bar mode="determinate" [value]="getScoreDistribution(90, 100)"></mat-progress-bar>
+                          <span class="count">{{ getScoreCount(90, 100) }}</span>
+                        </div>
+                        <div class="distribution-item">
+                          <span class="range">80-89%</span>
+                          <mat-progress-bar mode="determinate" [value]="getScoreDistribution(80, 89)"></mat-progress-bar>
+                          <span class="count">{{ getScoreCount(80, 89) }}</span>
+                        </div>
+                        <div class="distribution-item">
+                          <span class="range">70-79%</span>
+                          <mat-progress-bar mode="determinate" [value]="getScoreDistribution(70, 79)"></mat-progress-bar>
+                          <span class="count">{{ getScoreCount(70, 79) }}</span>
+                        </div>
+                        <div class="distribution-item">
+                          <span class="range">60-69%</span>
+                          <mat-progress-bar mode="determinate" [value]="getScoreDistribution(60, 69)"></mat-progress-bar>
+                          <span class="count">{{ getScoreCount(60, 69) }}</span>
+                        </div>
+                        <div class="distribution-item">
+                          <span class="range">0-59%</span>
+                          <mat-progress-bar mode="determinate" [value]="getScoreDistribution(0, 59)"></mat-progress-bar>
+                          <span class="count">{{ getScoreCount(0, 59) }}</span>
+                        </div>
+                      </div>
+                    </mat-card-content>
+                  </mat-card>
+
+                  <mat-card class="performance-card">
+                    <mat-card-header>
+                      <mat-card-title>Recent Performance</mat-card-title>
+                      
+                    </mat-card-header>
+                    <mat-card-content>
+                      <div class="recent-performance">
+                        <div class="performance-metric">
+                          <div class="metric-label">Last 7 Days</div>
+                          <div class="metric-value">{{ getRecentAverageScore(7) }}%</div>
+                          <div class="metric-change" [class]="getPerformanceChangeClass(7)">
+                            {{ getPerformanceChange(7) }}
+                          </div>
+                        </div>
+                        <div class="performance-metric">
+                          <div class="metric-label">Last 30 Days</div>
+                          <div class="metric-value">{{ getRecentAverageScore(30) }}%</div>
+                          <div class="metric-change" [class]="getPerformanceChangeClass(30)">
+                            {{ getPerformanceChange(30) }}
+                          </div>
+                        </div>
+                        <div class="performance-metric">
+                          <div class="metric-label">Improvement Rate</div>
+                          <div class="metric-value">{{ getImprovementRate() }}%</div>
+                          <div class="metric-change positive">
+                            Trending Up
+                          </div>
+                        </div>
+                      </div>
+                    </mat-card-content>
+                  </mat-card>
+                </div>
+              </div>
+            </mat-tab>
+
+            <mat-tab label="Certificates">
+              <div class="tab-content">
+                <div class="certificates-section">
+                  <h3>My Certificates</h3>
+                  <div class="certificates-grid">
+                    <mat-card *ngFor="let result of getPassedAssessmentsList()" class="certificate-card">
+                      <mat-card-content>
+                        <div class="certificate-content">
+                          
+                          <div class="certificate-details">
+                            <h4>{{ result.assessmentTitle }}</h4>
+                            <p>{{ result.courseName }}</p>
+                            <div class="certificate-score">
+                              <span>Score: {{ result.percentage }}%</span>
+                              <span>Grade: {{ result.grade }}</span>
+                            </div>
+                            <small>Completed: {{ result.submittedDate | date:'mediumDate' }}</small>
+                          </div>
+                        </div>
+                      </mat-card-content>
+                      <mat-card-actions>
+                        <button mat-button (click)="downloadCertificate(result)">
+                          
+                          Download
+                        </button>
+                        <button mat-button (click)="shareCertificate(result)">
+                          
+                          Share
+                        </button>
+                      </mat-card-actions>
+                    </mat-card>
+                  </div>
+                </div>
+              </div>
+            </mat-tab>
+          </mat-tab-group>
+        </mat-card-content>
+      </mat-card>
+
+      <!-- Detailed Result Modal -->
+      <div class="detailed-result-modal" *ngIf="selectedResult">
+        <mat-card class="detailed-result-card">
+          <mat-card-header>
+            <mat-card-title>{{ selectedResult.assessmentTitle }}</mat-card-title>
+            
+          </mat-card-header>
+          <mat-card-content>
+            <div class="result-summary">
+              <div class="summary-metric">
+                <h3>{{ selectedResult.score }}/{{ selectedResult.maxScore }}</h3>
+                <p>Final Score</p>
+              </div>
+              <div class="summary-metric">
+                <h3>{{ selectedResult.percentage }}%</h3>
+                <p>Percentage</p>
+              </div>
+              <div class="summary-metric">
+                <h3>{{ selectedResult.grade }}</h3>
+                <p>Grade</p>
+              </div>
+              <div class="summary-metric">
+                <h3>{{ selectedResult.timeTaken }}m</h3>
+                <p>Time Taken</p>
+              </div>
+            </div>
+
+            <div class="question-review" *ngIf="detailedResults">
+              <h4>Question Review</h4>
+              <div class="question-item" *ngFor="let question of detailedResults; let i = index">
+                <div class="question-header">
+                  <span class="question-number">Question {{ i + 1 }}</span>
+                  <mat-chip [class]="question.isCorrect ? 'correct' : 'incorrect'">
+                    {{ question.isCorrect ? 'Correct' : 'Incorrect' }}
+                  </mat-chip>
+                  <span class="question-points">{{ question.points }}/{{ question.maxPoints }} pts</span>
+                </div>
+                <div class="question-text">{{ question.question }}</div>
+                <div class="answer-comparison">
+                  <div class="your-answer">
+                    <strong>Your Answer:</strong> {{ question.yourAnswer }}
+                  </div>
+                  <div class="correct-answer" *ngIf="!question.isCorrect">
+                    <strong>Correct Answer:</strong> {{ question.correctAnswer }}
+                  </div>
+                  <div class="explanation" *ngIf="question.explanation">
+                    <strong>Explanation:</strong> {{ question.explanation }}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </mat-card-content>
+          <mat-card-actions>
+            <button mat-button (click)="closeDetailedResult()">Close</button>
+            <button mat-button (click)="retakeAssessment(selectedResult)" *ngIf="canRetake(selectedResult)">
+              
+              Retake Assessment
+            </button>
+          </mat-card-actions>
+        </mat-card>
+      </div>
+    </div>
+  

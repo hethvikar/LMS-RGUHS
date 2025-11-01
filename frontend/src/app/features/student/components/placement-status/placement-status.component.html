@@ -1,0 +1,132 @@
+
+    <div class="placement-container">
+      <div class="placement-header">
+        <h1>Placement Status</h1>
+        <p>Track your job placement progress</p>
+      </div>
+
+      <div class="placement-content">
+        <div class="stats-overview">
+          <mat-card class="stat-card">
+            <mat-card-content>
+              <div class="stat-content">
+                
+                <div class="stat-info">
+                  <h3>{{ getStatusCount('applied') }}</h3>
+                  <p>Applied</p>
+                </div>
+              </div>
+            </mat-card-content>
+          </mat-card>
+
+          <mat-card class="stat-card">
+            <mat-card-content>
+              <div class="stat-content">
+                
+                <div class="stat-info">
+                  <h3>{{ getStatusCount('interview') }}</h3>
+                  <p>Interviews</p>
+                </div>
+              </div>
+            </mat-card-content>
+          </mat-card>
+
+          <mat-card class="stat-card">
+            <mat-card-content>
+              <div class="stat-content">
+                
+                <div class="stat-info">
+                  <h3>{{ getStatusCount('offer') }}</h3>
+                  <p>Offers</p>
+                </div>
+              </div>
+            </mat-card-content>
+          </mat-card>
+
+          <mat-card class="stat-card">
+            <mat-card-content>
+              <div class="stat-content">
+                
+                <div class="stat-info">
+                  <h3>{{ getStatusCount('joined') }}</h3>
+                  <p>Placed</p>
+                </div>
+              </div>
+            </mat-card-content>
+          </mat-card>
+        </div>
+
+        <mat-card class="placement-timeline">
+          <mat-card-header>
+            <mat-card-title>Application Timeline</mat-card-title>
+            
+          </mat-card-header>
+          <mat-card-content>
+            <div class="timeline-container">
+              <div *ngFor="let placement of placements; let i = index" class="timeline-item">
+                <div class="timeline-marker" [class]="getStatusClass(placement.status)">
+                  
+                </div>
+                <div class="timeline-content">
+                  <div class="timeline-header">
+                    <h4>{{ placement.companyName }}</h4>
+                    <mat-chip [class]="getStatusClass(placement.status)">
+                      {{ getStatusText(placement.status) }}
+                    </mat-chip>
+                  </div>
+                  <p class="position">{{ placement.position }}</p>
+                  <div class="timeline-details">
+                    <span class="date">Applied: {{ placement.appliedDate | date:'short' }}</span>
+                    <span class="date">Last Update: {{ placement.lastUpdate | date:'short' }}</span>
+                  </div>
+                  <div class="next-step" *ngIf="placement.nextStep">
+                    
+                    <span>Next: {{ placement.nextStep }}</span>
+                  </div>
+                  <div class="offer-details" *ngIf="placement.offerDetails">
+                    <h5>Offer Details:</h5>
+                    <ul>
+                      <li>Salary: ₹{{ placement.offerDetails.salary.toLocaleString() }}</li>
+                      <li>Joining Date: {{ placement.offerDetails.joiningDate | date:'mediumDate' }}</li>
+                      <li>Location: {{ placement.offerDetails.location }}</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </mat-card-content>
+        </mat-card>
+
+        <mat-card class="placement-tips">
+          <mat-card-header>
+            <mat-card-title>Placement Tips</mat-card-title>
+            
+          </mat-card-header>
+          <mat-card-content>
+            <mat-list>
+              <mat-list-item>
+                
+                <div mat-line>Keep your resume updated with latest projects</div>
+              </mat-list-item>
+              <mat-list-item>
+                
+                <div mat-line>Practice coding problems regularly</div>
+              </mat-list-item>
+              <mat-list-item>
+                
+                <div mat-line>Network with alumni and industry professionals</div>
+              </mat-list-item>
+              <mat-list-item>
+                
+                <div mat-line>Prepare for common interview questions</div>
+              </mat-list-item>
+              <mat-list-item>
+                
+                <div mat-line>Follow up on applications after 1-2 weeks</div>
+              </mat-list-item>
+            </mat-list>
+          </mat-card-content>
+        </mat-card>
+      </div>
+    </div>
+  

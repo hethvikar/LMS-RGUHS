@@ -1,0 +1,137 @@
+
+    <div class="profile-container">
+      <div class="profile-header">
+        <h1>Company Profile</h1>
+        <p>Manage your company information and branding</p>
+      </div>
+
+      <div class="profile-content">
+        <mat-card class="profile-card">
+          <mat-card-header>
+            <mat-card-title>Company Information</mat-card-title>
+            
+          </mat-card-header>
+          <mat-card-content>
+            <form [formGroup]="profileForm" class="profile-form">
+              <div class="form-row">
+                <mat-form-field appearance="outline">
+                  <mat-label>Company Name</mat-label>
+                  <input matInput formControlName="companyName" placeholder="Enter company name">
+                </mat-form-field>
+                <mat-form-field appearance="outline">
+                  <mat-label>Industry</mat-label>
+                  <input matInput formControlName="industry" placeholder="Enter industry type">
+                </mat-form-field>
+              </div>
+
+              <div class="form-row">
+                <mat-form-field appearance="outline">
+                  <mat-label>Website</mat-label>
+                  <input matInput type="url" formControlName="website" placeholder="https://example.com">
+                  <mat-hint>Enter your company website URL</mat-hint>
+                  <button matSuffix mat-icon-button *ngIf="profileForm.get('website')?.value"
+                          [disabled]="verifyingWebsite"
+                          (click)="verifyWebsite()"
+                          [matTooltip]="getVerificationTooltip('website')">
+                    <mat-icon [class.verified]="verificationStatus['website'] === 'verified'"
+                              [class.failed]="verificationStatus['website'] === 'failed'">
+                      {{ getVerificationIcon('website') }}
+                    </mat-icon>
+                  </button>
+                </mat-form-field>
+                <mat-form-field appearance="outline">
+                  <mat-label>GST/TIN Number</mat-label>
+                  <input matInput formControlName="gstNumber" placeholder="Enter GST/TIN number">
+                  <mat-hint>Enter your GST or TIN number for verification</mat-hint>
+                  <button matSuffix mat-icon-button *ngIf="profileForm.get('gstNumber')?.value"
+                          [disabled]="verifyingGst"
+                          (click)="verifyGst()"
+                          [matTooltip]="getVerificationTooltip('gst')">
+                    <mat-icon [class.verified]="verificationStatus['gst'] === 'verified'"
+                              [class.failed]="verificationStatus['gst'] === 'failed'">
+                      {{ getVerificationIcon('gst') }}
+                    </mat-icon>
+                  </button>
+                </mat-form-field>
+              </div>
+
+              <div class="form-row">
+                <mat-form-field appearance="outline">
+                  <mat-label>Company Size</mat-label>
+                  <input matInput formControlName="companySize" placeholder="e.g., 50-100 employees">
+                </mat-form-field>
+                <mat-form-field appearance="outline">
+                  <mat-label>Registration Number</mat-label>
+                  <input matInput formControlName="registrationNumber" placeholder="Company registration number">
+                  <mat-hint>Enter your company registration number</mat-hint>
+                  <button matSuffix mat-icon-button *ngIf="profileForm.get('registrationNumber')?.value"
+                          [disabled]="verifyingRegistration"
+                          (click)="verifyRegistration()"
+                          [matTooltip]="getVerificationTooltip('registration')">
+                    <mat-icon [class.verified]="verificationStatus['registration'] === 'verified'"
+                              [class.failed]="verificationStatus['registration'] === 'failed'">
+                      {{ getVerificationIcon('registration') }}
+                    </mat-icon>
+                  </button>
+                </mat-form-field>
+              </div>
+
+              <div class="form-row">
+                <mat-form-field appearance="outline">
+                  <mat-label>Contact Email</mat-label>
+                  <input matInput type="email" formControlName="contactEmail" placeholder="hr@example.com">
+                </mat-form-field>
+                <mat-form-field appearance="outline">
+                  <mat-label>Contact Phone</mat-label>
+                  <input matInput formControlName="contactPhone" placeholder="Enter contact number">
+                </mat-form-field>
+              </div>
+
+              <div class="form-row">
+                <mat-form-field appearance="outline" class="full-width">
+                  <mat-label>Company Description</mat-label>
+                  <textarea matInput formControlName="description" rows="4" placeholder="Describe your company..."></textarea>
+                </mat-form-field>
+              </div>
+
+              <div class="form-row">
+                <mat-form-field appearance="outline" class="full-width">
+                  <mat-label>Address</mat-label>
+                  <textarea matInput formControlName="address" rows="3" placeholder="Company address..."></textarea>
+                </mat-form-field>
+              </div>
+            </form>
+          </mat-card-content>
+          <mat-card-actions>
+            <button mat-raised-button color="primary" (click)="updateProfile()">
+              
+              Update Profile
+            </button>
+          </mat-card-actions>
+        </mat-card>
+
+        <mat-card class="benefits-card">
+          <mat-card-header>
+            <mat-card-title>Company Benefits</mat-card-title>
+            
+          </mat-card-header>
+          <mat-card-content>
+            <mat-chip-set>
+              <mat-chip *ngFor="let benefit of benefitsList" [removable]="true" (removed)="removeBenefit(benefit)">
+                {{ benefit }}
+                
+              </mat-chip>
+            </mat-chip-set>
+            <mat-form-field appearance="outline" class="add-benefit-field">
+              <mat-label>Add New Benefit</mat-label>
+              <input matInput [(ngModel)]="newBenefit" (keyup.enter)="addBenefit()" placeholder="Enter a benefit">
+            </mat-form-field>
+            <button mat-button color="primary" (click)="addBenefit()">
+              
+              Add Benefit
+            </button>
+          </mat-card-content>
+        </mat-card>
+      </div>
+    </div>
+  

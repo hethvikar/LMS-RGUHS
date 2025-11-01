@@ -1,0 +1,196 @@
+
+    .assignments-container {
+      padding: 24px;
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    .assignments-header {
+      text-align: center;
+      margin-bottom: 32px;
+    }
+
+    .assignments-header h1 {
+      font-size: 2.5rem;
+      font-weight: 300;
+      margin-bottom: 16px;
+      color: #333;
+    }
+
+    .assignments-header p {
+      font-size: 1.2rem;
+      color: #666;
+    }
+
+    .assignments-stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 16px;
+      margin-bottom: 32px;
+    }
+
+    .stat-card {
+      text-align: center;
+    }
+
+    .stat-content {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      padding: 16px 0;
+    }
+
+    .stat-icon {
+      font-size: 32px;
+      width: 32px;
+      height: 32px;
+    }
+
+    .stat-icon.pending { color: #2196f3; }
+    .stat-icon.submitted { color: #4caf50; }
+    .stat-icon.graded { color: #9c27b0; }
+    .stat-icon.overdue { color: #f44336; }
+
+    .stat-info h3 {
+      margin: 0;
+      font-size: 2rem;
+      font-weight: 500;
+      color: #333;
+    }
+
+    .stat-info p {
+      margin: 4px 0 0 0;
+      font-size: 0.9rem;
+      color: #666;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .assignments-content {
+      margin-top: 24px;
+    }
+
+    .tab-content {
+      padding: 24px 0;
+    }
+
+    .assignments-table {
+      width: 100%;
+    }
+
+    .assignment-info {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .assignment-title {
+      font-weight: 500;
+      color: #333;
+    }
+
+    .assignment-course {
+      font-size: 0.85rem;
+      color: #666;
+    }
+
+    .due-date-info {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .time-remaining {
+      font-size: 0.8rem;
+      font-weight: 500;
+    }
+
+    .time-remaining.due-soon { color: #ff9800; }
+    .time-remaining.overdue { color: #f44336; }
+    .time-remaining.on-time { color: #4caf50; }
+
+    .grade-info {
+      display: flex;
+      align-items: baseline;
+      gap: 2px;
+    }
+
+    .grade-score {
+      font-weight: 500;
+      color: #333;
+    }
+
+    .grade-max {
+      color: #666;
+    }
+
+    .assignments-list {
+      display: grid;
+      gap: 16px;
+    }
+
+    .assignment-card {
+      transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+    }
+
+    .assignment-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    .assignment-card.submitted {
+      border-left: 4px solid #4caf50;
+    }
+
+    .assignment-description {
+      color: #666;
+      margin-bottom: 16px;
+      line-height: 1.5;
+    }
+
+    .assignment-details {
+      display: grid;
+      gap: 8px;
+    }
+
+    .detail-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 14px;
+      color: #666;
+    }
+
+    .detail-item mat-icon {
+      font-size: 18px;
+      width: 18px;
+      height: 18px;
+    }
+
+    .mat-mdc-chip {
+      font-size: 12px;
+      font-weight: 500;
+    }
+
+    .mat-mdc-chip.pending { background-color: #e3f2fd; color: #1976d2; }
+    .mat-mdc-chip.submitted { background-color: #e8f5e8; color: #2e7d32; }
+    .mat-mdc-chip.graded { background-color: #e8f5e8; color: #2e7d32; }
+    .mat-mdc-chip.overdue { background-color: #ffebee; color: #d32f2f; }
+
+    .mat-mdc-chip.low { background-color: #e8f5e8; color: #2e7d32; }
+    .mat-mdc-chip.medium { background-color: #fff3e0; color: #f57c00; }
+    .mat-mdc-chip.high { background-color: #ffebee; color: #d32f2f; }
+
+    @media (max-width: 768px) {
+      .assignments-container {
+        padding: 16px;
+      }
+
+      .assignments-stats {
+        grid-template-columns: 1fr;
+      }
+
+      .assignments-list {
+        gap: 12px;
+      }
+    }
+  

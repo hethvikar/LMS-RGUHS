@@ -1,0 +1,70 @@
+
+    <div class="lms-dashboard-container">
+      <div class="dashboard-header">
+        <h1>Learning Management System</h1>
+        <p>Access courses, resources, and learning materials</p>
+      </div>
+
+      <div class="dashboard-grid">
+        <mat-card class="dashboard-card">
+          <mat-card-header>
+            <mat-card-title>My Courses</mat-card-title>
+            
+          </mat-card-header>
+          <mat-card-content>
+            <p>View and manage your enrolled courses</p>
+          </mat-card-content>
+          <mat-card-actions>
+            <button mat-raised-button color="primary" (click)="navigateToCourses()">
+              View Courses
+            </button>
+          </mat-card-actions>
+        </mat-card>
+
+        <mat-card class="dashboard-card">
+          <mat-card-header>
+            <mat-card-title>Assignments</mat-card-title>
+            
+          </mat-card-header>
+          <mat-card-content>
+            <p>Submit and track your assignments</p>
+          </mat-card-content>
+          <mat-card-actions>
+            <button mat-raised-button color="primary" (click)="navigateToAssignments()">
+              View Assignments
+            </button>
+          </mat-card-actions>
+        </mat-card>
+
+        <mat-card class="dashboard-card">
+          <mat-card-header>
+            <mat-card-title>Resources</mat-card-title>
+            
+          </mat-card-header>
+          <mat-card-content>
+            <p>Access study materials and resources</p>
+          </mat-card-content>
+          <mat-card-actions>
+            <button mat-raised-button color="primary" (click)="navigateToResources()">
+              Browse Resources
+            </button>
+          </mat-card-actions>
+        </mat-card>
+
+        <mat-card class="dashboard-card">
+          <mat-card-header>
+            <mat-card-title>Progress</mat-card-title>
+            
+          </mat-card-header>
+          <mat-card-content>
+            <p>Track your learning progress</p>
+          </mat-card-content>
+          <mat-card-actions>
+            <button mat-raised-button color="primary" (click)="navigateToProgress()">
+              View Progress
+            </button>
+          </mat-card-actions>
+        </mat-card>
+      </div>
+    </div>
+  

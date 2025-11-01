@@ -1,0 +1,245 @@
+
+    <div class="enrollment-container">
+      <div class="enrollment-header">
+        <div class="header-content">
+          <h1>Course Enrollment Management</h1>
+          <p>Enroll students in courses and manage enrollments</p>
+        </div>
+        <button mat-raised-button color="primary" (click)="openEnrollmentDialog()">
+          
+          Enroll Student
+        </button>
+      </div>
+
+      <div class="enrollment-stats">
+        <mat-card class="stat-card">
+          <mat-card-content>
+            <div class="stat-content">
+              
+              <div class="stat-info">
+                <h3>{{ enrollments.length }}</h3>
+                <p>Total Enrollments</p>
+              </div>
+            </div>
+          </mat-card-content>
+        </mat-card>
+
+        <mat-card class="stat-card">
+          <mat-card-content>
+            <div class="stat-content">
+              
+              <div class="stat-info">
+                <h3>{{ getActiveEnrollments() }}</h3>
+                <p>Active Enrollments</p>
+              </div>
+            </div>
+          </mat-card-content>
+        </mat-card>
+
+        <mat-card class="stat-card">
+          <mat-card-content>
+            <div class="stat-content">
+              
+              <div class="stat-info">
+                <h3>{{ getCompletedEnrollments() }}</h3>
+                <p>Completed Courses</p>
+              </div>
+            </div>
+          </mat-card-content>
+        </mat-card>
+
+        <mat-card class="stat-card">
+          <mat-card-content>
+            <div class="stat-content">
+              
+              <div class="stat-info">
+                <h3>{{ getUniqueStudents() }}</h3>
+                <p>Enrolled Students</p>
+              </div>
+            </div>
+          </mat-card-content>
+        </mat-card>
+      </div>
+
+      <mat-card class="enrollment-form">
+        <mat-card-header>
+          <mat-card-title>Quick Enrollment</mat-card-title>
+          
+        </mat-card-header>
+        <mat-card-content>
+          <form class="enrollment-form-content">
+            <div class="form-row">
+              <mat-form-field appearance="outline" class="form-field">
+                <mat-label>Select Student</mat-label>
+                <input type="text"
+                       matInput
+                       [matAutocomplete]="studentAuto"
+                       [(ngModel)]="selectedStudentName"
+                       name="student"
+                       placeholder="Search student...">
+                <mat-autocomplete #studentAuto="matAutocomplete">
+                  <mat-option *ngFor="let student of filteredStudents"
+                             [value]="student.name"
+                             (click)="selectStudent(student)">
+                    {{ student.name }} ({{ student.email }})
+                  </mat-option>
+                </mat-autocomplete>
+              </mat-form-field>
+
+              <mat-form-field appearance="outline" class="form-field">
+                <mat-label>Select Course</mat-label>
+                <mat-select [(ngModel)]="selectedCourseId" name="course">
+                  <mat-option value="">Choose a course...</mat-option>
+                  <mat-option *ngFor="let course of availableCourses"
+                             [value]="course.id">
+                    {{ course.title }} ({{ course.enrolledStudents }}/{{ course.maxStudents }} enrolled)
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+
+            <div class="form-actions">
+              <button mat-raised-button
+                      color="primary"
+                      (click)="enrollStudent()"
+                      [disabled]="!selectedStudentId || !selectedCourseId">
+                
+                Enroll Student
+              </button>
+              <button mat-button (click)="clearForm()">
+                
+                Clear
+              </button>
+            </div>
+          </form>
+        </mat-card-content>
+      </mat-card>
+
+      <mat-card class="enrollments-content">
+        <mat-card-content>
+          <mat-tab-group>
+            <mat-tab label="Calendar View">
+              <div class="tab-content calendar-tab">
+                <app-enrollment-calendar
+                  [enrollmentEvents]="enrollmentEvents"
+                  (eventClicked)="onEventClicked($event)"
+                  (dateSelected)="onDateSelected($event)"
+                  (enrollmentAdded)="onEnrollmentAdded()"
+                  (eventUpdated)="onEventUpdated($event)">
+                </app-enrollment-calendar>
+              </div>
+            </mat-tab>
+
+            <mat-tab label="All Enrollments">
+              <div class="tab-content">
+                <table mat-table [dataSource]="enrollments" class="enrollments-table">
+                  <!-- Student Column -->
+                  <ng-container matColumnDef="student">
+                    <th mat-header-cell *matHeaderCellDef>Student</th>
+                    <td mat-cell *matCellDef="let enrollment">
+                      <div class="student-info">
+                        <div class="student-name">{{ enrollment.studentName }}</div>
+                        <div class="student-id">ID: {{ enrollment.studentId }}</div>
+                      </div>
+                    </td>
+                  </ng-container>
+
+                  <!-- Course Column -->
+                  <ng-container matColumnDef="course">
+                    <th mat-header-cell *matHeaderCellDef>Course</th>
+                    <td mat-cell *matCellDef="let enrollment">
+                      <div class="course-info">
+                        <div class="course-title">{{ enrollment.courseTitle }}</div>
+                        <div class="enrollment-date">Enrolled: {{ enrollment.enrollmentDate | date:'short' }}</div>
+                      </div>
+                    </td>
+                  </ng-container>
+
+                  <!-- Progress Column -->
+                  <ng-container matColumnDef="progress">
+                    <th mat-header-cell *matHeaderCellDef>Progress</th>
+                    <td mat-cell *matCellDef="let enrollment">
+                      <div class="progress-info">
+                        <div class="progress-bar">
+                          <div class="progress-fill" [style.width.%]="enrollment.progress"></div>
+                        </div>
+                        <span class="progress-text">{{ enrollment.progress }}%</span>
+                      </div>
+                    </td>
+                  </ng-container>
+
+                  <!-- Status Column -->
+                  <ng-container matColumnDef="status">
+                    <th mat-header-cell *matHeaderCellDef>Status</th>
+                    <td mat-cell *matCellDef="let enrollment">
+                      <mat-chip [class]="getStatusClass(enrollment.status)">
+                        {{ getStatusText(enrollment.status) }}
+                      </mat-chip>
+                    </td>
+                  </ng-container>
+
+                  <!-- Actions Column -->
+                  <ng-container matColumnDef="actions">
+                    <th mat-header-cell *matHeaderCellDef>Actions</th>
+                    <td mat-cell *matCellDef="let enrollment">
+                      <button mat-icon-button [matTooltip]="'View Details'" (click)="viewEnrollment(enrollment)">
+                        
+                      </button>
+                      <button mat-icon-button [matTooltip]="'Edit Enrollment'" (click)="editEnrollment(enrollment)">
+                        
+                      </button>
+                      <button mat-icon-button [matTooltip]="'Drop Course'" (click)="dropEnrollment(enrollment)" *ngIf="enrollment.status === 'active'">
+                        
+                      </button>
+                      <button mat-icon-button [matTooltip]="'Re-enroll'" (click)="reenrollStudent(enrollment)" *ngIf="enrollment.status === 'dropped'">
+                        
+                      </button>
+                    </td>
+                  </ng-container>
+
+                  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                  <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                </table>
+              </div>
+            </mat-tab>
+
+            <mat-tab label="By Course">
+              <div class="tab-content">
+                <div class="course-enrollments">
+                  <mat-card *ngFor="let course of courses" class="course-card">
+                    <mat-card-header>
+                      <mat-card-title>{{ course.title }}</mat-card-title>
+                      
+                    </mat-card-header>
+                    <mat-card-content>
+                      <div class="course-stats">
+                        <span>{{ getEnrollmentsForCourse(course.id).length }} enrolled</span>
+                        <span>{{ course.maxStudents - course.enrolledStudents }} spots available</span>
+                      </div>
+                      <div class="enrolled-students">
+                        <mat-chip *ngFor="let enrollment of getEnrollmentsForCourse(course.id)"
+                                 class="student-chip"
+                                 [class]="getEnrollmentStatusClass(enrollment.status)">
+                          {{ enrollment.studentName }}
+                        </mat-chip>
+                      </div>
+                    </mat-card-content>
+                    <mat-card-actions>
+                      <button mat-button (click)="viewCourseEnrollments(course)">
+                        
+                        View All
+                      </button>
+                      <button mat-button (click)="addStudentToCourse(course)">
+                        
+                        Add Student
+                      </button>
+                    </mat-card-actions>
+                  </mat-card>
+                </div>
+              </div>
+            </mat-tab>
+          </mat-tab-group>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  

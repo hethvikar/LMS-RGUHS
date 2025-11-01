@@ -1,0 +1,135 @@
+<mat-toolbar class="app-header" [class]="getHeaderClass()">
+  <div class="header-left">
+    <button mat-icon-button (click)="toggleSidenav()" class="menu-button">
+      
+    </button>
+
+    <div class="logo-section" routerLink="/">
+      
+      <span class="logo-text">Placement Cell</span>
+    </div>
+  </div>
+
+  <div class="header-center">
+    <nav class="main-navigation">
+      <button mat-button
+              *ngFor="let item of getVisibleNavigation()"
+              [routerLink]="item.route"
+              routerLinkActive="active"
+              [routerLinkActiveOptions]="{exact: false}"
+              class="nav-button">
+        
+        <span>{{ item.label }}</span>
+      </button>
+    </nav>
+  </div>
+
+  <div class="header-right">
+    <div class="header-actions">
+      <!-- Notifications -->
+      <button mat-icon-button [matMenuTriggerFor]="notificationsMenu" class="notification-button">
+        
+        <span class="notification-badge" *ngIf="unreadNotifications > 0">{{ unreadNotifications }}</span>
+      </button>
+
+      <!-- User Menu -->
+      <button mat-icon-button [matMenuTriggerFor]="userMenu" class="user-button">
+        <div class="user-avatar">
+          <img *ngIf="currentUser?.avatar" [src]="currentUser!.avatar" alt="Avatar">
+          
+        </div>
+      </button>
+    </div>
+  </div>
+
+  <!-- Notifications Menu -->
+  <mat-menu #notificationsMenu="matMenu" class="notifications-menu">
+    <div class="notification-header">
+      <h4>Notifications</h4>
+      <button mat-button>Mark all read</button>
+    </div>
+    <mat-divider></mat-divider>
+    <div class="notification-item" *ngFor="let notification of notifications">
+      
+      <div class="notification-content">
+        <div class="notification-title">{{ notification.title }}</div>
+        <div class="notification-message">{{ notification.message }}</div>
+        <div class="notification-time">{{ notification.time }}</div>
+      </div>
+    </div>
+    <mat-divider></mat-divider>
+    <button mat-menu-item>View All Notifications</button>
+  </mat-menu>
+
+  <!-- User Menu -->
+  <mat-menu #userMenu="matMenu" class="user-menu">
+    <div class="user-info">
+      <div class="user-avatar-large">
+        <img *ngIf="currentUser?.avatar" [src]="currentUser!.avatar" alt="Avatar">
+        
+      </div>
+      <div class="user-details">
+        <div class="user-name">{{ currentUser?.name }}</div>
+        <div class="user-email">{{ currentUser?.email }}</div>
+        <div class="user-role">{{ getRoleDisplayName(currentUser?.role) }}</div>
+      </div>
+    </div>
+    <mat-divider></mat-divider>
+    <button mat-menu-item routerLink="/profile">
+      
+      <span>Profile</span>
+    </button>
+    <button mat-menu-item routerLink="/settings">
+      
+      <span>Settings</span>
+    </button>
+    <button mat-menu-item routerLink="/help">
+      
+      <span>Help & Support</span>
+    </button>
+    <mat-divider></mat-divider>
+    <button mat-menu-item (click)="logout()">
+      
+      <span>Logout</span>
+    </button>
+  </mat-menu>
+</mat-toolbar>
+
+<!-- Mobile Navigation Drawer -->
+<div class="mobile-drawer" [class.open]="sidenavOpen" *ngIf="isMobile">
+  <div class="drawer-overlay" (click)="closeSidenav()"></div>
+  <div class="drawer-content">
+    <div class="drawer-header">
+      <div class="user-info-mobile">
+        <div class="user-avatar-mobile">
+          <img *ngIf="currentUser?.avatar" [src]="currentUser!.avatar" alt="Avatar">
+          
+        </div>
+        <div class="user-details-mobile">
+          <div class="user-name-mobile">{{ currentUser?.name }}</div>
+          <div class="user-role-mobile">{{ getRoleDisplayName(currentUser?.role) }}</div>
+        </div>
+      </div>
+    </div>
+
+    <nav class="mobile-navigation">
+      <button mat-button
+              *ngFor="let item of getVisibleNavigation()"
+              [routerLink]="item.route"
+              routerLinkActive="active"
+              [routerLinkActiveOptions]="{exact: false}"
+              (click)="closeSidenav()"
+              class="mobile-nav-button">
+        
+        <span>{{ item.label }}</span>
+      </button>
+    </nav>
+
+    <div class="drawer-footer">
+      <button mat-button (click)="logout()" class="logout-button">
+        
+        <span>Logout</span>
+      </button>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,452 @@
+
+    .progress-container {
+      padding: 24px;
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    .progress-header {
+      text-align: center;
+      margin-bottom: 32px;
+    }
+
+    .progress-header h1 {
+      font-size: 2.5rem;
+      font-weight: 300;
+      margin-bottom: 16px;
+      color: #333;
+    }
+
+    .progress-header p {
+      font-size: 1.2rem;
+      color: #666;
+    }
+
+    .progress-overview {
+      margin-bottom: 32px;
+    }
+
+    .overview-card {
+      margin-bottom: 24px;
+    }
+
+    .overall-stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 24px;
+      margin-bottom: 24px;
+    }
+
+    .stat-item {
+      text-align: center;
+    }
+
+    .stat-item h2 {
+      margin: 0;
+      font-size: 2.5rem;
+      font-weight: 500;
+      color: #333;
+    }
+
+    .stat-item p {
+      margin: 8px 0 0 0;
+      font-size: 0.9rem;
+      color: #666;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .progress-bar-container {
+      margin-top: 16px;
+    }
+
+    .progress-label {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 8px;
+      font-size: 14px;
+      color: #666;
+    }
+
+    .progress-content {
+      margin-top: 24px;
+    }
+
+    .tab-content {
+      padding: 24px 0;
+    }
+
+    .courses-progress {
+      display: grid;
+      gap: 24px;
+    }
+
+    .course-progress-card {
+      transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+    }
+
+    .course-progress-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    .course-info {
+      margin-bottom: 16px;
+    }
+
+    .instructor {
+      font-weight: 500;
+      color: #333;
+      margin-bottom: 4px;
+    }
+
+    .modules {
+      color: #666;
+      margin-bottom: 4px;
+    }
+
+    .last-accessed {
+      color: #999;
+      font-size: 14px;
+    }
+
+    .status-chip {
+      margin-top: 8px;
+    }
+
+    .course-progress-section {
+      margin-bottom: 16px;
+    }
+
+    .progress-details {
+      margin-top: 8px;
+      text-align: center;
+    }
+
+    .course-actions {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .goals-section {
+      max-width: 100%;
+    }
+
+    .goals-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 24px;
+    }
+
+    .goals-header h3 {
+      font-size: 1.5rem;
+      font-weight: 500;
+      color: #333;
+    }
+
+    .goals-list {
+      display: grid;
+      gap: 16px;
+    }
+
+    .goal-card {
+      transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+    }
+
+    .goal-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    .goal-description {
+      color: #666;
+      margin-bottom: 12px;
+      line-height: 1.4;
+    }
+
+    .goal-details {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+
+    .target-date {
+      color: #666;
+      font-size: 14px;
+    }
+
+    .goal-progress {
+      margin-top: 12px;
+    }
+
+    .achievements-section h3 {
+      font-size: 1.5rem;
+      font-weight: 500;
+      color: #333;
+      margin-bottom: 24px;
+    }
+
+    .achievements-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 16px;
+    }
+
+    .achievement-card {
+      transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+    }
+
+    .achievement-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    .achievement-content {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .achievement-icon {
+      font-size: 48px;
+      width: 48px;
+      height: 48px;
+      color: #4caf50;
+    }
+
+    .achievement-details h4 {
+      margin: 0 0 8px 0;
+      font-size: 1.1rem;
+      font-weight: 500;
+      color: #333;
+    }
+
+    .achievement-details p {
+      margin: 0 0 8px 0;
+      color: #666;
+      line-height: 1.4;
+    }
+
+    .achievement-details small {
+      color: #999;
+      font-size: 12px;
+    }
+
+    .stats-section h3 {
+      font-size: 1.5rem;
+      font-weight: 500;
+      color: #333;
+      margin-bottom: 24px;
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 16px;
+    }
+
+    .stat-content {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      padding: 16px 0;
+    }
+
+    .stat-icon {
+      font-size: 32px;
+      width: 32px;
+      height: 32px;
+      color: #2196f3;
+    }
+
+    .stat-info h3 {
+      margin: 0;
+      font-size: 2rem;
+      font-weight: 500;
+      color: #333;
+    }
+
+    .stat-info p {
+      margin: 4px 0 0 0;
+      font-size: 0.9rem;
+      color: #666;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .mat-mdc-chip {
+      font-size: 12px;
+      font-weight: 500;
+    }
+
+    .mat-mdc-chip.active { background-color: #e3f2fd; color: #1976d2; }
+    .mat-mdc-chip.completed { background-color: #e8f5e8; color: #2e7d32; }
+    .mat-mdc-chip.paused { background-color: #fff3e0; color: #f57c00; }
+
+    .mat-mdc-chip.programming { background-color: #e3f2fd; color: #1976d2; }
+    .mat-mdc-chip.design { background-color: #f3e5f5; color: #7b1fa2; }
+    .mat-mdc-chip.business { background-color: #e8f5e8; color: #2e7d32; }
+    .mat-mdc-chip.data { background-color: #fff3e0; color: #f57c00; }
+
+    .mat-card-avatar.not-started { color: #666; }
+    .mat-card-avatar.in-progress { color: #2196f3; }
+    .mat-card-avatar.completed { color: #4caf50; }
+    .mat-card-avatar.overdue { color: #f44336; }
+
+    @media (max-width: 768px) {
+      .progress-container {
+        padding: 16px;
+      }
+
+      .overall-stats {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .courses-progress {
+        gap: 16px;
+      }
+
+      .achievements-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .certificates-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* Certificate Dialog Styles */
+    .certificate-dialog .mat-mdc-dialog-container {
+      border-radius: 15px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    }
+
+    .certificate-dialog .mat-mdc-dialog-content {
+      padding: 0;
+      overflow: hidden;
+    }
+
+    /* Certificates & Badges styles */
+    .certificates-section h3 {
+      font-size: 1.5rem;
+      font-weight: 500;
+      color: #333;
+      margin-bottom: 24px;
+    }
+
+    .certificates-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+      gap: 20px;
+      margin-top: 20px;
+    }
+
+    .certificate-card {
+      border-radius: 12px;
+      transition: all 0.3s ease;
+      background: white;
+      border: 1px solid #e9ecef;
+
+      &:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+      }
+
+      mat-card-content {
+        padding: 20px;
+      }
+
+      mat-card-actions {
+        padding: 8px 20px 16px;
+        justify-content: flex-end;
+      }
+    }
+
+    .certificate-header {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 16px;
+    }
+
+    .certificate-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 24px;
+
+      mat-icon {
+        font-size: 24px;
+        width: 24px;
+        height: 24px;
+      }
+    }
+
+    .certificate-info {
+      flex: 1;
+
+      h4 {
+        margin: 0 0 4px 0;
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: #2c3e50;
+      }
+
+      .certificate-provider {
+        margin: 0;
+        font-size: 0.9rem;
+        color: #6c757d;
+        font-weight: 500;
+      }
+    }
+
+    .certificate-details {
+      .certificate-description {
+        margin: 0 0 12px 0;
+        font-size: 0.9rem;
+        color: #495057;
+        line-height: 1.5;
+      }
+
+      .certificate-meta {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 0.85rem;
+
+        .certificate-date {
+          color: #6c757d;
+        }
+
+        .certificate-type {
+          padding: 4px 8px;
+          border-radius: 12px;
+          font-weight: 500;
+          font-size: 0.8rem;
+
+          &.type-certificate {
+            background: #e8f5e9;
+            color: #2e7d32;
+          }
+
+          &.type-badge {
+            background: #fff3e0;
+            color: #f57c00;
+          }
+        }
+      }
+    }
+  

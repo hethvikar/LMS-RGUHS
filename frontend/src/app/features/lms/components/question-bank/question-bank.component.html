@@ -1,0 +1,71 @@
+<div class="question-bank-container">
+   <div class="header">
+     <h1>Question Bank Management</h1>
+     <p>Create and manage questions for assessments</p>
+     <button mat-raised-button color="primary" (click)="openCreateDialog()">
+       <mat-icon>add</mat-icon>
+       Create Question
+     </button>
+   </div>
+
+   <div class="content">
+     <div class="questions-list-section">
+      <mat-card class="questions-list-card">
+        <mat-card-header>
+          <mat-card-title>Questions ({{ questions.length }})</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <div class="questions-grid">
+            <mat-card *ngFor="let question of questions" class="question-card">
+              <mat-card-header>
+                <mat-card-title>{{ question.question }}</mat-card-title>
+                <mat-card-subtitle>
+                  {{ getQuestionTypeLabel(question.type) }} • {{ question.category }} •
+                  <span class="difficulty-chip" [class]="getDifficultyColor(question.difficulty)">
+                    {{ question.difficulty }}
+                  </span>
+                </mat-card-subtitle>
+              </mat-card-header>
+              <mat-card-content>
+                <div *ngIf="question.options && question.options.length > 0" class="question-options">
+                  <p><strong>Options:</strong></p>
+                  <ul>
+                    <li *ngFor="let option of question.options">{{ option }}</li>
+                  </ul>
+                </div>
+                <div *ngIf="question.correctAnswer" class="correct-answer">
+                  <p><strong>Correct Answer:</strong> {{ question.correctAnswer }}</p>
+                </div>
+                <div *ngIf="question.explanation" class="explanation">
+                  <p><strong>Explanation:</strong> {{ question.explanation }}</p>
+                </div>
+                <div class="question-meta">
+                  <mat-chip-set>
+                    <mat-chip *ngFor="let tag of question.tags">{{ tag }}</mat-chip>
+                  </mat-chip-set>
+                  <p class="points">Points: {{ question.points }}</p>
+                </div>
+              </mat-card-content>
+              <mat-card-actions>
+                <button mat-button (click)="openEditDialog(question)">
+                  <mat-icon>edit</mat-icon>
+                  Edit
+                </button>
+                <button mat-button color="warn" (click)="deleteQuestion(question)">
+                  <mat-icon>delete</mat-icon>
+                  Delete
+                </button>
+              </mat-card-actions>
+            </mat-card>
+          </div>
+
+          <div *ngIf="questions.length === 0" class="no-questions">
+            <mat-icon>quiz</mat-icon>
+            <h3>No questions yet</h3>
+            <p>Create your first question using the form above</p>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+</div>

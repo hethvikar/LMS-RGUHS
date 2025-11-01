@@ -1,0 +1,118 @@
+<div class="browse-courses-dialog">
+  <!-- Header -->
+  <div class="dialog-header">
+    <h2>Browse All Courses</h2>
+    <button mat-icon-button (click)="onClose()">
+
+    </button>
+  </div>
+
+  <!-- Search and Filters -->
+  <div class="search-filters-section">
+    <mat-form-field class="search-field">
+      <mat-label>Search courses...</mat-label>
+      <input matInput
+             placeholder="Course title, instructor, or keyword"
+             [(ngModel)]="searchQuery"
+             (ngModelChange)="onSearchChange()">
+
+    </mat-form-field>
+
+    <mat-form-field class="filter-field">
+      <mat-label>Category</mat-label>
+      <mat-select [(ngModel)]="selectedCategory" (ngModelChange)="onFilterChange()">
+        <mat-option value="">All Categories</mat-option>
+        <mat-option *ngFor="let category of courseCategories" [value]="category.value">
+          {{ category.label }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field class="filter-field">
+      <mat-label>Status</mat-label>
+      <mat-select [(ngModel)]="selectedStatus" (ngModelChange)="onFilterChange()">
+        <mat-option value="">All Status</mat-option>
+        <mat-option *ngFor="let status of courseStatuses" [value]="status.value">
+          {{ status.label }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+    <button mat-stroked-button (click)="resetFilters()" class="reset-btn">
+              Reset Filters
+    </button>
+  </div>
+
+  <!-- Results Info -->
+  <div class="results-info">
+    <p>Found <strong>{{ filteredCourses.length }}</strong> course(s)</p>
+  </div>
+
+  <!-- Courses Grid -->
+  <div class="courses-grid-container">
+    <div class="courses-grid">
+      <mat-card *ngFor="let course of filteredCourses" class="course-card">
+        <mat-card-header>
+          <mat-card-title>{{ course.title }}</mat-card-title>
+          <mat-card-subtitle>
+            <mat-chip [class]="getCategoryClass(course.category)">
+              {{ course.category }}
+            </mat-chip>
+            <mat-chip [class]="'status-' + course.status">
+              {{ course.status }}
+            </mat-chip>
+          </mat-card-subtitle>
+        </mat-card-header>
+
+        <mat-card-content>
+          <p class="course-description">{{ course.description }}</p>
+
+          <div class="course-details">
+            <div class="detail-item">
+              <strong>Instructor:</strong>
+              <span>{{ course.instructor }}</span>
+            </div>
+            <div class="detail-item">
+              <strong>Duration:</strong>
+              <span>{{ course.duration }}</span>
+            </div>
+            <div class="detail-item">
+                <strong>Students:</strong>
+                <span>{{ course.enrolledStudents }}/{{ course.maxStudents }}</span>
+              </div>
+              <div class="detail-item" *ngIf="course.status === 'completed' && course.completionDate">
+                <strong>Completed:</strong>
+                <span>{{ course.completionDate | date:'shortDate' }}</span>
+              </div>
+          </div>
+
+          <div class="capacity-bar" *ngIf="course.maxStudents > 0">
+            <mat-progress-bar
+              mode="determinate"
+              [value]="getCapacityPercentage(course)">
+            </mat-progress-bar>
+            <span class="capacity-text">{{ getCapacityPercentage(course).toFixed(0) }}% full</span>
+          </div>
+        </mat-card-content>
+
+        <mat-card-actions>
+          <button mat-raised-button color="primary" (click)="enrollCourse(course)">
+
+            Enroll Now
+          </button>
+          <button mat-button (click)="viewDetails(course)">
+
+            View Details
+          </button>
+        </mat-card-actions>
+      </mat-card>
+    </div>
+
+    <!-- Empty State -->
+    <div *ngIf="filteredCourses.length === 0" class="empty-state">
+
+      <p>No courses found matching your criteria.</p>
+      <p>Try adjusting your search or filters.</p>
+      <button mat-stroked-button (click)="resetFilters()">Clear Filters</button>
+    </div>
+  </div>
+</div>

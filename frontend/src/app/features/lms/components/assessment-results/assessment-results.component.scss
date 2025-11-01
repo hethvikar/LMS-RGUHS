@@ -1,0 +1,384 @@
+
+    .assessment-results-container {
+      padding: 24px;
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    .results-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 32px;
+    }
+
+    .header-content h1 {
+      font-size: 2.5rem;
+      font-weight: 300;
+      margin-bottom: 8px;
+      color: #333;
+    }
+
+    .header-content p {
+      font-size: 1.2rem;
+      color: #666;
+      margin: 0;
+    }
+
+    .results-overview {
+      margin-bottom: 32px;
+    }
+
+    .overview-stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 16px;
+    }
+
+    .stat-item {
+      text-align: center;
+      padding: 16px;
+      background: #f5f5f5;
+      border-radius: 8px;
+    }
+
+    .stat-item h3 {
+      margin: 0;
+      font-size: 2rem;
+      font-weight: 500;
+      color: #333;
+    }
+
+    .stat-item p {
+      margin: 4px 0 0 0;
+      font-size: 0.9rem;
+      color: #666;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .results-content {
+      margin-top: 24px;
+    }
+
+    .tab-content {
+      padding: 24px 0;
+    }
+
+    .results-table {
+      width: 100%;
+    }
+
+    .assessment-info {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .assessment-title {
+      font-weight: 500;
+      color: #333;
+    }
+
+    .course-name {
+      font-size: 0.85rem;
+      color: #666;
+    }
+
+    .score-info {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .score-display {
+      display: flex;
+      align-items: baseline;
+      gap: 8px;
+    }
+
+    .score {
+      font-weight: 500;
+      color: #333;
+      font-size: 1.1rem;
+    }
+
+    .percentage {
+      color: #666;
+      font-size: 0.9rem;
+    }
+
+    .grade-display {
+      margin-top: 4px;
+    }
+
+    .submission-info {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .attempts {
+      font-size: 0.8rem;
+      color: #666;
+    }
+
+    .performance-analysis {
+      display: grid;
+      gap: 24px;
+    }
+
+    .performance-card {
+      height: fit-content;
+    }
+
+    .score-distribution {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .distribution-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .range {
+      min-width: 60px;
+      font-weight: 500;
+      color: #333;
+    }
+
+    .count {
+      min-width: 30px;
+      text-align: right;
+      font-weight: 500;
+      color: #666;
+    }
+
+    .recent-performance {
+      display: grid;
+      gap: 16px;
+    }
+
+    .performance-metric {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px;
+      background: #f5f5f5;
+      border-radius: 8px;
+    }
+
+    .metric-label {
+      font-weight: 500;
+      color: #333;
+    }
+
+    .metric-value {
+      font-size: 1.2rem;
+      font-weight: 500;
+      color: #2196f3;
+    }
+
+    .metric-change {
+      font-size: 0.9rem;
+      font-weight: 500;
+    }
+
+    .metric-change.positive { color: #4caf50; }
+    .metric-change.negative { color: #f44336; }
+    .metric-change.neutral { color: #666; }
+
+    .certificates-section h3 {
+      font-size: 1.5rem;
+      font-weight: 500;
+      color: #333;
+      margin-bottom: 24px;
+    }
+
+    .certificates-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 16px;
+    }
+
+    .certificate-card {
+      transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+    }
+
+    .certificate-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    .certificate-content {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .certificate-icon {
+      font-size: 48px;
+      width: 48px;
+      height: 48px;
+      color: #4caf50;
+    }
+
+    .certificate-details h4 {
+      margin: 0 0 8px 0;
+      font-size: 1.1rem;
+      font-weight: 500;
+      color: #333;
+    }
+
+    .certificate-details p {
+      margin: 0 0 8px 0;
+      color: #666;
+    }
+
+    .certificate-score {
+      display: flex;
+      gap: 16px;
+      font-size: 0.9rem;
+      color: #666;
+    }
+
+    .detailed-result-modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.5);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+    }
+
+    .detailed-result-card {
+      max-width: 800px;
+      width: 90%;
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+
+    .result-summary {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 16px;
+      margin-bottom: 24px;
+      padding: 16px;
+      background: #f5f5f5;
+      border-radius: 8px;
+    }
+
+    .summary-metric {
+      text-align: center;
+    }
+
+    .summary-metric h3 {
+      margin: 0;
+      font-size: 1.5rem;
+      font-weight: 500;
+      color: #333;
+    }
+
+    .summary-metric p {
+      margin: 4px 0 0 0;
+      font-size: 0.9rem;
+      color: #666;
+    }
+
+    .question-review {
+      max-height: 400px;
+      overflow-y: auto;
+    }
+
+    .question-review h4 {
+      margin-bottom: 16px;
+      color: #333;
+    }
+
+    .question-item {
+      margin-bottom: 20px;
+      padding: 16px;
+      border: 1px solid #e0e0e0;
+      border-radius: 8px;
+      background: #fafafa;
+    }
+
+    .question-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+
+    .question-number {
+      font-weight: 500;
+      color: #333;
+    }
+
+    .question-points {
+      font-size: 0.9rem;
+      color: #666;
+    }
+
+    .question-text {
+      margin-bottom: 12px;
+      color: #333;
+      line-height: 1.4;
+    }
+
+    .answer-comparison {
+      display: grid;
+      gap: 8px;
+    }
+
+    .your-answer, .correct-answer, .explanation {
+      font-size: 14px;
+      line-height: 1.4;
+    }
+
+    .mat-mdc-chip.passed { background-color: #e8f5e8; color: #2e7d32; }
+    .mat-mdc-chip.failed { background-color: #ffebee; color: #d32f2f; }
+    .mat-mdc-chip.correct { background-color: #e8f5e8; color: #2e7d32; }
+    .mat-mdc-chip.incorrect { background-color: #ffebee; color: #d32f2f; }
+
+    .mat-mdc-chip.A { background-color: #e8f5e8; color: #2e7d32; }
+    .mat-mdc-chip.B { background-color: #e3f2fd; color: #1976d2; }
+    .mat-mdc-chip.C { background-color: #fff3e0; color: #f57c00; }
+    .mat-mdc-chip.D { background-color: #ffebee; color: #f44336; }
+    .mat-mdc-chip.F { background-color: #ffebee; color: #d32f2f; }
+
+    @media (max-width: 768px) {
+      .assessment-results-container {
+        padding: 16px;
+      }
+
+      .results-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 16px;
+      }
+
+      .overview-stats {
+        grid-template-columns: 1fr;
+      }
+
+      .certificates-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .result-summary {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .performance-metric {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+      }
+    }
+  

@@ -1,0 +1,8 @@
+<div class="app-container">
+  <!-- Header shown for all authenticated pages (auto-adapts based on user role from store) -->
+  <app-header *ngIf="!isLoginPage && (isAuthenticated$ | async)"></app-header>
+  <main class="main-content" [class.with-header]="!isLoginPage && (isAuthenticated$ | async)">
+    <router-outlet></router-outlet>
+  </main>
+  <app-footer *ngIf="!isLoginPage && (isAuthenticated$ | async)"></app-footer>
+</div>
