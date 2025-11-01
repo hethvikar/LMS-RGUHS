@@ -260,7 +260,7 @@ async extractProfileDataFromText(resumeText: string): Promise<ExtractionResponse
     };
   }
 
-  const openai = new OpenAI({ apiKey, dangerouslyAllowBrowser: true   });
+  const openai = new OpenAI({ apiKey });
 
   const prompt = `
     You are a resume parser AI. Extract the following details as JSON:
