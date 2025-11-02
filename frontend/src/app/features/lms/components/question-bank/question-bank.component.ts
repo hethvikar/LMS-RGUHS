@@ -13,7 +13,10 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatDialogModule, MatDialog } from '@angular/material/dialog';
 import { CommonModule } from '@angular/common';
+import { AgGridAngular } from 'ag-grid-angular';
+import { ColDef, GridApi, GridReadyEvent, GridOptions } from 'ag-grid-community';
 import { QuestionCreateDialogComponent } from './question-create-dialog.component';
+import { OptionsCellRendererComponent } from './options-cell-renderer.component';
 
 interface Question {
   id: number;
@@ -45,7 +48,9 @@ interface Question {
     MatIconModule,
     MatDatepickerModule,
     MatNativeDateModule,
-    MatDialogModule
+    MatDialogModule,
+    AgGridAngular,
+    OptionsCellRendererComponent
   ],
   templateUrl: './question-bank.component.html',
   styleUrl: './question-bank.component.scss'
@@ -54,6 +59,147 @@ export class QuestionBankComponent implements OnInit {
   questionForm: FormGroup;
   questions: Question[] = [];
   editingQuestion: Question | null = null;
+
+  categories = [
+    'Mathematics',
+    'Science',
+    'History',
+    'Literature',
+    'Programming',
+    'Business',
+    'Art',
+    'Geography',
+    'Physics',
+    'Chemistry'
+  ];
+
+  // AG Grid properties
+  gridApi!: GridApi;
+  columnDefs: ColDef[] = [
+    {
+      field: 'id',
+      headerName: 'ID',
+      width: 60,
+      minWidth: 55,
+      maxWidth: 70,
+      filter: 'agNumberColumnFilter',
+      sortable: true,
+      cellStyle: { textAlign: 'center', fontSize: '0.8rem' }
+    },
+    {
+      field: 'question',
+      headerName: 'Question',
+      width: 280,
+      minWidth: 250,
+      filter: 'agTextColumnFilter',
+      sortable: true,
+      cellRenderer: (params: any) => {
+        return `<div style="white-space: normal; line-height: 1.3; word-wrap: break-word; font-size: 0.8rem;">${params.value}</div>`;
+      },
+      autoHeight: true
+    },
+    {
+      field: 'options',
+      headerName: 'Options',
+      width: 120,
+      minWidth: 100,
+      maxWidth: 140,
+      filter: 'agTextColumnFilter',
+      sortable: false,
+      cellRenderer: OptionsCellRendererComponent
+    },
+    {
+      field: 'type',
+      headerName: 'Type',
+      width: 110,
+      minWidth: 100,
+      filter: 'agTextColumnFilter',
+      sortable: true,
+      valueFormatter: (params) => this.getQuestionTypeLabel(params.value),
+      cellStyle: { textAlign: 'center', fontSize: '0.8rem' }
+    },
+    {
+      field: 'category',
+      headerName: 'Category',
+      width: 110,
+      minWidth: 100,
+      filter: 'agTextColumnFilter',
+      sortable: true,
+      cellStyle: { textAlign: 'center', fontSize: '0.8rem' }
+    },
+    {
+      field: 'difficulty',
+      headerName: 'Difficulty',
+      width: 90,
+      minWidth: 85,
+      filter: 'agTextColumnFilter',
+      sortable: true,
+      cellRenderer: (params: any) => {
+        const color = this.getDifficultyColor(params.value);
+        return `<span class="difficulty-chip ${color}" style="font-size: 0.75rem;">${params.value}</span>`;
+      },
+      cellStyle: { textAlign: 'center' }
+    },
+    {
+      field: 'points',
+      headerName: 'Points',
+      width: 70,
+      minWidth: 60,
+      maxWidth: 80,
+      filter: 'agNumberColumnFilter',
+      sortable: true,
+      cellStyle: { textAlign: 'center', fontSize: '0.8rem' }
+    },
+    {
+      field: 'tags',
+      headerName: 'Tags',
+      width: 140,
+      minWidth: 120,
+      filter: 'agTextColumnFilter',
+      sortable: false,
+      cellRenderer: (params: any) => {
+        if (params.value && params.value.length > 0) {
+          return params.value.map((tag: string) => `<span class="tag-chip" style="font-size: 0.7rem;">${tag}</span>`).join('');
+        }
+        return '';
+      }
+    },
+    {
+      headerName: 'Actions',
+      width: 130,
+      minWidth: 120,
+      maxWidth: 150,
+      cellRenderer: (params: any) => {
+        return `
+          <div style="display: flex; justify-content: center; gap: 3px;">
+            <button class="action-btn edit-btn" style="font-size: 0.75rem; padding: 4px 8px;" data-action="edit" data-id="${params.data.id}">Edit</button>
+            <button class="action-btn delete-btn" style="font-size: 0.75rem; padding: 4px 8px;" data-action="delete" data-id="${params.data.id}">Delete</button>
+          </div>
+        `;
+      },
+      pinned: 'right',
+      sortable: false,
+      filter: false,
+      cellStyle: { textAlign: 'center' }
+    }
+  ];
+
+  defaultColDef: ColDef = {
+    resizable: true,
+    filter: true
+  };
+
+  gridOptions: GridOptions = {
+    pagination: true,
+    paginationPageSize: 15,
+    paginationPageSizeSelector: [10, 15, 20, 50, 100],
+    rowHeight: 50,
+    headerHeight: 42,
+    suppressRowHoverHighlight: false,
+    enableCellTextSelection: true,
+    ensureDomOrder: true,
+    domLayout: 'autoHeight'
+  };
 
   questionTypes = [
     { value: 'multiple-choice', label: 'Multiple Choice' },
@@ -68,19 +214,6 @@ export class QuestionBankComponent implements OnInit {
     { value: 'easy', label: 'Easy' },
     { value: 'medium', label: 'Medium' },
     { value: 'hard', label: 'Hard' }
-  ];
-
-  categories = [
-    'Mathematics',
-    'Science',
-    'History',
-    'Literature',
-    'Programming',
-    'Business',
-    'Art',
-    'Geography',
-    'Physics',
-    'Chemistry'
   ];
 
   constructor(private fb: FormBuilder, private dialog: MatDialog) {
@@ -101,6 +234,32 @@ export class QuestionBankComponent implements OnInit {
   ngOnInit() {
     this.initializeForm();
     this.loadMockData();
+  }
+
+  onGridReady(params: GridReadyEvent) {
+    this.gridApi = params.api;
+  }
+
+  onCellClicked(event: any) {
+    if (event.event.target.classList.contains('action-btn')) {
+      const action = event.event.target.getAttribute('data-action');
+      const id = parseInt(event.event.target.getAttribute('data-id'));
+      const question = this.questions.find(q => q.id === id);
+
+      if (question) {
+        if (action === 'edit') {
+          this.openEditDialog(question);
+        } else if (action === 'delete') {
+          this.deleteQuestion(question);
+        }
+      }
+    }
+  }
+
+  refreshGrid() {
+    if (this.gridApi) {
+      this.gridApi.setGridOption('rowData', this.questions);
+    }
   }
 
   loadMockData() {
@@ -258,6 +417,7 @@ export class QuestionBankComponent implements OnInit {
       }
 
       this.resetForm();
+      this.refreshGrid();
     }
   }
 
@@ -287,6 +447,7 @@ export class QuestionBankComponent implements OnInit {
 
   deleteQuestion(question: Question) {
     this.questions = this.questions.filter(q => q.id !== question.id);
+    this.refreshGrid();
   }
 
   resetForm() {
@@ -326,6 +487,7 @@ export class QuestionBankComponent implements OnInit {
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
         this.questions.push(result);
+        this.refreshGrid();
       }
     });
   }
@@ -342,6 +504,7 @@ export class QuestionBankComponent implements OnInit {
         const index = this.questions.findIndex(q => q.id === result.id);
         if (index !== -1) {
           this.questions[index] = result;
+          this.refreshGrid();
         }
       }
     });
