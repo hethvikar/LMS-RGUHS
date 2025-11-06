@@ -53,6 +53,7 @@ export class LiveInterviewComponent implements OnInit, OnDestroy, AfterViewInit 
   private localStream: MediaStream | null = null;
   private peers: { [key: string]: RTCPeerConnection } = {};
   private config = { iceServers: [{ urls: "stun:stun.l.google.com:19302" }] };
+  isScreenSharing: boolean = false;
 
   constructor(private authService: AuthService) { 
     this.loadCurrentUserName();
@@ -290,6 +291,65 @@ export class LiveInterviewComponent implements OnInit, OnDestroy, AfterViewInit 
     // Clear videos from DOM
     if (this.videosContainer) {
       this.videosContainer.nativeElement.innerHTML = '';
+    }
+  }
+
+  async startScreenShare() {
+    try {
+      const screenStream = await navigator.mediaDevices.getDisplayMedia({ video: true });
+      this.isScreenSharing = true;
+      this.replaceVideoTrack(screenStream.getVideoTracks()[0]);
+      // Handle when screen sharing ends
+      screenStream.getVideoTracks()[0].onended = () => {
+        this.stopScreenShare();
+      };
+      this.addMessage('Screen sharing started', 'info');
+    } catch (error) {
+      console.error('Error starting screen share:', error);
+      alert('Failed to start screen sharing');
+    }
+  }
+
+  async stopScreenShare() {
+    try {
+      const cameraStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
+      this.isScreenSharing = false;
+      this.replaceVideoTrack(cameraStream.getVideoTracks()[0]);
+      cameraStream.getVideoTracks()[0].stop(); // Stop the temp stream, keep the track
+      this.addMessage('Screen sharing stopped', 'info');
+    } catch (error) {
+      console.error('Error stopping screen share:', error);
+      alert('Failed to stop screen sharing');
+    }
+  }
+
+  private replaceVideoTrack(newTrack: MediaStreamTrack) {
+    if (!this.localStream) return;
+    const oldTrack = this.localStream.getVideoTracks()[0];
+    if (oldTrack) {
+      oldTrack.stop();
+      this.localStream.removeTrack(oldTrack);
+    }
+    this.localStream.addTrack(newTrack);
+    // Update local video element
+    const localVideo = this.videosContainer?.nativeElement.querySelector(`#video-${this.currentUserName}`) as HTMLVideoElement;
+    if (localVideo) {
+      localVideo.srcObject = this.localStream;
+    }
+    // Update peer connections
+    Object.values(this.peers).forEach(pc => {
+      const sender = pc.getSenders().find(s => s.track?.kind === 'video');
+      if (sender) {
+        sender.replaceTrack(newTrack);
+      }
+    });
+  }
+
+  toggleScreenShare() {
+    if (this.isScreenSharing) {
+      this.stopScreenShare();
+    } else {
+      this.startScreenShare();
     }
   }
 

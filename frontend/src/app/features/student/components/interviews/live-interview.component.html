@@ -91,13 +91,21 @@
       <mat-icon>videocam</mat-icon>
       <span>{{ isLive ? 'Join Now' : 'Join Interview' }}</span>
     </button>
-    <button 
+    <button
       mat-stroked-button
       (click)="onLeaveClick()"
       *ngIf="isLive"
       class="leave-button">
       <mat-icon>call_end</mat-icon>
       <span>Leave Call</span>
+    </button>
+    <button
+      mat-stroked-button
+      (click)="toggleScreenShare()"
+      *ngIf="isLive"
+      class="screen-share-button">
+      <mat-icon>{{ isScreenSharing ? 'stop_screen_share' : 'screen_share' }}</mat-icon>
+      <span>{{ isScreenSharing ? 'Stop Sharing' : 'Share Screen' }}</span>
     </button>
   </mat-card-actions>
 </mat-card>
