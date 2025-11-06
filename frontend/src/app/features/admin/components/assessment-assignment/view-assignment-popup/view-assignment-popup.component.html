@@ -1,0 +1,133 @@
+<div class="view-assignment-popup">
+  <div class="popup-header">
+    <h2>Assignment Details</h2>
+    <button mat-icon-button (click)="onClose()" class="close-button">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+
+  <div class="popup-content" *ngIf="assignment">
+    <!-- Student Information -->
+    <div class="info-section">
+      <div class="section-header">
+        <mat-icon>person</mat-icon>
+        <h3>Student Information</h3>
+      </div>
+      <div class="info-grid">
+        <div class="info-item">
+          <span class="label">Student Name:</span>
+          <span class="value">{{ assignment.studentName }}</span>
+        </div>
+        <div class="info-item">
+          <span class="label">Course:</span>
+          <span class="value">{{ assignment.courseName }}</span>
+        </div>
+      </div>
+    </div>
+
+    <mat-divider></mat-divider>
+
+    <!-- Assessment Information -->
+    <div class="info-section">
+      <div class="section-header">
+        <mat-icon>assignment</mat-icon>
+        <h3>Assessment Information</h3>
+      </div>
+      <div class="info-grid">
+        <div class="info-item">
+          <span class="label">Assessment Title:</span>
+          <span class="value">{{ assignment.assessmentTitle }}</span>
+        </div>
+        <div class="info-item">
+          <span class="label">Max Score:</span>
+          <span class="value">{{ assignment.maxScore }} points</span>
+        </div>
+        <div class="info-item">
+          <span class="label">Status:</span>
+          <mat-chip [class]="getStatusClass(assignment.status)">
+            {{ getStatusText(assignment.status) }}
+          </mat-chip>
+        </div>
+      </div>
+    </div>
+
+    <mat-divider></mat-divider>
+
+    <!-- Timeline Information -->
+    <div class="info-section">
+      <div class="section-header">
+        <mat-icon>schedule</mat-icon>
+        <h3>Timeline</h3>
+      </div>
+      <div class="info-grid">
+        <div class="info-item">
+          <span class="label">Assigned Date:</span>
+          <span class="value">{{ assignment.assignedDate | date:'medium' }}</span>
+        </div>
+        <div class="info-item">
+          <span class="label">Due Date:</span>
+          <span class="value">{{ assignment.dueDate | date:'medium' }}</span>
+        </div>
+        <div class="info-item" *ngIf="assignment.submittedDate">
+          <span class="label">Submitted Date:</span>
+          <span class="value">{{ assignment.submittedDate | date:'medium' }}</span>
+        </div>
+        <div class="info-item" *ngIf="assignment.gradedDate">
+          <span class="label">Graded Date:</span>
+          <span class="value">{{ assignment.gradedDate | date:'medium' }}</span>
+        </div>
+        <div class="info-item">
+          <span class="label">Time Remaining:</span>
+          <span class="value" [class]="assignment.status === 'overdue' ? 'overdue-text' : ''">
+            {{ getTimeRemainingText(assignment.dueDate) }}
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <mat-divider></mat-divider>
+
+    <!-- Attempts Information -->
+    <div class="info-section">
+      <div class="section-header">
+        <mat-icon>replay</mat-icon>
+        <h3>Attempts</h3>
+      </div>
+      <div class="info-grid">
+        <div class="info-item">
+          <span class="label">Attempts Used:</span>
+          <span class="value">{{ assignment.attempts }} / {{ assignment.maxAttempts }}</span>
+        </div>
+        <div class="info-item">
+          <span class="label">Remaining Attempts:</span>
+          <span class="value">{{ assignment.maxAttempts - assignment.attempts }}</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Score Information (if graded) -->
+    <div class="info-section" *ngIf="assignment.score !== undefined">
+      <mat-divider></mat-divider>
+      <div class="section-header">
+        <mat-icon>grading</mat-icon>
+        <h3>Score</h3>
+      </div>
+      <div class="score-display" [class]="getGradeClass()">
+        <div class="score-value">
+          <span class="score">{{ assignment.score }}</span>
+          <span class="divider">/</span>
+          <span class="max-score">{{ assignment.maxScore }}</span>
+        </div>
+        <div class="score-percentage">
+          {{ getScorePercentage() }}%
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="popup-footer">
+    <button mat-raised-button color="primary" (click)="onClose()">
+      Close
+    </button>
+  </div>
+</div>

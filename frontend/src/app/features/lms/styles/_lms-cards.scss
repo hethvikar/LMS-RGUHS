@@ -1,0 +1,426 @@
+/* ========================================
+   LMS Module - Global Mat-Card Styles
+   ======================================== */
+
+// Enhanced mat-card base styles for LMS module
+mat-card {
+  border-radius: 16px !important;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08) !important;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  overflow: hidden;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+
+  &:hover {
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12) !important;
+    transform: translateY(-4px);
+  }
+}
+
+// Gradient background variants
+.mat-mdc-card.gradient-purple {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+
+  mat-card-title,
+  mat-card-subtitle,
+  mat-card-content,
+  p, h1, h2, h3, h4, h5, h6 {
+    color: white !important;
+  }
+
+  mat-icon {
+    color: white !important;
+  }
+}
+
+.mat-mdc-card.gradient-blue {
+  background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+  color: white;
+
+  mat-card-title,
+  mat-card-subtitle,
+  mat-card-content,
+  p, h1, h2, h3, h4, h5, h6 {
+    color: white !important;
+  }
+
+  mat-icon {
+    color: white !important;
+  }
+}
+
+.mat-mdc-card.gradient-green {
+  background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+  color: white;
+
+  mat-card-title,
+  mat-card-subtitle,
+  mat-card-content,
+  p, h1, h2, h3, h4, h5, h6 {
+    color: white !important;
+  }
+
+  mat-icon {
+    color: white !important;
+  }
+}
+
+.mat-mdc-card.gradient-orange {
+  background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+  color: white;
+
+  mat-card-title,
+  mat-card-subtitle,
+  mat-card-content,
+  p, h1, h2, h3, h4, h5, h6 {
+    color: white !important;
+  }
+
+  mat-icon {
+    color: white !important;
+  }
+}
+
+.mat-mdc-card.gradient-sunset {
+  background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+  color: white;
+
+  mat-card-title,
+  mat-card-subtitle,
+  mat-card-content,
+  p, h1, h2, h3, h4, h5, h6 {
+    color: white !important;
+  }
+
+  mat-icon {
+    color: white !important;
+  }
+}
+
+.mat-mdc-card.gradient-ocean {
+  background: linear-gradient(135deg, #2193b0 0%, #6dd5ed 100%);
+  color: white;
+
+  mat-card-title,
+  mat-card-subtitle,
+  mat-card-content,
+  p, h1, h2, h3, h4, h5, h6 {
+    color: white !important;
+  }
+
+  mat-icon {
+    color: white !important;
+  }
+}
+
+// Subtle background variants
+.mat-mdc-card.bg-soft-purple {
+  background: linear-gradient(135deg, #f5f7fa 0%, #e8eaf6 100%);
+  border-left: 4px solid #667eea;
+}
+
+.mat-mdc-card.bg-soft-blue {
+  background: linear-gradient(135deg, #f5f7fa 0%, #e3f2fd 100%);
+  border-left: 4px solid #2196f3;
+}
+
+.mat-mdc-card.bg-soft-green {
+  background: linear-gradient(135deg, #f5f7fa 0%, #e8f5e9 100%);
+  border-left: 4px solid #4caf50;
+}
+
+.mat-mdc-card.bg-soft-orange {
+  background: linear-gradient(135deg, #f5f7fa 0%, #fff3e0 100%);
+  border-left: 4px solid #ff9800;
+}
+
+.mat-mdc-card.bg-soft-red {
+  background: linear-gradient(135deg, #f5f7fa 0%, #ffebee 100%);
+  border-left: 4px solid #f44336;
+}
+
+.mat-mdc-card.bg-soft-teal {
+  background: linear-gradient(135deg, #f5f7fa 0%, #e0f2f1 100%);
+  border-left: 4px solid #009688;
+}
+
+// Pattern backgrounds
+.mat-mdc-card.bg-pattern-dots {
+  background-color: white;
+  background-image: radial-gradient(#667eea 1px, transparent 1px);
+  background-size: 20px 20px;
+  background-position: 0 0, 10px 10px;
+}
+
+.mat-mdc-card.bg-pattern-grid {
+  background-color: white;
+  background-image: 
+    linear-gradient(rgba(102, 126, 234, 0.1) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(102, 126, 234, 0.1) 1px, transparent 1px);
+  background-size: 20px 20px;
+}
+
+// Glass morphism effect
+.mat-mdc-card.glass-effect {
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15) !important;
+}
+
+// Elevated cards
+.mat-mdc-card.elevated {
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1) !important;
+  
+  &:hover {
+    box-shadow: 0 15px 50px rgba(0, 0, 0, 0.15) !important;
+  }
+}
+
+// Stats card styles
+.mat-mdc-card.stat-card {
+  text-align: center;
+  padding: 24px;
+
+  mat-icon {
+    font-size: 48px;
+    width: 48px;
+    height: 48px;
+    margin-bottom: 16px;
+  }
+
+  h3 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin: 8px 0;
+  }
+
+  p {
+    font-size: 0.9rem;
+    opacity: 0.8;
+    margin: 0;
+  }
+}
+
+// Course card styles
+.mat-mdc-card.course-card {
+  overflow: hidden;
+  position: relative;
+
+  .course-image {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    border-radius: 12px 12px 0 0;
+  }
+
+  .course-badge {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    background: rgba(255, 255, 255, 0.9);
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+  }
+}
+
+// Assignment card styles
+.mat-mdc-card.assignment-card {
+  border-left: 4px solid;
+
+  &.priority-high {
+    border-left-color: #f44336;
+    background: linear-gradient(135deg, #fff5f5 0%, #ffebee 100%);
+  }
+
+  &.priority-medium {
+    border-left-color: #ff9800;
+    background: linear-gradient(135deg, #fffbf5 0%, #fff3e0 100%);
+  }
+
+  &.priority-low {
+    border-left-color: #4caf50;
+    background: linear-gradient(135deg, #f5fff5 0%, #e8f5e9 100%);
+  }
+}
+
+// Progress card styles
+.mat-mdc-card.progress-card {
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+
+  .progress-circle {
+    width: 120px;
+    height: 120px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: white;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    font-size: 2rem;
+    font-weight: 700;
+    color: #667eea;
+  }
+}
+
+// Interactive card
+.mat-mdc-card.interactive {
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+
+  &:hover::before {
+    opacity: 1;
+  }
+}
+
+// Card with icon header
+.mat-mdc-card.icon-header {
+  mat-card-header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 20px;
+    margin: -16px -16px 16px -16px;
+    border-radius: 12px 12px 0 0;
+
+    mat-card-title {
+      color: white !important;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+
+      mat-icon {
+        color: white !important;
+      }
+    }
+  }
+}
+
+// Bordered card
+.mat-mdc-card.bordered {
+  border: 2px solid #667eea;
+  background: white;
+
+  &:hover {
+    border-color: #764ba2;
+    background: linear-gradient(135deg, #f5f7fa 0%, #e8eaf6 100%);
+  }
+}
+
+// Shadow variants
+.mat-mdc-card.shadow-sm {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05) !important;
+}
+
+.mat-mdc-card.shadow-md {
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08) !important;
+}
+
+.mat-mdc-card.shadow-lg {
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12) !important;
+}
+
+.mat-mdc-card.shadow-xl {
+  box-shadow: 0 12px 48px rgba(0, 0, 0, 0.15) !important;
+}
+
+// Ribbon effect
+.mat-mdc-card.ribbon {
+  position: relative;
+  overflow: visible;
+
+  &::before {
+    content: 'NEW';
+    position: absolute;
+    top: 10px;
+    right: -35px;
+    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    color: white;
+    padding: 6px 40px;
+    font-size: 12px;
+    font-weight: 700;
+    transform: rotate(45deg);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  }
+}
+
+// Glow effect
+.mat-mdc-card.glow {
+  box-shadow: 0 0 20px rgba(102, 126, 234, 0.3) !important;
+
+  &:hover {
+    box-shadow: 0 0 30px rgba(102, 126, 234, 0.5) !important;
+  }
+}
+
+// Card content padding variants
+.mat-mdc-card.compact {
+  mat-card-content {
+    padding: 12px !important;
+  }
+}
+
+.mat-mdc-card.spacious {
+  mat-card-content {
+    padding: 32px !important;
+  }
+}
+
+// Responsive adjustments
+@media (max-width: 768px) {
+  mat-card {
+    margin-bottom: 16px;
+  }
+
+  .mat-mdc-card.stat-card {
+    mat-icon {
+      font-size: 36px;
+      width: 36px;
+      height: 36px;
+    }
+
+    h3 {
+      font-size: 2rem;
+    }
+  }
+}
+
+// Animation classes
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.mat-mdc-card.animate-in {
+  animation: fadeInUp 0.6s ease-out;
+}
+
+// Stagger animations for multiple cards
+.mat-mdc-card.animate-in:nth-child(1) { animation-delay: 0.1s; }
+.mat-mdc-card.animate-in:nth-child(2) { animation-delay: 0.2s; }
+.mat-mdc-card.animate-in:nth-child(3) { animation-delay: 0.3s; }
+.mat-mdc-card.animate-in:nth-child(4) { animation-delay: 0.4s; }
+.mat-mdc-card.animate-in:nth-child(5) { animation-delay: 0.5s; }
+.mat-mdc-card.animate-in:nth-child(6) { animation-delay: 0.6s; }

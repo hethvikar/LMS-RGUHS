@@ -1,0 +1,231 @@
+<div class="view-feedback-dialog">
+  <div mat-dialog-title class="dialog-header">
+    <div class="header-info">
+      <div class="feedback-header">
+        <mat-icon class="header-icon">assessment</mat-icon>
+        <div class="title-info">
+          <h2>Interview Feedback</h2>
+          <p>{{ feedback.companyName }} - {{ feedback.position }}</p>
+          <span class="interview-date">{{ feedback.interviewDate | date: 'MMM d, y' }}</span>
+        </div>
+      </div>
+    </div>
+    <button mat-icon-button (click)="onClose()" class="close-btn">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+
+  <div mat-dialog-content class="dialog-body">
+    <!-- Overall Rating Card -->
+    <mat-card class="overall-rating-card">
+      <mat-card-content>
+        <div class="rating-display">
+          <div class="rating-circle" [class]="getRatingClass(feedback.overallRating)">
+            <span class="rating-value">{{ feedback.overallRating }}</span>
+            <span class="rating-max">/5</span>
+          </div>
+          <div class="rating-details">
+            <h3>Overall Performance</h3>
+            <p>Based on comprehensive evaluation</p>
+            <mat-chip [class]="getRecommendationClass(feedback.recommendation)">
+              <mat-icon>{{ getRecommendationIcon(feedback.recommendation) }}</mat-icon>
+              {{ getRecommendationText(feedback.recommendation) }}
+            </mat-chip>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <!-- Interview Details -->
+    <mat-card class="details-card">
+      <mat-card-header>
+        <mat-card-title>
+          <mat-icon>info</mat-icon>
+          Interview Details
+        </mat-card-title>
+      </mat-card-header>
+      <mat-divider></mat-divider>
+      <mat-card-content>
+        <div class="details-grid">
+          <div class="detail-item">
+            <mat-icon>person</mat-icon>
+            <div class="detail-content">
+              <span class="label">Interviewer</span>
+              <span class="value">{{ feedback.interviewer }}</span>
+            </div>
+          </div>
+          <div class="detail-item">
+            <mat-icon>schedule</mat-icon>
+            <div class="detail-content">
+              <span class="label">Duration</span>
+              <span class="value">{{ feedback.duration }}</span>
+            </div>
+          </div>
+          <div class="detail-item">
+            <mat-icon>category</mat-icon>
+            <div class="detail-content">
+              <span class="label">Interview Type</span>
+              <span class="value">{{ feedback.interviewType | titlecase }} Round</span>
+            </div>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <!-- Skills Assessment -->
+    <mat-card class="skills-card">
+      <mat-card-header>
+        <mat-card-title>
+          <mat-icon>analytics</mat-icon>
+          Skills Assessment
+        </mat-card-title>
+      </mat-card-header>
+      <mat-divider></mat-divider>
+      <mat-card-content>
+        <!-- Technical Skills -->
+        <div class="skill-section" *ngIf="feedback.technicalSkills">
+          <div class="skill-header">
+            <h4>Technical Skills</h4>
+            <span class="skill-rating" [class]="getRatingClass(feedback.technicalSkills.rating)">
+              {{ feedback.technicalSkills.rating }}/5
+            </span>
+          </div>
+          <mat-progress-bar 
+            mode="determinate" 
+            [value]="getRatingPercentage(feedback.technicalSkills.rating)"
+            [class]="getRatingClass(feedback.technicalSkills.rating)">
+          </mat-progress-bar>
+          <p class="skill-comment">{{ feedback.technicalSkills.comments }}</p>
+        </div>
+
+        <!-- Communication Skills -->
+        <div class="skill-section" *ngIf="feedback.communicationSkills">
+          <div class="skill-header">
+            <h4>Communication Skills</h4>
+            <span class="skill-rating" [class]="getRatingClass(feedback.communicationSkills.rating)">
+              {{ feedback.communicationSkills.rating }}/5
+            </span>
+          </div>
+          <mat-progress-bar 
+            mode="determinate" 
+            [value]="getRatingPercentage(feedback.communicationSkills.rating)"
+            [class]="getRatingClass(feedback.communicationSkills.rating)">
+          </mat-progress-bar>
+          <p class="skill-comment">{{ feedback.communicationSkills.comments }}</p>
+        </div>
+
+        <!-- Problem Solving -->
+        <div class="skill-section" *ngIf="feedback.problemSolving">
+          <div class="skill-header">
+            <h4>Problem Solving</h4>
+            <span class="skill-rating" [class]="getRatingClass(feedback.problemSolving.rating)">
+              {{ feedback.problemSolving.rating }}/5
+            </span>
+          </div>
+          <mat-progress-bar 
+            mode="determinate" 
+            [value]="getRatingPercentage(feedback.problemSolving.rating)"
+            [class]="getRatingClass(feedback.problemSolving.rating)">
+          </mat-progress-bar>
+          <p class="skill-comment">{{ feedback.problemSolving.comments }}</p>
+        </div>
+
+        <!-- Culture Fit -->
+        <div class="skill-section" *ngIf="feedback.cultureFit">
+          <div class="skill-header">
+            <h4>Culture Fit</h4>
+            <span class="skill-rating" [class]="getRatingClass(feedback.cultureFit.rating)">
+              {{ feedback.cultureFit.rating }}/5
+            </span>
+          </div>
+          <mat-progress-bar 
+            mode="determinate" 
+            [value]="getRatingPercentage(feedback.cultureFit.rating)"
+            [class]="getRatingClass(feedback.cultureFit.rating)">
+          </mat-progress-bar>
+          <p class="skill-comment">{{ feedback.cultureFit.comments }}</p>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <!-- Strengths -->
+    <mat-card class="strengths-card" *ngIf="feedback.strengths && feedback.strengths.length > 0">
+      <mat-card-header>
+        <mat-card-title>
+          <mat-icon>emoji_events</mat-icon>
+          Key Strengths
+        </mat-card-title>
+      </mat-card-header>
+      <mat-divider></mat-divider>
+      <mat-card-content>
+        <ul class="strengths-list">
+          <li *ngFor="let strength of feedback.strengths">
+            <mat-icon>check_circle</mat-icon>
+            <span>{{ strength }}</span>
+          </li>
+        </ul>
+      </mat-card-content>
+    </mat-card>
+
+    <!-- Areas of Improvement -->
+    <mat-card class="improvement-card" *ngIf="feedback.areasOfImprovement && feedback.areasOfImprovement.length > 0">
+      <mat-card-header>
+        <mat-card-title>
+          <mat-icon>trending_up</mat-icon>
+          Areas for Improvement
+        </mat-card-title>
+      </mat-card-header>
+      <mat-divider></mat-divider>
+      <mat-card-content>
+        <ul class="improvement-list">
+          <li *ngFor="let area of feedback.areasOfImprovement">
+            <mat-icon>arrow_forward</mat-icon>
+            <span>{{ area }}</span>
+          </li>
+        </ul>
+      </mat-card-content>
+    </mat-card>
+
+    <!-- General Comments -->
+    <mat-card class="comments-card" *ngIf="feedback.generalComments">
+      <mat-card-header>
+        <mat-card-title>
+          <mat-icon>comment</mat-icon>
+          General Comments
+        </mat-card-title>
+      </mat-card-header>
+      <mat-divider></mat-divider>
+      <mat-card-content>
+        <p class="general-comments">{{ feedback.generalComments }}</p>
+      </mat-card-content>
+    </mat-card>
+
+    <!-- Next Steps -->
+    <mat-card class="next-steps-card" *ngIf="feedback.nextSteps">
+      <mat-card-header>
+        <mat-card-title>
+          <mat-icon>next_plan</mat-icon>
+          Next Steps
+        </mat-card-title>
+      </mat-card-header>
+      <mat-divider></mat-divider>
+      <mat-card-content>
+        <div class="next-steps-content">
+          <p class="next-steps-text">{{ feedback.nextSteps }}</p>
+          <div class="follow-up" *ngIf="feedback.followUpDate">
+            <mat-icon>event</mat-icon>
+            <span>Follow-up expected by: <strong>{{ feedback.followUpDate | date: 'MMM d, y' }}</strong></span>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+  <div mat-dialog-actions class="dialog-actions">
+    <button mat-button (click)="onClose()">Close</button>
+    <button mat-raised-button color="primary" (click)="downloadFeedback()">
+      <mat-icon>download</mat-icon>
+      Download Report
+    </button>
+  </div>
+</div>

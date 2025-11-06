@@ -13,6 +13,13 @@ import { MatNativeDateModule } from '@angular/material/core';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { CommonModule } from '@angular/common';
+import { AssignAssignmentPopupComponent } from './assign-assignment-popup/assign-assignment-popup.component';
+import { ViewAssignmentPopupComponent } from './view-assignment-popup/view-assignment-popup.component';
+import { EditAssignmentPopupComponent } from './edit-assignment-popup/edit-assignment-popup.component';
+import { GradeSubmissionPopupComponent } from './grade-submission-popup/grade-submission-popup.component';
+import { ExtendDeadlinePopupComponent } from './extend-deadline-popup/extend-deadline-popup.component';
+import { ViewAssignmentsPopupComponent } from './view-assignments-popup/view-assignments-popup.component';
+import { AssignToAllPopupComponent } from './assign-to-all-popup/assign-to-all-popup.component';
 
 interface Assessment {
   id: number;
@@ -62,7 +69,14 @@ interface AssessmentAssignment {
     MatDatepickerModule,
     MatNativeDateModule,
     MatTabsModule,
-    MatTooltipModule
+    MatTooltipModule,
+    AssignAssignmentPopupComponent,
+    ViewAssignmentPopupComponent,
+    EditAssignmentPopupComponent,
+    GradeSubmissionPopupComponent,
+    ExtendDeadlinePopupComponent,
+    ViewAssignmentsPopupComponent,
+    AssignToAllPopupComponent
   ],
   templateUrl: './assessment-assignment.component.html',
   styleUrls: ['./assessment-assignment.component.scss']
@@ -168,6 +182,15 @@ export class AssessmentAssignmentComponent implements OnInit {
   assignmentDueDate: Date | null = null;
   maxAttempts = 1;
   displayedColumns: string[] = ['student', 'assessment', 'dueDate', 'status', 'score', 'actions'];
+  openAssignmentPopup = false;
+  openViewAssignmentPopup = false;
+  openEditAssignmentPopup = false;
+  openGradeSubmissionPopup = false;
+  openExtendDeadlinePopup = false;
+  openViewAssignmentsPopup = false;
+  openAssignToAllPopup = false;
+  selectedAssignment: AssessmentAssignment | null = null;
+  selectedAssessment: Assessment | null = null;
 
   ngOnInit() {
     // Load data from API
@@ -307,19 +330,113 @@ export class AssessmentAssignmentComponent implements OnInit {
   }
 
   viewAssignment(assignment: AssessmentAssignment) {
-    console.log('View assignment:', assignment);
+    console.log('viewAssignment called with:', assignment);
+    this.selectedAssignment = assignment;
+    this.openViewAssignmentPopup = true;
+    console.log('openViewAssignmentPopup set to:', this.openViewAssignmentPopup);
+    console.log('selectedAssignment set to:', this.selectedAssignment);
+  }
+
+  closeViewAssignmentPopup() {
+    console.log('closeViewAssignmentPopup called');
+    this.openViewAssignmentPopup = false;
+    this.selectedAssignment = null;
   }
 
   editAssignment(assignment: AssessmentAssignment) {
     console.log('Edit assignment:', assignment);
+    this.selectedAssignment = assignment;
+    this.openEditAssignmentPopup = true;
+  }
+
+  closeEditAssignmentPopup() {
+    console.log('closeEditAssignmentPopup called');
+    this.openEditAssignmentPopup = false;
+    this.selectedAssignment = null;
+  }
+
+  handleEditAssignment(event: { id: number, dueDate: Date, maxAttempts: number, status: string }) {
+    console.log('handleEditAssignment called with:', event);
+    const assignmentIndex = this.assignments.findIndex(a => a.id === event.id);
+    
+    if (assignmentIndex > -1) {
+      this.assignments[assignmentIndex] = {
+        ...this.assignments[assignmentIndex],
+        dueDate: event.dueDate,
+        maxAttempts: event.maxAttempts,
+        status: event.status as 'assigned' | 'in-progress' | 'submitted' | 'graded' | 'overdue'
+      };
+      console.log('Assignment updated successfully:', this.assignments[assignmentIndex]);
+    } else {
+      console.error('Assignment not found');
+    }
+    
+    this.closeEditAssignmentPopup();
   }
 
   gradeAssignment(assignment: AssessmentAssignment) {
     console.log('Grade assignment:', assignment);
+    this.selectedAssignment = assignment;
+    this.openGradeSubmissionPopup = true;
+  }
+
+  closeGradeSubmissionPopup() {
+    console.log('closeGradeSubmissionPopup called');
+    this.openGradeSubmissionPopup = false;
+    this.selectedAssignment = null;
+  }
+
+  handleGradeSubmission(event: { id: number, score: number, feedback: string }) {
+    console.log('handleGradeSubmission called with:', event);
+    const assignmentIndex = this.assignments.findIndex(a => a.id === event.id);
+    
+    if (assignmentIndex > -1) {
+      this.assignments[assignmentIndex] = {
+        ...this.assignments[assignmentIndex],
+        score: event.score,
+        status: 'graded',
+        gradedDate: new Date()
+      };
+      console.log('Assignment graded successfully:', this.assignments[assignmentIndex]);
+      console.log('Feedback:', event.feedback);
+    } else {
+      console.error('Assignment not found');
+    }
+    
+    this.closeGradeSubmissionPopup();
   }
 
   extendDeadline(assignment: AssessmentAssignment) {
     console.log('Extend deadline:', assignment);
+    this.selectedAssignment = assignment;
+    this.openExtendDeadlinePopup = true;
+  }
+
+  closeExtendDeadlinePopup() {
+    console.log('closeExtendDeadlinePopup called');
+    this.openExtendDeadlinePopup = false;
+    this.selectedAssignment = null;
+  }
+
+  handleExtendDeadline(event: { id: number, newDueDate: Date, reason: string }) {
+    console.log('handleExtendDeadline called with:', event);
+    const assignmentIndex = this.assignments.findIndex(a => a.id === event.id);
+    
+    if (assignmentIndex > -1) {
+      const oldDueDate = this.assignments[assignmentIndex].dueDate;
+      this.assignments[assignmentIndex] = {
+        ...this.assignments[assignmentIndex],
+        dueDate: event.newDueDate
+      };
+      console.log('Deadline extended successfully');
+      console.log('Old due date:', oldDueDate);
+      console.log('New due date:', event.newDueDate);
+      console.log('Reason:', event.reason);
+    } else {
+      console.error('Assignment not found');
+    }
+    
+    this.closeExtendDeadlinePopup();
   }
 
   removeAssignment(assignment: AssessmentAssignment) {
@@ -332,13 +449,124 @@ export class AssessmentAssignmentComponent implements OnInit {
 
   viewAssessmentAssignments(assessment: Assessment) {
     console.log('View assessment assignments:', assessment);
+    this.selectedAssessment = assessment;
+    this.openViewAssignmentsPopup = true;
+  }
+
+  closeViewAssignmentsPopup() {
+    console.log('closeViewAssignmentsPopup called');
+    this.openViewAssignmentsPopup = false;
+    this.selectedAssessment = null;
   }
 
   assignToAllStudents(assessment: Assessment) {
     console.log('Assign to all students:', assessment);
+    this.selectedAssessment = assessment;
+    this.openAssignToAllPopup = true;
+  }
+
+  closeAssignToAllPopup() {
+    console.log('closeAssignToAllPopup called');
+    this.openAssignToAllPopup = false;
+    this.selectedAssessment = null;
+  }
+
+  handleAssignToAll(event: { assessmentId: number, studentIds: number[], dueDate: Date, maxAttempts: number }) {
+    console.log('handleAssignToAll called with:', event);
+    
+    const assessment = this.assessments.find(a => a.id === event.assessmentId);
+    if (!assessment) {
+      console.error('Assessment not found');
+      return;
+    }
+
+    event.studentIds.forEach(studentId => {
+      const student = this.students.find(s => s.id === studentId);
+      if (!student) {
+        console.error('Student not found:', studentId);
+        return;
+      }
+
+      // Check if already assigned
+      const alreadyAssigned = this.assignments.some(
+        a => a.assessmentId === event.assessmentId && a.studentId === studentId
+      );
+
+      if (!alreadyAssigned) {
+        const newAssignment: AssessmentAssignment = {
+          id: this.assignments.length + 1,
+          assessmentId: assessment.id,
+          assessmentTitle: assessment.title,
+          studentId: student.id,
+          studentName: student.name,
+          courseName: assessment.courseName,
+          assignedDate: new Date(),
+          dueDate: event.dueDate,
+          status: 'assigned',
+          maxScore: assessment.maxScore,
+          attempts: 0,
+          maxAttempts: event.maxAttempts
+        };
+
+        this.assignments.push(newAssignment);
+      }
+    });
+
+    console.log(`Assigned to ${event.studentIds.length} students successfully`);
+    this.closeAssignToAllPopup();
+  }
+
+  getAssignmentsForSelectedAssessment(): AssessmentAssignment[] {
+    if (!this.selectedAssessment) return [];
+    return this.assignments.filter(a => a.assessmentId === this.selectedAssessment?.id);
+  }
+
+  getAlreadyAssignedStudentIds(): number[] {
+    if (!this.selectedAssessment) return [];
+    const assignmentsForAssessment = this.getAssignmentsForSelectedAssessment();
+    return assignmentsForAssessment.map(a => a.studentId);
   }
 
   openAssignmentDialog() {
-    console.log('Open assignment dialog');
+    this.openAssignmentPopup = true;
+  }
+
+  closeAssignmentPopup() {
+    this.openAssignmentPopup = false;
+  }
+
+  handleAssignAssignment(event: { assessmentId: number, studentId: number, dueDate: Date, maxAttempts: number }) {
+    const assessment = this.assessments.find(a => a.id === event.assessmentId);
+    const student = this.students.find(s => s.id === event.studentId);
+
+    if (!assessment || !student) {
+      console.error('Assessment or student not found');
+      return;
+    }
+
+    // Check if already assigned
+    if (this.assignments.some(a => a.assessmentId === event.assessmentId && a.studentId === event.studentId)) {
+      alert('Assessment is already assigned to this student');
+      return;
+    }
+
+    const newAssignment: AssessmentAssignment = {
+      id: this.assignments.length + 1,
+      assessmentId: assessment.id,
+      assessmentTitle: assessment.title,
+      studentId: student.id,
+      studentName: student.name,
+      courseName: assessment.courseName,
+      assignedDate: new Date(),
+      dueDate: event.dueDate,
+      status: 'assigned',
+      maxScore: assessment.maxScore,
+      attempts: 0,
+      maxAttempts: event.maxAttempts
+    };
+
+    this.assignments.push(newAssignment);
+    console.log('Assessment assigned successfully:', newAssignment);
+    this.closeAssignmentPopup();
   }
 }

@@ -1,0 +1,81 @@
+<div class="edit-assignment-popup">
+  <div class="popup-header">
+    <h2>Edit Assignment</h2>
+    <button mat-icon-button (click)="onClose()" class="close-button">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+
+  <div class="popup-content" *ngIf="assignment">
+    <!-- Assignment Info (Read-only) -->
+    <div class="info-section">
+      <div class="info-item">
+        <mat-icon>person</mat-icon>
+        <div class="info-details">
+          <span class="info-label">Student</span>
+          <span class="info-value">{{ assignment.studentName }}</span>
+        </div>
+      </div>
+      <div class="info-item">
+        <mat-icon>assignment</mat-icon>
+        <div class="info-details">
+          <span class="info-label">Assessment</span>
+          <span class="info-value">{{ assignment.assessmentTitle }}</span>
+        </div>
+      </div>
+      <div class="info-item">
+        <mat-icon>school</mat-icon>
+        <div class="info-details">
+          <span class="info-label">Course</span>
+          <span class="info-value">{{ assignment.courseName }}</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Editable Fields -->
+    <div class="form-section">
+      <h3>Edit Assignment Details</h3>
+      
+      <mat-form-field appearance="outline" class="form-field">
+        <mat-label>Due Date</mat-label>
+        <input matInput [matDatepicker]="dueDatePicker" [(ngModel)]="dueDate" name="dueDate" required>
+        <mat-datepicker-toggle matIconSuffix [for]="dueDatePicker"></mat-datepicker-toggle>
+        <mat-datepicker #dueDatePicker></mat-datepicker>
+        <mat-hint>Select the new due date for this assignment</mat-hint>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="form-field">
+        <mat-label>Max Attempts</mat-label>
+        <mat-select [(ngModel)]="maxAttempts" name="maxAttempts" required>
+          <mat-option [value]="1">1 Attempt</mat-option>
+          <mat-option [value]="2">2 Attempts</mat-option>
+          <mat-option [value]="3">3 Attempts</mat-option>
+          <mat-option [value]="5">5 Attempts</mat-option>
+          <mat-option [value]="10">10 Attempts</mat-option>
+          <mat-option [value]="999">Unlimited</mat-option>
+        </mat-select>
+        <mat-hint>Current attempts used: {{ assignment.attempts }}</mat-hint>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="form-field">
+        <mat-label>Status</mat-label>
+        <mat-select [(ngModel)]="status" name="status" required>
+          <mat-option *ngFor="let option of statusOptions" [value]="option.value">
+            {{ option.label }}
+          </mat-option>
+        </mat-select>
+        <mat-hint>Update the assignment status</mat-hint>
+      </mat-form-field>
+    </div>
+  </div>
+
+  <div class="popup-footer">
+    <button mat-button (click)="onClose()">
+      Cancel
+    </button>
+    <button mat-raised-button color="primary" (click)="onSave()" [disabled]="!isFormValid()">
+      <mat-icon>save</mat-icon>
+      Save Changes
+    </button>
+  </div>
+</div>

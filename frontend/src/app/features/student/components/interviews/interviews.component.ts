@@ -4,7 +4,9 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatListModule } from '@angular/material/list';
+import { MatDialog } from '@angular/material/dialog';
 import { CommonModule } from '@angular/common';
+import { ViewInterviewFeedbackComponent } from './view-interview-feedback/view-interview-feedback.component';
 
 interface Interview {
   id: number;
@@ -69,6 +71,8 @@ export class StudentInterviewsComponent implements OnInit {
     }
   ];
 
+  constructor(private dialog: MatDialog) {}
+
   ngOnInit() {
     // Load interviews from API
   }
@@ -124,7 +128,19 @@ export class StudentInterviewsComponent implements OnInit {
   }
 
   viewFeedback(interview: Interview) {
-    console.log('Viewing feedback for:', interview);
-    // Show feedback modal
+    const dialogRef = this.dialog.open(ViewInterviewFeedbackComponent, {
+      width: '900px',
+      maxWidth: '95vw',
+      maxHeight: '90vh',
+      data: { interview },
+      panelClass: 'view-feedback-dialog-panel'
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      // Handle any actions after dialog closes
+      if (result) {
+        console.log('Feedback dialog closed with result:', result);
+      }
+    });
   }
 }

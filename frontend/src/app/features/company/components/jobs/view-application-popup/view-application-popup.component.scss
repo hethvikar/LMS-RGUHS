@@ -1,0 +1,495 @@
+.view-applications-dialog {
+  display: flex;
+  flex-direction: column;
+  max-height: 90vh;
+
+  .dialog-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 24px !important;
+    margin: 0 !important;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+
+    .header-info {
+      h2 {
+        margin: 0;
+        font-size: 22px;
+        font-weight: 600;
+      }
+
+      p {
+        margin: 4px 0 0 0;
+        opacity: 0.9;
+        font-size: 13px;
+      }
+    }
+
+    .close-btn {
+      color: white;
+      
+      mat-icon {
+        font-size: 26px;
+        width: 26px;
+        height: 26px;
+      }
+    }
+  }
+
+  .dialog-body {
+    padding: 20px 24px !important;
+    overflow-y: auto;
+  }
+}
+
+.application-stats {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 12px;
+  margin-bottom: 20px;
+
+  .stat-item {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 14px 12px;
+    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    border-radius: 8px;
+    transition: transform 0.2s;
+
+    &:hover {
+      transform: translateY(-2px);
+    }
+
+    mat-icon {
+      color: #667eea;
+      font-size: 28px;
+      width: 28px;
+      height: 28px;
+      flex-shrink: 0;
+    }
+
+    .stat-details {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+
+      .stat-value {
+        font-size: 22px;
+        font-weight: 700;
+        color: #2c3e50;
+        line-height: 1;
+      }
+
+      .stat-label {
+        font-size: 11px;
+        color: #7f8c8d;
+        text-transform: uppercase;
+        margin-top: 2px;
+        white-space: nowrap;
+      }
+    }
+  }
+}
+
+mat-divider {
+  margin: 20px 0;
+}
+
+.applications-section {
+  .section-header {
+    margin-bottom: 16px;
+
+    h3 {
+      margin: 0;
+      font-size: 20px;
+      color: #2c3e50;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+  }
+}
+
+.table-container {
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.applications-table {
+  width: 100%;
+
+  th {
+    background: #f5f7fa;
+    font-weight: 600;
+    color: #2c3e50;
+    padding: 12px 16px !important;
+    text-align: left;
+    vertical-align: middle;
+  }
+
+  td {
+    padding: 12px 16px !important;
+    border-bottom: 1px solid #e0e0e0;
+    vertical-align: middle;
+  }
+
+  .application-row {
+    cursor: pointer;
+    transition: background-color 0.2s;
+
+    &:hover {
+      background-color: #f8f9fa;
+    }
+  }
+
+  .candidate-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+
+    .candidate-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 600;
+      font-size: 18px;
+    }
+
+    .candidate-details {
+      display: flex;
+      flex-direction: column;
+
+      strong {
+        color: #2c3e50;
+        font-size: 14px;
+      }
+
+      .candidate-email {
+        font-size: 12px;
+        color: #7f8c8d;
+      }
+    }
+  }
+
+  mat-chip {
+    font-size: 12px;
+    min-height: 24px;
+    padding: 4px 12px;
+  }
+
+  .status-pending {
+    background: #fff3cd;
+    color: #856404;
+  }
+
+  .status-shortlisted {
+    background: #d1ecf1;
+    color: #0c5460;
+  }
+
+  .status-rejected {
+    background: #f8d7da;
+    color: #721c24;
+  }
+
+  .status-interview {
+    background: #d4edda;
+    color: #155724;
+  }
+
+  .status-offered {
+    background: #cce5ff;
+    color: #004085;
+  }
+
+  .status-hired {
+    background: #d1e7dd;
+    color: #0f5132;
+  }
+
+  .score-badge {
+    padding: 4px 12px;
+    border-radius: 12px;
+    font-weight: 600;
+    font-size: 13px;
+  }
+
+  .score-high {
+    background: #d4edda;
+    color: #155724;
+  }
+
+  .score-medium {
+    background: #fff3cd;
+    color: #856404;
+  }
+
+  .score-low {
+    background: #f8d7da;
+    color: #721c24;
+  }
+
+  .no-score {
+    color: #7f8c8d;
+    font-size: 12px;
+  }
+}
+
+.no-applications {
+  text-align: center;
+  padding: 48px 24px;
+  color: #7f8c8d;
+
+  mat-icon {
+    font-size: 64px;
+    width: 64px;
+    height: 64px;
+    color: #bdc3c7;
+    margin-bottom: 16px;
+  }
+
+  h3 {
+    margin: 0 0 8px 0;
+    color: #2c3e50;
+  }
+
+  p {
+    margin: 0;
+    font-size: 14px;
+  }
+}
+
+.application-details {
+  .details-header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 24px;
+
+    button {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    h3 {
+      margin: 0;
+      font-size: 20px;
+      color: #2c3e50;
+    }
+  }
+
+  .candidate-card {
+    mat-card-header {
+      padding: 24px;
+      background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+
+      .candidate-header {
+        display: flex;
+        gap: 24px;
+        width: 100%;
+
+        .candidate-avatar-large {
+          width: 80px;
+          height: 80px;
+          border-radius: 50%;
+          background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+          color: white;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-weight: 700;
+          font-size: 32px;
+          flex-shrink: 0;
+        }
+
+        .candidate-main-info {
+          flex: 1;
+
+          h2 {
+            margin: 0 0 12px 0;
+            color: #2c3e50;
+            font-size: 28px;
+          }
+
+          .contact-info {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 16px;
+            margin-bottom: 12px;
+
+            .contact-item {
+              display: flex;
+              align-items: center;
+              gap: 8px;
+              color: #495057;
+              font-size: 14px;
+
+              mat-icon {
+                font-size: 20px;
+                width: 20px;
+                height: 20px;
+                color: #667eea;
+              }
+            }
+          }
+
+          mat-chip {
+            font-size: 13px;
+            padding: 6px 16px;
+          }
+        }
+      }
+    }
+
+    mat-card-content {
+      padding: 24px;
+
+      .details-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 24px;
+        margin-bottom: 24px;
+      }
+
+      .detail-section {
+        h4 {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          margin: 0 0 8px 0;
+          color: #495057;
+          font-size: 14px;
+          font-weight: 600;
+          text-transform: uppercase;
+
+          mat-icon {
+            font-size: 20px;
+            width: 20px;
+            height: 20px;
+            color: #667eea;
+          }
+        }
+
+        p {
+          margin: 0;
+          color: #2c3e50;
+          font-size: 16px;
+        }
+
+        &.full-width {
+          grid-column: 1 / -1;
+        }
+      }
+
+      .skills-container {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+
+        mat-chip {
+          background: #e7f3ff;
+          color: #0066cc;
+          font-size: 13px;
+        }
+      }
+
+      .cover-letter {
+        padding: 16px;
+        background: #f8f9fa;
+        border-radius: 8px;
+        border-left: 4px solid #667eea;
+        line-height: 1.6;
+        color: #495057;
+      }
+    }
+
+    mat-card-actions {
+      padding: 16px 24px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      background: #f8f9fa;
+
+      button {
+        mat-icon {
+          margin-right: 4px;
+        }
+      }
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .view-applications-dialog {
+    .dialog-header {
+      padding: 16px !important;
+
+      .header-info h2 {
+        font-size: 18px;
+      }
+    }
+
+    .dialog-body {
+      padding: 16px !important;
+    }
+  }
+
+  .application-stats {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+    
+    .stat-item {
+      padding: 12px 10px;
+      
+      mat-icon {
+        font-size: 24px;
+        width: 24px;
+        height: 24px;
+      }
+      
+      .stat-details {
+        .stat-value {
+          font-size: 18px;
+        }
+        
+        .stat-label {
+          font-size: 10px;
+        }
+      }
+    }
+  }
+
+  .applications-table {
+    font-size: 11px;
+
+    th, td {
+      padding: 10px 8px !important;
+    }
+  }
+
+  .details-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  .candidate-header {
+    flex-direction: column;
+    align-items: flex-start !important;
+  }
+
+  mat-card-actions {
+    button {
+      flex: 1;
+      min-width: 120px;
+    }
+  }
+}

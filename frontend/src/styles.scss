@@ -6,6 +6,10 @@
 /* AG Grid CSS */
 @import 'ag-grid-community/styles/ag-grid.css';
 @import 'ag-grid-community/styles/ag-theme-alpine.css';
+
+/* LMS Module Custom Card Styles */
+@import 'app/features/lms/styles/lms-cards';
+
 /* You can add global styles to this file, and also import other style files */
 
 html, body {
@@ -346,4 +350,59 @@ mat-card[class*="gradient-"] button:hover {
 /* Dialog Backdrop */
 .cdk-overlay-dark-backdrop {
   background: rgba(0, 0, 0, 0.5);
+}
+/* View Applications Dialog Styling */
+.view-applications-dialog-container {
+  .mat-mdc-dialog-container {
+    --mdc-dialog-container-shape: 12px;
+    padding: 0 !important;
+    overflow: hidden;
+  }
+
+  .mdc-dialog__surface {
+    overflow: hidden;
+    border-radius: 12px;
+  }
+}
+
+/* View Application Details Dialog Styling */
+.view-application-dialog-panel {
+  .mat-mdc-dialog-container {
+    --mdc-dialog-container-shape: 12px;
+    padding: 0 !important;
+    overflow: hidden;
+  }
+
+  .mdc-dialog__surface {
+    overflow: hidden;
+    border-radius: 12px;
+  }
+}
+
+/* View Interview Feedback Dialog Styling */
+.view-feedback-dialog-panel {
+  .mat-mdc-dialog-container {
+    --mdc-dialog-container-shape: 12px;
+    padding: 0 !important;
+    overflow: hidden;
+  }
+
+  .mdc-dialog__surface {
+    overflow: hidden;
+    border-radius: 12px;
+  }
+}
+
+/* View Offer Details Dialog Styling */
+.view-offer-dialog-panel {
+  .mat-mdc-dialog-container {
+    --mdc-dialog-container-shape: 12px;
+    padding: 0 !important;
+    overflow: hidden;
+  }
+
+  .mdc-dialog__surface {
+    overflow: hidden;
+    border-radius: 12px;
+  }
 }

@@ -1,0 +1,173 @@
+<div class="grade-submission-popup">
+  <div class="popup-header">
+    <h2>Grade Submission</h2>
+    <button mat-icon-button (click)="onClose()" class="close-button">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+
+  <div class="popup-content" *ngIf="assignment">
+    <!-- Submission Information -->
+    <div class="info-section">
+      <div class="section-header">
+        <mat-icon>info</mat-icon>
+        <h3>Submission Details</h3>
+      </div>
+      
+      <div class="info-grid">
+        <div class="info-item">
+          <mat-icon>person</mat-icon>
+          <div class="info-details">
+            <span class="info-label">Student</span>
+            <span class="info-value">{{ assignment.studentName }}</span>
+          </div>
+        </div>
+
+        <div class="info-item">
+          <mat-icon>assignment</mat-icon>
+          <div class="info-details">
+            <span class="info-label">Assessment</span>
+            <span class="info-value">{{ assignment.assessmentTitle }}</span>
+          </div>
+        </div>
+
+        <div class="info-item">
+          <mat-icon>school</mat-icon>
+          <div class="info-details">
+            <span class="info-label">Course</span>
+            <span class="info-value">{{ assignment.courseName }}</span>
+          </div>
+        </div>
+
+        <div class="info-item">
+          <mat-icon>event</mat-icon>
+          <div class="info-details">
+            <span class="info-label">Submitted</span>
+            <span class="info-value">{{ assignment.submittedDate | date:'medium' }}</span>
+          </div>
+        </div>
+
+        <div class="info-item">
+          <mat-icon>schedule</mat-icon>
+          <div class="info-details">
+            <span class="info-label">Time Elapsed</span>
+            <span class="info-value">{{ getTimeElapsed() }}</span>
+          </div>
+        </div>
+
+        <div class="info-item">
+          <mat-icon>replay</mat-icon>
+          <div class="info-details">
+            <span class="info-label">Attempt</span>
+            <span class="info-value">{{ assignment.attempts }} of {{ assignment.maxAttempts }}</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Late Submission Warning -->
+      <div class="late-warning" *ngIf="isLateSubmission()">
+        <mat-icon>warning</mat-icon>
+        <span>This submission was {{ getDaysLate() }} day(s) late</span>
+      </div>
+    </div>
+
+    <mat-divider></mat-divider>
+
+    <!-- Grading Section -->
+    <div class="grading-section">
+      <div class="section-header">
+        <mat-icon>grading</mat-icon>
+        <h3>Grade Assignment</h3>
+      </div>
+
+      <!-- Score Input -->
+      <div class="score-input-container">
+        <div class="score-controls">
+          <button mat-icon-button (click)="decrementScore()" [disabled]="score <= 0">
+            <mat-icon>remove</mat-icon>
+          </button>
+          
+          <div class="score-display">
+            <input 
+              type="number" 
+              [(ngModel)]="score" 
+              (input)="onScoreInput($event)"
+              [max]="maxScore"
+              min="0"
+              step="0.5"
+              class="score-input">
+            <span class="score-divider">/</span>
+            <span class="max-score">{{ maxScore }}</span>
+          </div>
+
+          <button mat-icon-button (click)="incrementScore()" [disabled]="score >= maxScore">
+            <mat-icon>add</mat-icon>
+          </button>
+        </div>
+
+        <!-- Percentage Display -->
+        <div class="percentage-display" [class]="getGradeClass()">
+          <div class="percentage-value">{{ getScorePercentage() }}%</div>
+          <div class="grade-label">{{ getGradeLabel() }}</div>
+        </div>
+      </div>
+
+      <!-- Quick Score Buttons -->
+      <div class="quick-scores">
+        <span class="quick-scores-label">Quick Grade:</span>
+        <button mat-button (click)="setQuickScore(100)" class="quick-score-btn">
+          100%
+        </button>
+        <button mat-button (click)="setQuickScore(90)" class="quick-score-btn">
+          90%
+        </button>
+        <button mat-button (click)="setQuickScore(75)" class="quick-score-btn">
+          75%
+        </button>
+        <button mat-button (click)="setQuickScore(60)" class="quick-score-btn">
+          60%
+        </button>
+        <button mat-button (click)="setQuickScore(50)" class="quick-score-btn">
+          50%
+        </button>
+        <button mat-button (click)="setQuickScore(0)" class="quick-score-btn">
+          0%
+        </button>
+      </div>
+
+      <!-- Visual Score Bar -->
+      <div class="score-bar-container">
+        <div class="score-bar">
+          <div class="score-fill" [style.width.%]="getScorePercentage()" [class]="getGradeClass()"></div>
+        </div>
+        <div class="score-markers">
+          <span>0</span>
+          <span>{{ maxScore / 2 }}</span>
+          <span>{{ maxScore }}</span>
+        </div>
+      </div>
+
+      <!-- Feedback Text Area -->
+      <mat-form-field appearance="outline" class="feedback-field">
+        <mat-label>Feedback (Optional)</mat-label>
+        <textarea 
+          matInput 
+          [(ngModel)]="feedback" 
+          rows="6"
+          placeholder="Provide constructive feedback to the student..."
+          name="feedback"></textarea>
+        <mat-hint>Share comments, suggestions, or areas for improvement</mat-hint>
+      </mat-form-field>
+    </div>
+  </div>
+
+  <div class="popup-footer">
+    <button mat-button (click)="onClose()">
+      Cancel
+    </button>
+    <button mat-raised-button color="primary" (click)="onGrade()" [disabled]="!isFormValid()">
+      <mat-icon>check_circle</mat-icon>
+      Submit Grade
+    </button>
+  </div>
+</div>

@@ -90,6 +90,10 @@
                       <li>Joining Date: {{ placement.offerDetails.joiningDate | date:'mediumDate' }}</li>
                       <li>Location: {{ placement.offerDetails.location }}</li>
                     </ul>
+                    <button mat-raised-button color="primary" (click)="viewOfferDetails(placement)" class="view-offer-btn">
+                      <mat-icon>visibility</mat-icon>
+                      View Full Offer Details
+                    </button>
                   </div>
                 </div>
               </div>

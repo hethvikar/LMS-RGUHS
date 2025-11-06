@@ -1,0 +1,497 @@
+.view-feedback-dialog {
+  display: flex;
+  flex-direction: column;
+  max-height: 90vh;
+
+  .dialog-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: 24px 24px 16px;
+    border-bottom: 1px solid #e0e0e0;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+
+    .header-info {
+      flex: 1;
+
+      .feedback-header {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+
+        .header-icon {
+          font-size: 48px;
+          width: 48px;
+          height: 48px;
+        }
+
+        .title-info {
+          h2 {
+            margin: 0 0 4px 0;
+            font-size: 24px;
+            font-weight: 600;
+          }
+
+          p {
+            margin: 0 0 4px 0;
+            font-size: 16px;
+            opacity: 0.9;
+          }
+
+          .interview-date {
+            font-size: 14px;
+            opacity: 0.8;
+          }
+        }
+      }
+    }
+
+    .close-btn {
+      color: white;
+
+      &:hover {
+        background-color: rgba(255, 255, 255, 0.1);
+      }
+    }
+  }
+
+  .dialog-body {
+    padding: 24px;
+    overflow-y: auto;
+    flex: 1;
+    background-color: #f5f5f5;
+
+    mat-card {
+      margin-bottom: 20px;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+
+      &:last-child {
+        margin-bottom: 0;
+      }
+
+      mat-card-header {
+        mat-card-title {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          font-size: 18px;
+          font-weight: 600;
+          color: #1a1a1a;
+
+          mat-icon {
+            color: #667eea;
+          }
+        }
+      }
+
+      mat-divider {
+        margin: 16px 0;
+      }
+    }
+
+    // Overall Rating Card
+    .overall-rating-card {
+      background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+
+      .rating-display {
+        display: flex;
+        align-items: center;
+        gap: 24px;
+        padding: 10px 0;
+
+        .rating-circle {
+          width: 120px;
+          height: 120px;
+          border-radius: 50%;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          background-color: white;
+          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+
+          &.rating-high {
+            border: 4px solid #00b894;
+            color: #00b894;
+          }
+
+          &.rating-medium {
+            border: 4px solid #fdcb6e;
+            color: #fdcb6e;
+          }
+
+          &.rating-low {
+            border: 4px solid #ff7675;
+            color: #ff7675;
+          }
+
+          .rating-value {
+            font-size: 48px;
+            font-weight: 700;
+            line-height: 1;
+          }
+
+          .rating-max {
+            font-size: 20px;
+            opacity: 0.7;
+          }
+        }
+
+        .rating-details {
+          flex: 1;
+
+          h3 {
+            margin: 0 0 8px 0;
+            font-size: 24px;
+            font-weight: 600;
+            color: #1a1a1a;
+          }
+
+          p {
+            margin: 0 0 12px 0;
+            color: #666;
+          }
+
+          mat-chip {
+            font-weight: 600;
+
+            mat-icon {
+              margin-right: 4px;
+            }
+
+            &.rec-excellent {
+              background-color: #00b894;
+              color: white;
+            }
+
+            &.rec-good {
+              background-color: #0984e3;
+              color: white;
+            }
+
+            &.rec-average {
+              background-color: #fdcb6e;
+              color: #1a1a1a;
+            }
+
+            &.rec-poor {
+              background-color: #ff7675;
+              color: white;
+            }
+          }
+        }
+      }
+    }
+
+    // Details Card
+    .details-card {
+      .details-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 16px;
+
+        .detail-item {
+          display: flex;
+          gap: 12px;
+          align-items: flex-start;
+
+          mat-icon {
+            color: #667eea;
+            margin-top: 2px;
+          }
+
+          .detail-content {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+
+            .label {
+              font-size: 12px;
+              color: #999;
+              text-transform: uppercase;
+              font-weight: 500;
+            }
+
+            .value {
+              font-size: 14px;
+              color: #1a1a1a;
+              font-weight: 500;
+            }
+          }
+        }
+      }
+    }
+
+    // Skills Card
+    .skills-card {
+      .skill-section {
+        margin-bottom: 24px;
+
+        &:last-child {
+          margin-bottom: 0;
+        }
+
+        .skill-header {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          margin-bottom: 8px;
+
+          h4 {
+            margin: 0;
+            font-size: 16px;
+            font-weight: 600;
+            color: #1a1a1a;
+          }
+
+          .skill-rating {
+            font-size: 16px;
+            font-weight: 700;
+            padding: 4px 12px;
+            border-radius: 12px;
+
+            &.rating-high {
+              background-color: #d5f4e6;
+              color: #00b894;
+            }
+
+            &.rating-medium {
+              background-color: #fff4d6;
+              color: #fdcb6e;
+            }
+
+            &.rating-low {
+              background-color: #ffe5e5;
+              color: #ff7675;
+            }
+          }
+        }
+
+        mat-progress-bar {
+          margin-bottom: 12px;
+          border-radius: 4px;
+          height: 8px;
+
+          &.rating-high ::ng-deep .mdc-linear-progress__bar-inner {
+            border-color: #00b894 !important;
+          }
+
+          &.rating-medium ::ng-deep .mdc-linear-progress__bar-inner {
+            border-color: #fdcb6e !important;
+          }
+
+          &.rating-low ::ng-deep .mdc-linear-progress__bar-inner {
+            border-color: #ff7675 !important;
+          }
+        }
+
+        .skill-comment {
+          margin: 0;
+          color: #666;
+          font-size: 14px;
+          line-height: 1.6;
+        }
+      }
+    }
+
+    // Strengths Card
+    .strengths-card {
+      background-color: #f0fff4;
+
+      .strengths-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+
+        li {
+          display: flex;
+          align-items: flex-start;
+          gap: 12px;
+          margin-bottom: 12px;
+          padding: 8px;
+          background-color: white;
+          border-radius: 8px;
+          border-left: 3px solid #00b894;
+
+          &:last-child {
+            margin-bottom: 0;
+          }
+
+          mat-icon {
+            color: #00b894;
+            font-size: 20px;
+            width: 20px;
+            height: 20px;
+          }
+
+          span {
+            flex: 1;
+            color: #1a1a1a;
+            font-size: 14px;
+            line-height: 1.6;
+          }
+        }
+      }
+    }
+
+    // Improvement Card
+    .improvement-card {
+      background-color: #fffbf0;
+
+      .improvement-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+
+        li {
+          display: flex;
+          align-items: flex-start;
+          gap: 12px;
+          margin-bottom: 12px;
+          padding: 8px;
+          background-color: white;
+          border-radius: 8px;
+          border-left: 3px solid #fdcb6e;
+
+          &:last-child {
+            margin-bottom: 0;
+          }
+
+          mat-icon {
+            color: #fdcb6e;
+            font-size: 20px;
+            width: 20px;
+            height: 20px;
+          }
+
+          span {
+            flex: 1;
+            color: #1a1a1a;
+            font-size: 14px;
+            line-height: 1.6;
+          }
+        }
+      }
+    }
+
+    // Comments Card
+    .comments-card {
+      background-color: #f8f9fa;
+
+      .general-comments {
+        margin: 0;
+        color: #666;
+        font-size: 14px;
+        line-height: 1.8;
+        white-space: pre-line;
+      }
+    }
+
+    // Next Steps Card
+    .next-steps-card {
+      background: linear-gradient(135deg, #e8eaf6 0%, #c5cae9 100%);
+
+      .next-steps-content {
+        .next-steps-text {
+          margin: 0 0 16px 0;
+          color: #1a1a1a;
+          font-size: 14px;
+          font-weight: 500;
+          line-height: 1.6;
+        }
+
+        .follow-up {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          padding: 12px;
+          background-color: white;
+          border-radius: 8px;
+          border-left: 3px solid #667eea;
+
+          mat-icon {
+            color: #667eea;
+          }
+
+          span {
+            color: #666;
+            font-size: 14px;
+
+            strong {
+              color: #1a1a1a;
+              font-weight: 600;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  .dialog-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    padding: 16px 24px;
+    border-top: 1px solid #e0e0e0;
+    background-color: white;
+
+    button {
+      mat-icon {
+        margin-right: 8px;
+      }
+    }
+  }
+}
+
+// Responsive design
+@media (max-width: 768px) {
+  .view-feedback-dialog {
+    .dialog-header {
+      .header-info {
+        .feedback-header {
+          .header-icon {
+            font-size: 36px;
+            width: 36px;
+            height: 36px;
+          }
+
+          .title-info {
+            h2 {
+              font-size: 20px;
+            }
+
+            p {
+              font-size: 14px;
+            }
+          }
+        }
+      }
+    }
+
+    .dialog-body {
+      .overall-rating-card {
+        .rating-display {
+          flex-direction: column;
+          text-align: center;
+
+          .rating-circle {
+            width: 100px;
+            height: 100px;
+
+            .rating-value {
+              font-size: 40px;
+            }
+          }
+        }
+      }
+
+      .details-card {
+        .details-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+    }
+  }
+}

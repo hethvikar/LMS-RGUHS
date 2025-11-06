@@ -5,7 +5,9 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatTableModule } from '@angular/material/table';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatDialog } from '@angular/material/dialog';
 import { CommonModule } from '@angular/common';
+import { ViewApplicationDetailsComponent } from './view-application-details/view-application-details.component';
 
 interface JobApplication {
   id: number;
@@ -61,6 +63,8 @@ export class StudentApplicationsComponent implements OnInit {
 
   displayedColumns: string[] = ['company', 'position', 'appliedDate', 'status', 'actions'];
 
+  constructor(private dialog: MatDialog) {}
+
   ngOnInit() {
     // Load applications from API
   }
@@ -85,8 +89,19 @@ export class StudentApplicationsComponent implements OnInit {
   }
 
   viewApplication(application: JobApplication) {
-    console.log('Viewing application:', application);
-    // Navigate to application details
+    const dialogRef = this.dialog.open(ViewApplicationDetailsComponent, {
+      width: '900px',
+      maxWidth: '95vw',
+      maxHeight: '90vh',
+      data: { application },
+      panelClass: 'view-application-dialog-panel'
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result?.action === 'withdraw') {
+        this.withdrawApplication(application);
+      }
+    });
   }
 
   withdrawApplication(application: JobApplication) {

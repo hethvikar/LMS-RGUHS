@@ -1,79 +1,181 @@
 
-    .progress-container {
-      padding: 24px;
-      max-width: 1400px;
-      margin: 0 auto;
-    }
+// ============================================
+// LMS Progress Component - Enhanced Styling
+// ============================================
 
-    .progress-header {
-      text-align: center;
-      margin-bottom: 32px;
-    }
+.progress-container {
+  padding: 24px;
+  max-width: 1400px;
+  margin: 0 auto;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #e8f4f8 0%, #c5dff5 100%);
+  position: relative;
 
-    .progress-header h1 {
-      font-size: 2.5rem;
-      font-weight: 300;
-      margin-bottom: 16px;
-      color: #333;
-    }
+  // Animated background pattern
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 350px;
+    background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+    clip-path: polygon(0 0, 100% 0, 100% 70%, 0 95%);
+    z-index: 0;
+    opacity: 0.95;
+  }
 
-    .progress-header p {
-      font-size: 1.2rem;
-      color: #666;
-    }
+  // Decorative circles
+  &::after {
+    content: '';
+    position: absolute;
+    top: 100px;
+    right: 5%;
+    width: 250px;
+    height: 250px;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.15) 0%, transparent 70%);
+    border-radius: 50%;
+    z-index: 0;
+    animation: pulse 4s ease-in-out infinite;
+  }
 
-    .progress-overview {
-      margin-bottom: 32px;
-    }
+  > * {
+    position: relative;
+    z-index: 1;
+  }
+}
 
-    .overview-card {
-      margin-bottom: 24px;
-    }
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 0.5;
+  }
+  50% {
+    transform: scale(1.1);
+    opacity: 0.8;
+  }
+}
 
-    .overall-stats {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-      gap: 24px;
-      margin-bottom: 24px;
-    }
+.progress-header {
+  text-align: center;
+  margin-bottom: 40px;
+  padding: 32px;
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 24px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
 
-    .stat-item {
-      text-align: center;
-    }
+.progress-header h1 {
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin-bottom: 16px;
+  background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
 
-    .stat-item h2 {
-      margin: 0;
-      font-size: 2.5rem;
-      font-weight: 500;
-      color: #333;
-    }
+.progress-header p {
+  font-size: 1.2rem;
+  color: #666;
+  font-weight: 500;
+}
 
-    .stat-item p {
-      margin: 8px 0 0 0;
-      font-size: 0.9rem;
-      color: #666;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-    }
+.progress-overview {
+  margin-bottom: 32px;
+}
 
-    .progress-bar-container {
-      margin-top: 16px;
-    }
+.overview-card {
+  margin-bottom: 24px;
+  background: rgba(255, 255, 255, 0.95) !important;
+  border-radius: 20px !important;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1) !important;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  overflow: hidden;
+  position: relative;
 
-    .progress-label {
-      display: flex;
-      justify-content: space-between;
-      margin-bottom: 8px;
-      font-size: 14px;
-      color: #666;
-    }
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 5px;
+    background: linear-gradient(90deg, #4facfe 0%, #00f2fe 100%);
+  }
+}
 
-    .progress-content {
+.overall-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 24px;
+  margin-bottom: 24px;
+  padding: 24px;
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  border-radius: 16px;
+}
+
+.stat-item {
+  text-align: center;
+  padding: 16px;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  transition: all 0.3s ease;
+
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+  }
+}
+
+.stat-item h2 {
+  margin: 0;
+  font-size: 2.8rem;
+  font-weight: 700;
+  background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.stat-item p {
+  margin: 8px 0 0 0;
+  font-size: 0.9rem;
+  color: #666;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-weight: 600;
+}
+
+.progress-bar-container {
+  margin-top: 20px;
+  padding: 16px;
+  background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+  border-radius: 12px;
+}
+
+.progress-label {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+  font-size: 14px;
+  color: #2c3e50;
+  font-weight: 600;
+}    .progress-content {
       margin-top: 24px;
+      background: rgba(255, 255, 255, 0.95) !important;
+      border-radius: 20px !important;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1) !important;
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.3);
     }
 
     .tab-content {
-      padding: 24px 0;
+      padding: 32px 24px;
     }
 
     .courses-progress {
@@ -82,200 +184,379 @@
     }
 
     .course-progress-card {
-      transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
-    }
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+      border-radius: 16px !important;
+      overflow: hidden;
+      border: 1px solid rgba(0, 0, 0, 0.06);
+      background: white !important;
+      position: relative;
 
-    .course-progress-card:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      &::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 5px;
+        background: linear-gradient(90deg, #4facfe 0%, #00f2fe 100%);
+        opacity: 0;
+        transition: opacity 0.3s ease;
+      }
+
+      &:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 15px 50px rgba(0, 0, 0, 0.15) !important;
+
+        &::before {
+          opacity: 1;
+        }
+      }
+
+      mat-card-header {
+        background: linear-gradient(135deg, #f8f9fa 0%, #e8eaf6 100%);
+        padding: 20px !important;
+        margin: -16px -16px 16px -16px;
+      }
+
+      mat-card-title {
+        font-weight: 600 !important;
+        font-size: 1.25rem !important;
+        color: #2c3e50;
+      }
     }
 
     .course-info {
-      margin-bottom: 16px;
+      margin-bottom: 20px;
+      padding: 16px;
+      background: linear-gradient(135deg, #f0f4f8 0%, #d9e2ec 100%);
+      border-radius: 12px;
+      border-left: 3px solid #4facfe;
     }
 
     .instructor {
-      font-weight: 500;
-      color: #333;
-      margin-bottom: 4px;
+      font-weight: 600;
+      color: #2c3e50;
+      margin-bottom: 6px;
+      font-size: 15px;
     }
 
     .modules {
-      color: #666;
-      margin-bottom: 4px;
+      color: #495057;
+      margin-bottom: 6px;
+      font-weight: 500;
     }
 
     .last-accessed {
-      color: #999;
-      font-size: 14px;
+      color: #6c757d;
+      font-size: 13px;
+      font-style: italic;
     }
 
     .status-chip {
-      margin-top: 8px;
+      margin-top: 12px;
     }
 
     .course-progress-section {
-      margin-bottom: 16px;
+      margin-bottom: 20px;
+      padding: 16px;
+      background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
+      border-radius: 12px;
     }
 
     .progress-details {
-      margin-top: 8px;
+      margin-top: 12px;
       text-align: center;
+      font-weight: 600;
+      color: #2e7d32;
     }
 
     .course-actions {
       display: flex;
-      gap: 8px;
+      gap: 12px;
       flex-wrap: wrap;
+      margin-top: 12px;
+
+      button {
+        flex: 1;
+        min-width: 150px;
+        border-radius: 25px;
+        font-weight: 600;
+        text-transform: none;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        transition: all 0.3s ease;
+
+        &:hover {
+          transform: translateY(-2px);
+          box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+        }
+      }
     }
 
     .goals-section {
       max-width: 100%;
+      padding: 32px;
+      background: linear-gradient(135deg, #fff3e0 0%, #ffe0b2 100%);
+      border-radius: 20px;
+      position: relative;
+      overflow: hidden;
+
+      &::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        right: -20%;
+        width: 300px;
+        height: 300px;
+        background: radial-gradient(circle, rgba(255, 193, 7, 0.2) 0%, transparent 70%);
+        border-radius: 50%;
+        animation: float 8s ease-in-out infinite;
+      }
     }
 
     .goals-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 24px;
+      margin-bottom: 32px;
+      position: relative;
+      z-index: 1;
     }
 
     .goals-header h3 {
-      font-size: 1.5rem;
-      font-weight: 500;
-      color: #333;
+      font-size: 1.75rem;
+      font-weight: 700;
+      background: linear-gradient(135deg, #f57c00 0%, #ff9800 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
     }
 
     .goals-list {
       display: grid;
-      gap: 16px;
+      gap: 20px;
+      position: relative;
+      z-index: 1;
     }
 
     .goal-card {
-      transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
-    }
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+      border-radius: 16px !important;
+      overflow: hidden;
+      background: white !important;
+      border: 1px solid rgba(245, 124, 0, 0.2);
+      position: relative;
 
-    .goal-card:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      &::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: linear-gradient(90deg, #f57c00 0%, #ff9800 100%);
+        opacity: 0;
+        transition: opacity 0.3s ease;
+      }
+
+      &:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 15px 50px rgba(245, 124, 0, 0.2) !important;
+
+        &::before {
+          opacity: 1;
+        }
+      }
     }
 
     .goal-description {
-      color: #666;
-      margin-bottom: 12px;
-      line-height: 1.4;
+      color: #495057;
+      margin-bottom: 16px;
+      line-height: 1.6;
+      font-weight: 500;
     }
 
     .goal-details {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 12px;
+      margin-bottom: 16px;
+      padding: 12px;
+      background: linear-gradient(135deg, #fff8e1 0%, #ffecb3 100%);
+      border-radius: 10px;
+      border-left: 3px solid #ff9800;
     }
 
     .target-date {
-      color: #666;
+      color: #f57c00;
       font-size: 14px;
+      font-weight: 600;
     }
 
     .goal-progress {
-      margin-top: 12px;
+      margin-top: 16px;
+      padding: 12px;
+      background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
+      border-radius: 10px;
     }
 
     .achievements-section h3 {
-      font-size: 1.5rem;
-      font-weight: 500;
-      color: #333;
-      margin-bottom: 24px;
+      font-size: 1.75rem;
+      font-weight: 700;
+      background: linear-gradient(135deg, #7b1fa2 0%, #9c27b0 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 32px;
     }
 
     .achievements-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-      gap: 16px;
+      gap: 20px;
     }
 
     .achievement-card {
-      transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
-    }
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+      border-radius: 16px !important;
+      background: white !important;
+      border: 1px solid rgba(156, 39, 176, 0.2);
+      position: relative;
+      overflow: hidden;
 
-    .achievement-card:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      &::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        right: -50%;
+        width: 200%;
+        height: 200%;
+        background: radial-gradient(circle, rgba(156, 39, 176, 0.1) 0%, transparent 70%);
+        opacity: 0;
+        transition: opacity 0.5s ease;
+      }
+
+      &:hover {
+        transform: translateY(-8px) scale(1.02);
+        box-shadow: 0 15px 50px rgba(156, 39, 176, 0.25) !important;
+
+        &::before {
+          opacity: 1;
+        }
+      }
     }
 
     .achievement-content {
       display: flex;
       align-items: center;
-      gap: 16px;
+      gap: 20px;
+      position: relative;
+      z-index: 1;
     }
 
     .achievement-icon {
-      font-size: 48px;
-      width: 48px;
-      height: 48px;
-      color: #4caf50;
+      font-size: 56px;
+      width: 56px;
+      height: 56px;
+      color: #9c27b0;
+      filter: drop-shadow(0 4px 8px rgba(156, 39, 176, 0.3));
+      animation: pulse 2s ease-in-out infinite;
     }
 
     .achievement-details h4 {
-      margin: 0 0 8px 0;
-      font-size: 1.1rem;
-      font-weight: 500;
-      color: #333;
+      margin: 0 0 10px 0;
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: #2c3e50;
     }
 
     .achievement-details p {
-      margin: 0 0 8px 0;
-      color: #666;
-      line-height: 1.4;
+      margin: 0 0 10px 0;
+      color: #495057;
+      line-height: 1.6;
+      font-weight: 500;
     }
 
     .achievement-details small {
-      color: #999;
-      font-size: 12px;
+      color: #9c27b0;
+      font-size: 13px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
     }
 
     .stats-section h3 {
-      font-size: 1.5rem;
-      font-weight: 500;
-      color: #333;
-      margin-bottom: 24px;
+      font-size: 1.75rem;
+      font-weight: 700;
+      background: linear-gradient(135deg, #00695c 0%, #00897b 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 32px;
     }
 
     .stats-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 16px;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 20px;
+    }
+
+    .stat-card {
+      background: white !important;
+      border-radius: 16px !important;
+      border: 1px solid rgba(0, 137, 123, 0.2);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+      position: relative;
+      overflow: hidden;
+
+      &::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: linear-gradient(90deg, #00695c 0%, #00897b 100%);
+      }
+
+      &:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 15px 50px rgba(0, 137, 123, 0.25) !important;
+      }
     }
 
     .stat-content {
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 16px;
-      padding: 16px 0;
+      gap: 20px;
+      padding: 24px 16px;
     }
 
     .stat-icon {
-      font-size: 32px;
-      width: 32px;
-      height: 32px;
-      color: #2196f3;
+      font-size: 42px;
+      width: 42px;
+      height: 42px;
+      color: #00897b;
+      filter: drop-shadow(0 4px 8px rgba(0, 137, 123, 0.3));
     }
 
     .stat-info h3 {
       margin: 0;
-      font-size: 2rem;
-      font-weight: 500;
-      color: #333;
+      font-size: 2.25rem;
+      font-weight: 700;
+      background: linear-gradient(135deg, #00695c 0%, #00897b 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
     }
 
     .stat-info p {
-      margin: 4px 0 0 0;
+      margin: 6px 0 0 0;
       font-size: 0.9rem;
-      color: #666;
+      color: #495057;
+      font-weight: 600;
       text-transform: uppercase;
-      letter-spacing: 0.5px;
+      letter-spacing: 0.8px;
     }
 
     .mat-mdc-chip {

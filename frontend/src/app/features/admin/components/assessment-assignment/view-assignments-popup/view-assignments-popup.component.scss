@@ -1,0 +1,394 @@
+.view-assignments-popup {
+  background: white;
+  border-radius: 12px;
+  width: 750px;
+  max-width: 95vw;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+  overflow: hidden;
+
+  .popup-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 24px 28px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+
+    .header-content {
+      flex: 1;
+
+      h2 {
+        margin: 0 0 4px 0;
+        font-size: 24px;
+        font-weight: 600;
+      }
+
+      p {
+        margin: 0;
+        font-size: 14px;
+        opacity: 0.9;
+      }
+    }
+
+    .close-button {
+      color: white;
+
+      &:hover {
+        background-color: rgba(255, 255, 255, 0.1);
+      }
+    }
+  }
+
+  .popup-content {
+    flex: 1;
+    overflow-y: auto;
+    padding: 0;
+
+    .assessment-info {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 16px;
+      padding: 24px 28px;
+
+      .info-card {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 16px;
+        background: #f7fafc;
+        border-radius: 8px;
+        border-left: 4px solid #667eea;
+
+        mat-icon {
+          color: #667eea;
+          font-size: 28px;
+          width: 28px;
+          height: 28px;
+          flex-shrink: 0;
+        }
+
+        .info-details {
+          display: flex;
+          flex-direction: column;
+          gap: 4px;
+
+          .info-label {
+            font-size: 11px;
+            color: #718096;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+          }
+
+          .info-value {
+            font-size: 14px;
+            color: #2d3748;
+            font-weight: 600;
+          }
+        }
+      }
+    }
+
+    .statistics-section {
+      padding: 24px 28px;
+
+      h3 {
+        margin: 0 0 20px 0;
+        font-size: 18px;
+        font-weight: 600;
+        color: #2d3748;
+      }
+
+      .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+        gap: 16px;
+
+        .stat-card {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          padding: 20px 16px;
+          border-radius: 12px;
+          background: white;
+          border: 2px solid #e2e8f0;
+          transition: all 0.2s;
+
+          &:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+          }
+
+          .stat-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 12px;
+
+            mat-icon {
+              font-size: 28px;
+              width: 28px;
+              height: 28px;
+            }
+          }
+
+          .stat-info {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+
+            .stat-value {
+              font-size: 24px;
+              font-weight: 700;
+            }
+
+            .stat-label {
+              font-size: 12px;
+              color: #718096;
+              font-weight: 600;
+              text-align: center;
+            }
+          }
+
+          &.total {
+            .stat-icon {
+              background: #e6f2ff;
+              mat-icon { color: #2196f3; }
+            }
+            .stat-value { color: #2196f3; }
+          }
+
+          &.submitted {
+            .stat-icon {
+              background: #e8f5e9;
+              mat-icon { color: #4caf50; }
+            }
+            .stat-value { color: #4caf50; }
+          }
+
+          &.graded {
+            .stat-icon {
+              background: #f3e5f5;
+              mat-icon { color: #9c27b0; }
+            }
+            .stat-value { color: #9c27b0; }
+          }
+
+          &.completion {
+            .stat-icon {
+              background: #e0f2f1;
+              mat-icon { color: #009688; }
+            }
+            .stat-value { color: #009688; }
+          }
+
+          &.average {
+            .stat-icon {
+              background: #fff3e0;
+              mat-icon { color: #ff9800; }
+            }
+            .stat-value { color: #ff9800; }
+          }
+
+          &.overdue {
+            .stat-icon {
+              background: #ffebee;
+              mat-icon { color: #f44336; }
+            }
+            .stat-value { color: #f44336; }
+          }
+        }
+      }
+    }
+
+    .assignments-section {
+      padding: 24px 28px;
+
+      h3 {
+        margin: 0 0 20px 0;
+        font-size: 18px;
+        font-weight: 600;
+        color: #2d3748;
+      }
+
+      .table-container {
+        border: 1px solid #e2e8f0;
+        border-radius: 8px;
+        overflow: hidden;
+
+        .assignments-table {
+          width: 100%;
+
+          th {
+            background: #f7fafc;
+            color: #4a5568;
+            font-weight: 600;
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+          }
+
+          td {
+            padding: 16px;
+            border-bottom: 1px solid #e2e8f0;
+          }
+
+          .student-cell {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+
+            mat-icon {
+              color: #667eea;
+              font-size: 20px;
+              width: 20px;
+              height: 20px;
+            }
+          }
+
+          mat-chip {
+            font-size: 11px;
+            height: 24px;
+            
+            &.assigned {
+              background-color: #bee3f8;
+              color: #2c5282;
+            }
+
+            &.inprogress {
+              background-color: #feebc8;
+              color: #c05621;
+            }
+
+            &.submitted {
+              background-color: #c6f6d5;
+              color: #276749;
+            }
+
+            &.graded {
+              background-color: #e9d8fd;
+              color: #6b46c1;
+            }
+
+            &.overdue {
+              background-color: #fed7d7;
+              color: #c53030;
+            }
+          }
+
+          .score-cell {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+
+            .score {
+              font-weight: 600;
+              color: #2d3748;
+            }
+
+            .percentage {
+              font-size: 12px;
+              color: #718096;
+            }
+          }
+
+          .no-score,
+          .not-submitted {
+            color: #a0aec0;
+            font-style: italic;
+            font-size: 13px;
+          }
+        }
+      }
+
+      .no-assignments {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 60px 20px;
+        color: #a0aec0;
+
+        mat-icon {
+          font-size: 64px;
+          width: 64px;
+          height: 64px;
+          margin-bottom: 16px;
+        }
+
+        p {
+          margin: 0;
+          font-size: 16px;
+          font-weight: 500;
+        }
+      }
+    }
+
+    mat-divider {
+      border-top-color: #e2e8f0;
+    }
+  }
+
+  .popup-footer {
+    padding: 20px 28px;
+    border-top: 1px solid #e2e8f0;
+    background: #f7fafc;
+    display: flex;
+    justify-content: flex-end;
+
+    button {
+      min-width: 120px;
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .view-assignments-popup {
+    width: 100%;
+    max-width: 100vw;
+    max-height: 100vh;
+    border-radius: 0;
+
+    .popup-header {
+      padding: 20px;
+
+      .header-content h2 {
+        font-size: 20px;
+      }
+    }
+
+    .popup-content {
+      .assessment-info {
+        grid-template-columns: 1fr;
+        padding: 20px;
+      }
+
+      .statistics-section {
+        padding: 20px;
+
+        .stats-grid {
+          grid-template-columns: repeat(2, 1fr);
+        }
+      }
+
+      .assignments-section {
+        padding: 20px;
+
+        .table-container {
+          overflow-x: auto;
+        }
+      }
+    }
+
+    .popup-footer {
+      padding: 16px 20px;
+    }
+  }
+}

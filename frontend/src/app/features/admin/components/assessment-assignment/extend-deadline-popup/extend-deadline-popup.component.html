@@ -1,0 +1,167 @@
+<div class="extend-deadline-popup">
+  <div class="popup-header">
+    <h2>Extend Deadline</h2>
+    <button mat-icon-button (click)="onClose()" class="close-button">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+
+  <div class="popup-content" *ngIf="assignment">
+    <!-- Assignment Information -->
+    <div class="info-section">
+      <div class="section-header">
+        <mat-icon>info</mat-icon>
+        <h3>Assignment Details</h3>
+      </div>
+      
+      <div class="info-grid">
+        <div class="info-item">
+          <mat-icon>person</mat-icon>
+          <div class="info-details">
+            <span class="info-label">Student</span>
+            <span class="info-value">{{ assignment.studentName }}</span>
+          </div>
+        </div>
+
+        <div class="info-item">
+          <mat-icon>assignment</mat-icon>
+          <div class="info-details">
+            <span class="info-label">Assessment</span>
+            <span class="info-value">{{ assignment.assessmentTitle }}</span>
+          </div>
+        </div>
+
+        <div class="info-item">
+          <mat-icon>event</mat-icon>
+          <div class="info-details">
+            <span class="info-label">Current Due Date</span>
+            <span class="info-value">{{ currentDueDate | date:'medium' }}</span>
+          </div>
+        </div>
+
+        <div class="info-item">
+          <mat-icon>flag</mat-icon>
+          <div class="info-details">
+            <span class="info-label">Status</span>
+            <span class="info-value">{{ assignment.status | titlecase }}</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Overdue Warning -->
+      <div class="overdue-warning" *ngIf="isOverdue()">
+        <mat-icon>warning</mat-icon>
+        <span>This assignment is currently {{ getDaysOverdue() }} day(s) overdue</span>
+      </div>
+    </div>
+
+    <mat-divider></mat-divider>
+
+    <!-- Extension Options -->
+    <div class="extension-section">
+      <div class="section-header">
+        <mat-icon>update</mat-icon>
+        <h3>Extension Options</h3>
+      </div>
+
+      <!-- Extension Type Selection -->
+      <mat-radio-group [(ngModel)]="extensionType" (change)="onExtensionTypeChange()" class="extension-type-group">
+        <mat-radio-button value="quick" class="extension-type-option">
+          <div class="radio-content">
+            <span class="radio-label">Quick Extension</span>
+            <span class="radio-description">Choose from preset time periods</span>
+          </div>
+        </mat-radio-button>
+        <mat-radio-button value="custom" class="extension-type-option">
+          <div class="radio-content">
+            <span class="radio-label">Custom Date</span>
+            <span class="radio-description">Pick a specific date</span>
+          </div>
+        </mat-radio-button>
+      </mat-radio-group>
+
+      <!-- Quick Extension Options -->
+      <div class="quick-extension" *ngIf="extensionType === 'quick'">
+        <label class="section-label">Select Extension Period:</label>
+        <div class="quick-options-grid">
+          <button 
+            *ngFor="let option of quickOptions"
+            mat-stroked-button
+            [class.selected]="quickExtensionDays === option.value"
+            (click)="quickExtensionDays = option.value; onQuickExtensionChange()"
+            class="quick-option-btn">
+            <mat-icon>schedule</mat-icon>
+            <span>{{ option.label }}</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Custom Date Picker -->
+      <div class="custom-extension" *ngIf="extensionType === 'custom'">
+        <mat-form-field appearance="outline" class="date-field">
+          <mat-label>New Due Date</mat-label>
+          <input 
+            matInput 
+            [matDatepicker]="newDueDatePicker" 
+            [(ngModel)]="newDueDate"
+            [min]="minDate()"
+            name="newDueDate"
+            required>
+          <mat-datepicker-toggle matIconSuffix [for]="newDueDatePicker"></mat-datepicker-toggle>
+          <mat-datepicker #newDueDatePicker></mat-datepicker>
+          <mat-hint>Select a date after the current due date</mat-hint>
+        </mat-form-field>
+      </div>
+
+      <!-- Extension Summary -->
+      <div class="extension-summary" *ngIf="newDueDate">
+        <div class="summary-card">
+          <div class="summary-header">
+            <mat-icon>event_available</mat-icon>
+            <h4>Extension Summary</h4>
+          </div>
+          <div class="summary-content">
+            <div class="summary-row">
+              <span class="summary-label">Current Due Date:</span>
+              <span class="summary-value">{{ currentDueDate | date:'short' }}</span>
+            </div>
+            <div class="summary-row">
+              <span class="summary-label">New Due Date:</span>
+              <span class="summary-value highlight">{{ newDueDate | date:'short' }}</span>
+            </div>
+            <div class="summary-row extension-amount">
+              <mat-icon>arrow_forward</mat-icon>
+              <span class="extension-text">{{ getExtensionSummary() }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Reason for Extension -->
+      <mat-form-field appearance="outline" class="reason-field">
+        <mat-label>Reason for Extension (Optional)</mat-label>
+        <textarea 
+          matInput 
+          [(ngModel)]="reason" 
+          rows="4"
+          placeholder="E.g., Medical emergency, technical issues, special circumstances..."
+          name="reason"></textarea>
+        <mat-hint>Document the reason for this deadline extension</mat-hint>
+      </mat-form-field>
+    </div>
+  </div>
+
+  <div class="popup-footer">
+    <button mat-button (click)="onClose()">
+      Cancel
+    </button>
+    <button 
+      mat-raised-button 
+      color="primary" 
+      (click)="onExtend()" 
+      [disabled]="!isFormValid()">
+      <mat-icon>check_circle</mat-icon>
+      Extend Deadline
+    </button>
+  </div>
+</div>

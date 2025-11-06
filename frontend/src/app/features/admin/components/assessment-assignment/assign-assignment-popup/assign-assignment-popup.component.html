@@ -1,0 +1,54 @@
+<div class="assign-popup">
+  <div class="popup-header">
+    <h2>Assign Assessment</h2>
+    <button mat-icon-button (click)="onClose()" class="close-button">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+  
+  <form (ngSubmit)="onAssign()" class="popup-form">
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Select Assessment</mat-label>
+      <mat-select [(ngModel)]="selectedAssessmentId" name="assessment" required>
+        <mat-option *ngFor="let assessment of assessments" [value]="assessment.id">
+          {{ assessment.title }} - {{ assessment.courseName }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Select Student</mat-label>
+      <mat-select [(ngModel)]="selectedStudentId" name="student" required>
+        <mat-option *ngFor="let student of students" [value]="student.id">
+          {{ student.name }} ({{ student.email }})
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Due Date</mat-label>
+      <input matInput [matDatepicker]="picker" [(ngModel)]="dueDate" name="dueDate" required>
+      <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+      <mat-datepicker #picker></mat-datepicker>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Max Attempts</mat-label>
+      <mat-select [(ngModel)]="maxAttempts" name="maxAttempts" required>
+        <mat-option [value]="1">1 Attempt</mat-option>
+        <mat-option [value]="2">2 Attempts</mat-option>
+        <mat-option [value]="3">3 Attempts</mat-option>
+        <mat-option [value]="5">5 Attempts</mat-option>
+        <mat-option [value]="10">10 Attempts</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <div class="form-actions">
+      <button mat-raised-button color="primary" type="submit" 
+              [disabled]="!selectedAssessmentId || !selectedStudentId || !dueDate">
+        Assign Assessment
+      </button>
+      <button mat-button type="button" (click)="onClose()">Cancel</button>
+    </div>
+  </form>
+</div>

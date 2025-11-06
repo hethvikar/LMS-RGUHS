@@ -5,7 +5,9 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatListModule } from '@angular/material/list';
+import { MatDialog } from '@angular/material/dialog';
 import { CommonModule } from '@angular/common';
+import { ViewOfferDetailsComponent } from './view-offer-details/view-offer-details.component';
 
 interface PlacementStatus {
   id: number;
@@ -81,6 +83,8 @@ export class StudentPlacementStatusComponent implements OnInit {
     }
   ];
 
+  constructor(private dialog: MatDialog) {}
+
   ngOnInit() {
     // Load placement data from API
   }
@@ -115,5 +119,36 @@ export class StudentPlacementStatusComponent implements OnInit {
       'rejected': 'cancel'
     };
     return iconMap[status] || 'work';
+  }
+
+  viewOfferDetails(placement: PlacementStatus): void {
+    const dialogRef = this.dialog.open(ViewOfferDetailsComponent, {
+      width: '1000px',
+      maxWidth: '95vw',
+      maxHeight: '90vh',
+      data: { placement },
+      panelClass: 'view-offer-dialog-panel'
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result?.action === 'accept') {
+        console.log('Offer accepted:', result.offerId);
+        // Update placement status to 'joined'
+        const placementIndex = this.placements.findIndex(p => p.id === result.offerId);
+        if (placementIndex !== -1) {
+          this.placements[placementIndex].status = 'joined';
+        }
+      } else if (result?.action === 'decline') {
+        console.log('Offer declined:', result.offerId);
+        // Update placement status to 'rejected'
+        const placementIndex = this.placements.findIndex(p => p.id === result.offerId);
+        if (placementIndex !== -1) {
+          this.placements[placementIndex].status = 'rejected';
+        }
+      } else if (result?.action === 'negotiate') {
+        console.log('Negotiation requested:', result.offerId);
+        // Open negotiation dialog or send request
+      }
+    });
   }
 }

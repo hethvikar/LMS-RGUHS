@@ -8,6 +8,7 @@ import { MatDialogModule, MatDialog } from '@angular/material/dialog';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { CommonModule } from '@angular/common';
 import { JobPostFormDialogComponent } from './job-post-form-dialog.component';
+import { ViewApplicationPopupComponent } from './view-application-popup/view-application-popup.component';
 
 interface JobPosting {
   id: number;
@@ -168,8 +169,22 @@ export class CompanyJobsComponent implements OnInit {
   }
 
   viewApplications(job: JobPosting) {
-    console.log('View applications for job:', job);
-    // Navigate to applications view
+    const dialogRef = this.dialog.open(ViewApplicationPopupComponent, {
+      width: '950px',
+      maxWidth: '95vw',
+      maxHeight: '90vh',
+      disableClose: false,
+      panelClass: 'view-applications-dialog-container',
+      data: {
+        jobTitle: job.title,
+        jobId: job.id
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      // Handle any actions after dialog closes if needed
+      console.log('View applications dialog closed');
+    });
   }
 
   editJob(job: JobPosting) {

@@ -1,0 +1,274 @@
+<div class="view-applications-dialog">
+  <div mat-dialog-title class="dialog-header">
+    <div class="header-info">
+      <h2>Applications for: {{ jobTitle }}</h2>
+      <p>Review and manage candidate applications</p>
+    </div>
+    <button mat-icon-button (click)="onClose()" class="close-btn">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+
+  <div mat-dialog-content class="dialog-body">
+      <!-- Application Statistics -->
+      <div class="application-stats">
+        <div class="stat-item">
+          <mat-icon>assignment</mat-icon>
+          <div class="stat-details">
+            <span class="stat-value">{{ getApplicationStats().total }}</span>
+            <span class="stat-label">Total</span>
+          </div>
+        </div>
+        <div class="stat-item">
+          <mat-icon>schedule</mat-icon>
+          <div class="stat-details">
+            <span class="stat-value">{{ getApplicationStats().pending }}</span>
+            <span class="stat-label">Pending</span>
+          </div>
+        </div>
+        <div class="stat-item">
+          <mat-icon>star</mat-icon>
+          <div class="stat-details">
+            <span class="stat-value">{{ getApplicationStats().shortlisted }}</span>
+            <span class="stat-label">Shortlisted</span>
+          </div>
+        </div>
+        <div class="stat-item">
+          <mat-icon>event</mat-icon>
+          <div class="stat-details">
+            <span class="stat-value">{{ getApplicationStats().interviewed }}</span>
+            <span class="stat-label">Interviews</span>
+          </div>
+        </div>
+        <div class="stat-item">
+          <mat-icon>card_giftcard</mat-icon>
+          <div class="stat-details">
+            <span class="stat-value">{{ getApplicationStats().offered }}</span>
+            <span class="stat-label">Offers</span>
+          </div>
+        </div>
+      </div>
+
+      <mat-divider></mat-divider>
+
+      <!-- Applications Table -->
+      <div class="applications-section" *ngIf="!selectedApplication">
+        <div class="section-header">
+          <h3>All Applications</h3>
+        </div>
+
+        <div class="table-container">
+          <table mat-table [dataSource]="applications" class="applications-table">
+            <!-- Candidate Column -->
+            <ng-container matColumnDef="candidate">
+              <th mat-header-cell *matHeaderCellDef>Candidate</th>
+              <td mat-cell *matCellDef="let app">
+                <div class="candidate-info">
+                  <div class="candidate-avatar">{{ app.candidateName.charAt(0) }}</div>
+                  <div class="candidate-details">
+                    <strong>{{ app.candidateName }}</strong>
+                    <span class="candidate-email">{{ app.candidateEmail }}</span>
+                  </div>
+                </div>
+              </td>
+            </ng-container>
+
+            <!-- Applied Date Column -->
+            <ng-container matColumnDef="appliedDate">
+              <th mat-header-cell *matHeaderCellDef>Applied On</th>
+              <td mat-cell *matCellDef="let app">{{ app.appliedDate | date: 'MMM d, y' }}</td>
+            </ng-container>
+
+            <!-- Experience Column -->
+            <ng-container matColumnDef="experience">
+              <th mat-header-cell *matHeaderCellDef>Experience</th>
+              <td mat-cell *matCellDef="let app">{{ app.experience }}</td>
+            </ng-container>
+
+            <!-- Status Column -->
+            <ng-container matColumnDef="status">
+              <th mat-header-cell *matHeaderCellDef>Status</th>
+              <td mat-cell *matCellDef="let app">
+                <mat-chip [class]="getStatusClass(app.status)">
+                  {{ getStatusText(app.status) }}
+                </mat-chip>
+              </td>
+            </ng-container>
+
+            <!-- Score Column -->
+            <ng-container matColumnDef="score">
+              <th mat-header-cell *matHeaderCellDef>Score</th>
+              <td mat-cell *matCellDef="let app">
+                <span class="score-badge" [class]="getScoreClass(app.score)" *ngIf="app.score">
+                  {{ app.score }}%
+                </span>
+                <span *ngIf="!app.score" class="no-score">Not Rated</span>
+              </td>
+            </ng-container>
+
+            <!-- Actions Column -->
+            <ng-container matColumnDef="actions">
+              <th mat-header-cell *matHeaderCellDef>Actions</th>
+              <td mat-cell *matCellDef="let app">
+                <button mat-icon-button [matTooltip]="'View Details'" (click)="viewDetails(app)">
+                  <mat-icon>visibility</mat-icon>
+                </button>
+                <button mat-icon-button [matTooltip]="'Download Resume'" 
+                        (click)="downloadResume(app)" 
+                        [disabled]="!app.resumeUrl">
+                  <mat-icon>download</mat-icon>
+                </button>
+                <button mat-icon-button [matTooltip]="'Shortlist'" 
+                        (click)="shortlistCandidate(app)"
+                        [disabled]="app.status !== 'pending'">
+                  <mat-icon>star</mat-icon>
+                </button>
+                <button mat-icon-button [matTooltip]="'Schedule Interview'" 
+                        (click)="scheduleInterview(app)"
+                        [disabled]="app.status === 'rejected'">
+                  <mat-icon>event</mat-icon>
+                </button>
+              </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;" class="application-row"></tr>
+          </table>
+
+          <div class="no-applications" *ngIf="applications.length === 0">
+            <mat-icon>inbox</mat-icon>
+            <h3>No Applications Yet</h3>
+            <p>No candidates have applied for this job yet.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Application Details View -->
+      <div class="application-details" *ngIf="selectedApplication">
+        <div class="details-header">
+          <button mat-button (click)="closeDetails()">
+            <mat-icon>arrow_back</mat-icon>
+            Back to List
+          </button>
+          <h3>Application Details</h3>
+        </div>
+
+        <mat-card class="candidate-card">
+          <mat-card-header>
+            <div class="candidate-header">
+              <div class="candidate-avatar-large">{{ selectedApplication.candidateName.charAt(0) }}</div>
+              <div class="candidate-main-info">
+                <h2>{{ selectedApplication.candidateName }}</h2>
+                <div class="contact-info">
+                  <div class="contact-item">
+                    <mat-icon>email</mat-icon>
+                    <span>{{ selectedApplication.candidateEmail }}</span>
+                  </div>
+                  <div class="contact-item">
+                    <mat-icon>phone</mat-icon>
+                    <span>{{ selectedApplication.candidatePhone }}</span>
+                  </div>
+                  <div class="contact-item">
+                    <mat-icon>location_on</mat-icon>
+                    <span>{{ selectedApplication.currentLocation }}</span>
+                  </div>
+                </div>
+                <mat-chip [class]="getStatusClass(selectedApplication.status)">
+                  {{ getStatusText(selectedApplication.status) }}
+                </mat-chip>
+              </div>
+            </div>
+          </mat-card-header>
+
+          <mat-divider></mat-divider>
+
+          <mat-card-content>
+            <div class="details-grid">
+              <div class="detail-section">
+                <h4><mat-icon>work</mat-icon> Experience</h4>
+                <p>{{ selectedApplication.experience }}</p>
+              </div>
+
+              <div class="detail-section">
+                <h4><mat-icon>school</mat-icon> Education</h4>
+                <p>{{ selectedApplication.education }}</p>
+              </div>
+
+              <div class="detail-section">
+                <h4><mat-icon>calendar_today</mat-icon> Applied On</h4>
+                <p>{{ selectedApplication.appliedDate | date: 'MMM d, y' }}</p>
+              </div>
+
+              <div class="detail-section" *ngIf="selectedApplication.expectedSalary">
+                <h4><mat-icon>payments</mat-icon> Expected Salary</h4>
+                <p>{{ selectedApplication.expectedSalary }}</p>
+              </div>
+
+              <div class="detail-section" *ngIf="selectedApplication.noticePeriod">
+                <h4><mat-icon>schedule</mat-icon> Notice Period</h4>
+                <p>{{ selectedApplication.noticePeriod }}</p>
+              </div>
+
+              <div class="detail-section" *ngIf="selectedApplication.score">
+                <h4><mat-icon>grade</mat-icon> Application Score</h4>
+                <p>
+                  <span class="score-badge" [class]="getScoreClass(selectedApplication.score)">
+                    {{ selectedApplication.score }}%
+                  </span>
+                </p>
+              </div>
+            </div>
+
+            <mat-divider></mat-divider>
+
+            <div class="detail-section full-width">
+              <h4><mat-icon>build</mat-icon> Skills</h4>
+              <div class="skills-container">
+                <mat-chip *ngFor="let skill of selectedApplication.skills">{{ skill }}</mat-chip>
+              </div>
+            </div>
+
+            <mat-divider *ngIf="selectedApplication.coverLetter"></mat-divider>
+
+            <div class="detail-section full-width" *ngIf="selectedApplication.coverLetter">
+              <h4><mat-icon>description</mat-icon> Cover Letter</h4>
+              <p class="cover-letter">{{ selectedApplication.coverLetter }}</p>
+            </div>
+          </mat-card-content>
+
+          <mat-card-actions>
+            <button mat-raised-button color="primary" 
+                    (click)="shortlistCandidate(selectedApplication)"
+                    [disabled]="selectedApplication.status !== 'pending'">
+              <mat-icon>star</mat-icon>
+              Shortlist
+            </button>
+            <button mat-raised-button color="accent" 
+                    (click)="scheduleInterview(selectedApplication)"
+                    [disabled]="selectedApplication.status === 'rejected'">
+              <mat-icon>event</mat-icon>
+              Schedule Interview
+            </button>
+            <button mat-raised-button 
+                    (click)="makeOffer(selectedApplication)"
+                    [disabled]="selectedApplication.status === 'rejected' || selectedApplication.status === 'offered'">
+              <mat-icon>card_giftcard</mat-icon>
+              Make Offer
+            </button>
+            <button mat-raised-button color="warn" 
+                    (click)="rejectCandidate(selectedApplication)"
+                    [disabled]="selectedApplication.status === 'rejected'">
+              <mat-icon>close</mat-icon>
+              Reject
+            </button>
+            <button mat-button 
+                    (click)="downloadResume(selectedApplication)"
+                    [disabled]="!selectedApplication.resumeUrl">
+              <mat-icon>download</mat-icon>
+              Download Resume
+            </button>
+          </mat-card-actions>
+        </mat-card>
+      </div>
+  </div>
+</div>

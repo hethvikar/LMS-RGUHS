@@ -1,0 +1,179 @@
+<div class="assign-to-all-popup">
+  <div class="popup-header">
+    <div class="header-content">
+      <h2>Assign to All Students</h2>
+      <p *ngIf="assessment">{{ assessment.title }}</p>
+    </div>
+    <button mat-icon-button (click)="onClose()" class="close-button">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+
+  <div class="popup-content" *ngIf="assessment">
+    <!-- Assessment Information -->
+    <div class="info-section">
+      <div class="section-header">
+        <mat-icon>assignment</mat-icon>
+        <h3>Assessment Details</h3>
+      </div>
+      
+      <div class="info-grid">
+        <div class="info-item">
+          <mat-icon>school</mat-icon>
+          <div class="info-details">
+            <span class="info-label">Course</span>
+            <span class="info-value">{{ assessment.courseName }}</span>
+          </div>
+        </div>
+        <div class="info-item">
+          <mat-icon>category</mat-icon>
+          <div class="info-details">
+            <span class="info-label">Type</span>
+            <span class="info-value">{{ assessment.type | titlecase }}</span>
+          </div>
+        </div>
+        <div class="info-item">
+          <mat-icon>star</mat-icon>
+          <div class="info-details">
+            <span class="info-label">Max Score</span>
+            <span class="info-value">{{ assessment.maxScore }} points</span>
+          </div>
+        </div>
+        <div class="info-item">
+          <mat-icon>check_circle</mat-icon>
+          <div class="info-details">
+            <span class="info-label">Passing Score</span>
+            <span class="info-value">{{ assessment.passingScore }} points</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <mat-divider></mat-divider>
+
+    <!-- Assignment Settings -->
+    <div class="settings-section">
+      <div class="section-header">
+        <mat-icon>settings</mat-icon>
+        <h3>Assignment Settings</h3>
+      </div>
+
+      <div class="settings-form">
+        <mat-form-field appearance="outline" class="form-field">
+          <mat-label>Due Date</mat-label>
+          <input 
+            matInput 
+            [matDatepicker]="dueDatePicker" 
+            [(ngModel)]="dueDate" 
+            [min]="minDate()"
+            name="dueDate" 
+            required>
+          <mat-datepicker-toggle matIconSuffix [for]="dueDatePicker"></mat-datepicker-toggle>
+          <mat-datepicker #dueDatePicker></mat-datepicker>
+          <mat-hint>When should students complete this assessment?</mat-hint>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="form-field">
+          <mat-label>Max Attempts</mat-label>
+          <mat-select [(ngModel)]="maxAttempts" name="maxAttempts" required>
+            <mat-option [value]="1">1 Attempt</mat-option>
+            <mat-option [value]="2">2 Attempts</mat-option>
+            <mat-option [value]="3">3 Attempts</mat-option>
+            <mat-option [value]="5">5 Attempts</mat-option>
+            <mat-option [value]="10">10 Attempts</mat-option>
+            <mat-option [value]="999">Unlimited</mat-option>
+          </mat-select>
+          <mat-hint>How many attempts can each student make?</mat-hint>
+        </mat-form-field>
+      </div>
+    </div>
+
+    <mat-divider></mat-divider>
+
+    <!-- Student Selection -->
+    <div class="students-section">
+      <div class="section-header">
+        <mat-icon>people</mat-icon>
+        <h3>Select Students</h3>
+      </div>
+
+      <!-- Filter Options -->
+      <div class="filter-options">
+        <mat-checkbox 
+          [(ngModel)]="skipAlreadyAssigned" 
+          (change)="onSkipAlreadyAssignedChange()"
+          class="filter-checkbox">
+          Skip already assigned students
+        </mat-checkbox>
+        
+        <div class="assignment-info" *ngIf="alreadyAssignedStudents.length > 0">
+          <mat-icon>info</mat-icon>
+          <span>{{ alreadyAssignedStudents.length }} student(s) already assigned</span>
+        </div>
+      </div>
+
+      <!-- Select All -->
+      <div class="select-all-container">
+        <mat-checkbox 
+          [(ngModel)]="selectAll" 
+          (change)="onSelectAll()"
+          class="select-all-checkbox">
+          <strong>Select All ({{ availableStudents.length }} students)</strong>
+        </mat-checkbox>
+      </div>
+
+      <!-- Student List -->
+      <div class="student-list">
+        <div 
+          *ngFor="let student of availableStudents" 
+          class="student-item"
+          [class.selected]="isStudentSelected(student.id)">
+          <mat-checkbox 
+            [checked]="isStudentSelected(student.id)"
+            (change)="onStudentToggle(student.id)">
+            <div class="student-info">
+              <span class="student-name">{{ student.name }}</span>
+              <span class="student-email">{{ student.email }}</span>
+            </div>
+          </mat-checkbox>
+        </div>
+      </div>
+
+      <!-- Already Assigned Students (when not skipping) -->
+      <div class="already-assigned-list" *ngIf="!skipAlreadyAssigned && alreadyAssignedStudents.length > 0">
+        <div class="already-assigned-header">
+          <mat-icon>assignment_turned_in</mat-icon>
+          <span>Already Assigned ({{ alreadyAssignedStudents.length }})</span>
+        </div>
+        <div *ngFor="let student of alreadyAssignedStudents" class="student-item disabled">
+          <mat-checkbox [checked]="false" [disabled]="true">
+            <div class="student-info">
+              <span class="student-name">{{ student.name }}</span>
+              <span class="student-email">{{ student.email }}</span>
+            </div>
+          </mat-checkbox>
+        </div>
+      </div>
+
+      <!-- Summary -->
+      <div class="selection-summary" *ngIf="selectedStudentIds.length > 0">
+        <mat-icon>check_circle</mat-icon>
+        <span>{{ selectedStudentIds.length }} student(s) selected for assignment</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="popup-footer">
+    <button mat-button (click)="onClose()">
+      Cancel
+    </button>
+    <button 
+      mat-raised-button 
+      color="primary" 
+      (click)="onAssign()" 
+      [disabled]="!isFormValid()">
+      <mat-icon>group_add</mat-icon>
+      Assign to {{ selectedStudentIds.length }} Student(s)
+    </button>
+  </div>
+</div>

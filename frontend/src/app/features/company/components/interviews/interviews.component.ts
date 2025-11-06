@@ -211,8 +211,8 @@ export class CompanyInterviewsComponent implements OnInit {
 
   viewInterview(interview: CompanyInterview) {
     const dialogRef = this.dialog.open(ViewInterviewDialogComponent, {
-      width: '100%',
-      maxWidth: '100vw',
+      width: '750px',
+      maxWidth: '90vw',
       maxHeight: '90vh',
       height: 'auto',
       data: interview,

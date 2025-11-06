@@ -124,13 +124,15 @@ export class UserActivityComponent implements OnInit {
   severityFilter = '';
   searchFilter = '';
   displayedColumns: string[] = ['timestamp', 'user', 'action', 'details', 'severity', 'actions'];
+  filteredLogs: ActivityLog[] = [];
 
   ngOnInit() {
     // Load activity logs from API
+    this.applyFilters();
   }
 
-  get filteredLogs(): ActivityLog[] {
-    return this.activityLogs.filter(log => {
+  applyFilters() {
+    this.filteredLogs = this.activityLogs.filter(log => {
       const userMatch = !this.userFilter || log.userId.toString() === this.userFilter;
       const actionMatch = !this.actionFilter || log.action === this.actionFilter;
       const severityMatch = !this.severityFilter || log.severity === this.severityFilter;

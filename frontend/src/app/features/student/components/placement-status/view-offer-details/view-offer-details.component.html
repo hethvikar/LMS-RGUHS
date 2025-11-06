@@ -1,0 +1,308 @@
+<div class="view-offer-dialog">
+  <div mat-dialog-title class="dialog-header">
+    <div class="header-info">
+      <div class="offer-header">
+        <div class="company-logo" *ngIf="offer.companyLogo">
+          <img [src]="offer.companyLogo" [alt]="offer.companyName">
+        </div>
+        <div class="company-logo-placeholder" *ngIf="!offer.companyLogo">
+          {{ offer.companyName.charAt(0) }}
+        </div>
+        <div class="title-info">
+          <div class="offer-badge">
+            <mat-icon>card_giftcard</mat-icon>
+            <span>Offer Letter</span>
+          </div>
+          <h2>{{ offer.position }}</h2>
+          <p>{{ offer.companyName }}</p>
+        </div>
+      </div>
+    </div>
+    <button mat-icon-button (click)="onClose()" class="close-btn">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+
+  <div mat-dialog-content class="dialog-body">
+    <!-- Deadline Alert -->
+    <mat-card class="deadline-card" [class]="getDeadlineClass()">
+      <mat-card-content>
+        <div class="deadline-content">
+          <mat-icon>schedule</mat-icon>
+          <div class="deadline-info">
+            <h4>Respond by: {{ offer.acceptanceDeadline | date: 'MMM d, y' }}</h4>
+            <p *ngIf="getDaysRemaining() > 0">{{ getDaysRemaining() }} days remaining to accept or decline this offer</p>
+            <p *ngIf="getDaysRemaining() <= 0" class="expired">Offer deadline has passed</p>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <!-- Compensation Overview -->
+    <mat-card class="compensation-card">
+      <mat-card-header>
+        <mat-card-title>
+          <mat-icon>payments</mat-icon>
+          Compensation Package
+        </mat-card-title>
+      </mat-card-header>
+      <mat-divider></mat-divider>
+      <mat-card-content>
+        <div class="ctc-display">
+          <div class="ctc-main">
+            <h3>Annual CTC</h3>
+            <div class="ctc-amount">{{ formatCurrency(offer.annualCTC) }}</div>
+            <p>Cost to Company (Per Annum)</p>
+          </div>
+        </div>
+
+        <mat-divider class="section-divider"></mat-divider>
+
+        <div class="compensation-breakdown">
+          <h4>Compensation Breakdown</h4>
+          <div class="breakdown-grid">
+            <div class="breakdown-item">
+              <div class="item-label">
+                <mat-icon>account_balance_wallet</mat-icon>
+                <span>Base Salary</span>
+              </div>
+              <div class="item-value">{{ formatCurrency(offer.baseSalary) }}</div>
+            </div>
+            <div class="breakdown-item" *ngIf="offer.variableBonus">
+              <div class="item-label">
+                <mat-icon>trending_up</mat-icon>
+                <span>Variable Bonus</span>
+              </div>
+              <div class="item-value">{{ formatCurrency(offer.variableBonus) }}</div>
+            </div>
+            <div class="breakdown-item" *ngIf="offer.joiningBonus">
+              <div class="item-label">
+                <mat-icon>redeem</mat-icon>
+                <span>Joining Bonus</span>
+              </div>
+              <div class="item-value">{{ formatCurrency(offer.joiningBonus) }}</div>
+            </div>
+            <div class="breakdown-item" *ngIf="offer.stockOptions">
+              <div class="item-label">
+                <mat-icon>show_chart</mat-icon>
+                <span>Stock Options</span>
+              </div>
+              <div class="item-value stock-info">{{ offer.stockOptions }}</div>
+            </div>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <!-- Tabbed Information -->
+    <mat-card class="details-tabs-card">
+      <mat-tab-group>
+        <!-- Job Details Tab -->
+        <mat-tab label="Job Details">
+          <div class="tab-content">
+            <div class="details-grid">
+              <div class="detail-item">
+                <mat-icon>work</mat-icon>
+                <div class="detail-content">
+                  <span class="label">Job Type</span>
+                  <span class="value">{{ offer.jobType }}</span>
+                </div>
+              </div>
+              <div class="detail-item">
+                <mat-icon>business</mat-icon>
+                <div class="detail-content">
+                  <span class="label">Department</span>
+                  <span class="value">{{ offer.department }}</span>
+                </div>
+              </div>
+              <div class="detail-item">
+                <mat-icon>supervisor_account</mat-icon>
+                <div class="detail-content">
+                  <span class="label">Reporting To</span>
+                  <span class="value">{{ offer.reportingTo }}</span>
+                </div>
+              </div>
+              <div class="detail-item">
+                <mat-icon>location_on</mat-icon>
+                <div class="detail-content">
+                  <span class="label">Location</span>
+                  <span class="value">{{ offer.location }}</span>
+                </div>
+              </div>
+              <div class="detail-item">
+                <mat-icon>home_work</mat-icon>
+                <div class="detail-content">
+                  <span class="label">Work Mode</span>
+                  <span class="value">{{ offer.workMode }}</span>
+                </div>
+              </div>
+              <div class="detail-item">
+                <mat-icon>event</mat-icon>
+                <div class="detail-content">
+                  <span class="label">Joining Date</span>
+                  <span class="value">{{ offer.joiningDate | date: 'MMM d, y' }}</span>
+                </div>
+              </div>
+              <div class="detail-item">
+                <mat-icon>hourglass_empty</mat-icon>
+                <div class="detail-content">
+                  <span class="label">Probation Period</span>
+                  <span class="value">{{ offer.probationPeriod }}</span>
+                </div>
+              </div>
+              <div class="detail-item">
+                <mat-icon>schedule</mat-icon>
+                <div class="detail-content">
+                  <span class="label">Notice Period</span>
+                  <span class="value">{{ offer.noticePeriod }}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </mat-tab>
+
+        <!-- Benefits Tab -->
+        <mat-tab label="Benefits & Perks">
+          <div class="tab-content">
+            <div class="benefits-section" *ngIf="offer.benefits">
+              <div class="benefits-grid">
+                <div class="benefit-item" *ngIf="offer.benefits.healthInsurance">
+                  <mat-icon class="active">health_and_safety</mat-icon>
+                  <span>Health Insurance</span>
+                </div>
+                <div class="benefit-item" *ngIf="offer.benefits.lifeInsurance">
+                  <mat-icon class="active">favorite</mat-icon>
+                  <span>Life Insurance</span>
+                </div>
+                <div class="benefit-item" *ngIf="offer.benefits.paidLeaves">
+                  <mat-icon class="active">beach_access</mat-icon>
+                  <span>{{ offer.benefits.paidLeaves }} Paid Leaves/Year</span>
+                </div>
+                <div class="benefit-item" *ngIf="offer.benefits.workFromHome">
+                  <mat-icon class="active">home</mat-icon>
+                  <span>Work From Home</span>
+                </div>
+                <div class="benefit-item" *ngIf="offer.benefits.flexibleHours">
+                  <mat-icon class="active">access_time</mat-icon>
+                  <span>Flexible Hours</span>
+                </div>
+                <div class="benefit-item" *ngIf="offer.benefits.learningBudget">
+                  <mat-icon class="active">school</mat-icon>
+                  <span>Learning Budget: {{ formatCurrency(offer.benefits.learningBudget) }}/year</span>
+                </div>
+              </div>
+
+              <div class="other-benefits" *ngIf="offer.benefits.otherBenefits && offer.benefits.otherBenefits.length > 0">
+                <h4>Additional Benefits</h4>
+                <ul class="benefits-list">
+                  <li *ngFor="let benefit of offer.benefits.otherBenefits">
+                    <mat-icon>check_circle</mat-icon>
+                    <span>{{ benefit }}</span>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </mat-tab>
+
+        <!-- Documents Required Tab -->
+        <mat-tab label="Required Documents">
+          <div class="tab-content">
+            <div class="documents-section" *ngIf="offer.requiredDocuments && offer.requiredDocuments.length > 0">
+              <p class="documents-intro">Please prepare the following documents before joining:</p>
+              <ul class="documents-list">
+                <li *ngFor="let doc of offer.requiredDocuments; let i = index">
+                  <div class="doc-number">{{ i + 1 }}</div>
+                  <span>{{ doc }}</span>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </mat-tab>
+
+        <!-- Terms & Conditions Tab -->
+        <mat-tab label="Terms & Conditions">
+          <div class="tab-content">
+            <div class="terms-section" *ngIf="offer.specialTerms && offer.specialTerms.length > 0">
+              <ul class="terms-list">
+                <li *ngFor="let term of offer.specialTerms">
+                  <mat-icon>gavel</mat-icon>
+                  <span>{{ term }}</span>
+                </li>
+              </ul>
+            </div>
+
+            <div class="notes-section" *ngIf="offer.notes">
+              <mat-divider></mat-divider>
+              <div class="notes-content">
+                <mat-icon>info</mat-icon>
+                <p>{{ offer.notes }}</p>
+              </div>
+            </div>
+          </div>
+        </mat-tab>
+      </mat-tab-group>
+    </mat-card>
+
+    <!-- Contact Information -->
+    <mat-card class="contact-card" *ngIf="offer.contactPerson">
+      <mat-card-header>
+        <mat-card-title>
+          <mat-icon>contact_phone</mat-icon>
+          Contact for Queries
+        </mat-card-title>
+      </mat-card-header>
+      <mat-divider></mat-divider>
+      <mat-card-content>
+        <div class="contact-details">
+          <div class="contact-item">
+            <mat-icon>person</mat-icon>
+            <div class="contact-info">
+              <strong>{{ offer.contactPerson.name }}</strong>
+              <span>{{ offer.contactPerson.designation }}</span>
+            </div>
+          </div>
+          <div class="contact-item">
+            <mat-icon>email</mat-icon>
+            <div class="contact-info">
+              <a [href]="'mailto:' + offer.contactPerson.email">{{ offer.contactPerson.email }}</a>
+            </div>
+          </div>
+          <div class="contact-item">
+            <mat-icon>phone</mat-icon>
+            <div class="contact-info">
+              <a [href]="'tel:' + offer.contactPerson.phone">{{ offer.contactPerson.phone }}</a>
+            </div>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+  <div mat-dialog-actions class="dialog-actions">
+    <div class="actions-left">
+      <button mat-button (click)="downloadOfferLetter()">
+        <mat-icon>download</mat-icon>
+        Download
+      </button>
+      <button mat-button (click)="shareOffer()">
+        <mat-icon>share</mat-icon>
+        Share
+      </button>
+    </div>
+    <div class="actions-right">
+      <button mat-button (click)="declineOffer()" color="warn">
+        <mat-icon>close</mat-icon>
+        Decline
+      </button>
+      <button mat-stroked-button (click)="negotiateOffer()" color="primary">
+        <mat-icon>question_answer</mat-icon>
+        Negotiate
+      </button>
+      <button mat-raised-button (click)="acceptOffer()" color="primary" class="accept-btn">
+        <mat-icon>check_circle</mat-icon>
+        Accept Offer
+      </button>
+    </div>
+  </div>
+</div>

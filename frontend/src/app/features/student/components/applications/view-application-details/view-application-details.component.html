@@ -1,0 +1,231 @@
+<div class="view-application-dialog">
+  <div mat-dialog-title class="dialog-header">
+    <div class="header-info">
+      <div class="company-header">
+        <div class="company-logo" *ngIf="application.companyLogo">
+          <img [src]="application.companyLogo" [alt]="application.companyName">
+        </div>
+        <div class="company-logo-placeholder" *ngIf="!application.companyLogo">
+          {{ application.companyName.charAt(0) }}
+        </div>
+        <div class="title-info">
+          <h2>{{ application.position }}</h2>
+          <p>{{ application.companyName }}</p>
+        </div>
+      </div>
+    </div>
+    <button mat-icon-button (click)="onClose()" class="close-btn">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+
+  <div mat-dialog-content class="dialog-body">
+    <!-- Application Status Card -->
+    <mat-card class="status-card" [class]="getStatusClass(application.status)">
+      <mat-card-content>
+        <div class="status-content">
+          <mat-icon>{{ getStatusIcon(application.status) }}</mat-icon>
+          <div class="status-info">
+            <h3>{{ getStatusText(application.status) }}</h3>
+            <p>Application ID: {{ application.applicationId }}</p>
+            <p>Applied on: {{ application.appliedDate | date: 'MMM d, y' }}</p>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <!-- Interview Details (if status is interview) -->
+    <mat-card class="interview-card" *ngIf="application.status === 'interview' && application.interviewDetails">
+      <mat-card-header>
+        <mat-card-title>
+          <mat-icon>event</mat-icon>
+          Interview Details
+        </mat-card-title>
+      </mat-card-header>
+      <mat-divider></mat-divider>
+      <mat-card-content>
+        <div class="interview-details">
+          <div class="detail-item">
+            <mat-icon>calendar_today</mat-icon>
+            <div class="detail-content">
+              <span class="label">Date & Time</span>
+              <span class="value">{{ application.interviewDetails.date | date: 'MMM d, y' }} at {{ application.interviewDetails.time }}</span>
+            </div>
+          </div>
+          <div class="detail-item">
+            <mat-icon>videocam</mat-icon>
+            <div class="detail-content">
+              <span class="label">Mode</span>
+              <span class="value">{{ application.interviewDetails.mode }}</span>
+            </div>
+          </div>
+          <div class="detail-item">
+            <mat-icon>place</mat-icon>
+            <div class="detail-content">
+              <span class="label">Venue/Platform</span>
+              <span class="value">{{ application.interviewDetails.venue }}</span>
+            </div>
+          </div>
+          <div class="detail-item" *ngIf="application.interviewDetails.interviewers && application.interviewDetails.interviewers.length > 0">
+            <mat-icon>people</mat-icon>
+            <div class="detail-content">
+              <span class="label">Interviewers</span>
+              <div class="interviewers-list">
+                <span class="value" *ngFor="let interviewer of application.interviewDetails.interviewers">{{ interviewer }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <!-- Offer Details (if status is accepted) -->
+    <mat-card class="offer-card" *ngIf="application.status === 'accepted' && application.offerDetails">
+      <mat-card-header>
+        <mat-card-title>
+          <mat-icon>card_giftcard</mat-icon>
+          Offer Details
+        </mat-card-title>
+      </mat-card-header>
+      <mat-divider></mat-divider>
+      <mat-card-content>
+        <div class="offer-details">
+          <div class="detail-item">
+            <mat-icon>work</mat-icon>
+            <div class="detail-content">
+              <span class="label">Position</span>
+              <span class="value">{{ application.offerDetails.position }}</span>
+            </div>
+          </div>
+          <div class="detail-item">
+            <mat-icon>payments</mat-icon>
+            <div class="detail-content">
+              <span class="label">Salary</span>
+              <span class="value">{{ application.offerDetails.salary }}</span>
+            </div>
+          </div>
+          <div class="detail-item">
+            <mat-icon>today</mat-icon>
+            <div class="detail-content">
+              <span class="label">Joining Date</span>
+              <span class="value">{{ application.offerDetails.joiningDate | date: 'MMM d, y' }}</span>
+            </div>
+          </div>
+        </div>
+        <button mat-raised-button color="primary" (click)="downloadOfferLetter()" class="download-btn">
+          <mat-icon>download</mat-icon>
+          Download Offer Letter
+        </button>
+      </mat-card-content>
+    </mat-card>
+
+    <!-- Rejection Reason (if status is rejected) -->
+    <mat-card class="rejection-card" *ngIf="application.status === 'rejected' && application.rejectionReason">
+      <mat-card-header>
+        <mat-card-title>
+          <mat-icon>info</mat-icon>
+          Feedback
+        </mat-card-title>
+      </mat-card-header>
+      <mat-divider></mat-divider>
+      <mat-card-content>
+        <p class="rejection-reason">{{ application.rejectionReason }}</p>
+      </mat-card-content>
+    </mat-card>
+
+    <!-- Job Details -->
+    <mat-card class="job-details-card">
+      <mat-card-header>
+        <mat-card-title>
+          <mat-icon>work_outline</mat-icon>
+          Job Details
+        </mat-card-title>
+      </mat-card-header>
+      <mat-divider></mat-divider>
+      <mat-card-content>
+        <div class="job-info-grid">
+          <div class="info-item">
+            <mat-icon>location_on</mat-icon>
+            <div class="info-content">
+              <span class="label">Location</span>
+              <span class="value">{{ application.location || 'Not specified' }}</span>
+            </div>
+          </div>
+          <div class="info-item">
+            <mat-icon>business_center</mat-icon>
+            <div class="info-content">
+              <span class="label">Employment Type</span>
+              <span class="value">{{ application.employmentType || 'Not specified' }}</span>
+            </div>
+          </div>
+          <div class="info-item">
+            <mat-icon>attach_money</mat-icon>
+            <div class="info-content">
+              <span class="label">Salary Range</span>
+              <span class="value">{{ application.salary || 'Not specified' }}</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="job-description" *ngIf="application.jobDescription">
+          <h4>Job Description</h4>
+          <p>{{ application.jobDescription }}</p>
+        </div>
+
+        <div class="required-skills" *ngIf="application.requiredSkills && application.requiredSkills.length > 0">
+          <h4>Required Skills</h4>
+          <div class="skills-chips">
+            <mat-chip *ngFor="let skill of application.requiredSkills">{{ skill }}</mat-chip>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <!-- Application Timeline -->
+    <mat-card class="timeline-card" *ngIf="application.timeline && application.timeline.length > 0">
+      <mat-card-header>
+        <mat-card-title>
+          <mat-icon>timeline</mat-icon>
+          Application Timeline
+        </mat-card-title>
+      </mat-card-header>
+      <mat-divider></mat-divider>
+      <mat-card-content>
+        <div class="timeline">
+          <div class="timeline-item" *ngFor="let item of application.timeline; let last = last" [class.last]="last">
+            <div class="timeline-marker"></div>
+            <div class="timeline-content">
+              <div class="timeline-date">{{ item.date | date: 'MMM d, y' }}</div>
+              <div class="timeline-status">{{ item.status | titlecase }}</div>
+              <div class="timeline-description">{{ item.description }}</div>
+            </div>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <!-- Application Notes -->
+    <mat-card class="notes-card" *ngIf="application.applicationNotes">
+      <mat-card-header>
+        <mat-card-title>
+          <mat-icon>note</mat-icon>
+          Notes
+        </mat-card-title>
+      </mat-card-header>
+      <mat-divider></mat-divider>
+      <mat-card-content>
+        <p>{{ application.applicationNotes }}</p>
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+  <div mat-dialog-actions class="dialog-actions">
+    <button mat-button (click)="onClose()">Close</button>
+    <button mat-raised-button color="warn" 
+            (click)="withdrawApplication()" 
+            *ngIf="application.status === 'pending' || application.status === 'reviewed'">
+      <mat-icon>delete</mat-icon>
+      Withdraw Application
+    </button>
+  </div>
+</div>

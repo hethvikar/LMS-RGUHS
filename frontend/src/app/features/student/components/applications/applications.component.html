@@ -5,6 +5,69 @@
         <p>Track and manage your job applications</p>
       </div>
 
+      <!-- Stats Cards at Top -->
+      <div class="stats-cards">
+        <mat-card class="stat-card gradient-blue">
+          <mat-card-content>
+            <div class="stat-content">
+              <mat-icon>pending_actions</mat-icon>
+              <div class="stat-info">
+                <h3>{{ getStatusCount('pending') }}</h3>
+                <p>Pending</p>
+              </div>
+            </div>
+          </mat-card-content>
+        </mat-card>
+
+        <mat-card class="stat-card gradient-orange">
+          <mat-card-content>
+            <div class="stat-content">
+              <mat-icon>rate_review</mat-icon>
+              <div class="stat-info">
+                <h3>{{ getStatusCount('reviewed') }}</h3>
+                <p>Under Review</p>
+              </div>
+            </div>
+          </mat-card-content>
+        </mat-card>
+
+        <mat-card class="stat-card gradient-purple">
+          <mat-card-content>
+            <div class="stat-content">
+              <mat-icon>event</mat-icon>
+              <div class="stat-info">
+                <h3>{{ getStatusCount('interview') }}</h3>
+                <p>Interviews</p>
+              </div>
+            </div>
+          </mat-card-content>
+        </mat-card>
+
+        <mat-card class="stat-card gradient-green">
+          <mat-card-content>
+            <div class="stat-content">
+              <mat-icon>check_circle</mat-icon>
+              <div class="stat-info">
+                <h3>{{ getStatusCount('accepted') }}</h3>
+                <p>Accepted</p>
+              </div>
+            </div>
+          </mat-card-content>
+        </mat-card>
+
+        <mat-card class="stat-card gradient-red">
+          <mat-card-content>
+            <div class="stat-content">
+              <mat-icon>cancel</mat-icon>
+              <div class="stat-info">
+                <h3>{{ getStatusCount('rejected') }}</h3>
+                <p>Rejected</p>
+              </div>
+            </div>
+          </mat-card-content>
+        </mat-card>
+      </div>
+
       <div class="applications-content">
         <mat-card class="applications-card">
           <mat-card-header>
@@ -46,10 +109,10 @@
                 <th mat-header-cell *matHeaderCellDef>Actions</th>
                 <td mat-cell *matCellDef="let application">
                   <button mat-icon-button [matTooltip]="'View Details'" (click)="viewApplication(application)">
-                    
+                    <mat-icon>visibility</mat-icon>
                   </button>
                   <button mat-icon-button [matTooltip]="'Withdraw Application'" (click)="withdrawApplication(application)" *ngIf="application.status === 'pending'">
-                    
+                    <mat-icon>delete</mat-icon>
                   </button>
                 </td>
               </ng-container>
@@ -59,66 +122,16 @@
             </table>
 
             <div class="no-applications" *ngIf="applications.length === 0">
-              
+              <mat-icon>work_outline</mat-icon>
               <h3>No Applications Yet</h3>
               <p>You haven't applied to any jobs yet. Start exploring opportunities!</p>
               <button mat-raised-button color="primary" (click)="browseJobs()">
-                
+                <mat-icon>search</mat-icon>
                 Browse Jobs
               </button>
             </div>
           </mat-card-content>
         </mat-card>
-
-        <div class="stats-cards" *ngIf="applications.length > 0">
-          <mat-card class="stat-card">
-            <mat-card-content>
-              <div class="stat-content">
-                
-                <div class="stat-info">
-                  <h3>{{ getStatusCount('pending') }}</h3>
-                  <p>Pending</p>
-                </div>
-              </div>
-            </mat-card-content>
-          </mat-card>
-
-          <mat-card class="stat-card">
-            <mat-card-content>
-              <div class="stat-content">
-                
-                <div class="stat-info">
-                  <h3>{{ getStatusCount('reviewed') }}</h3>
-                  <p>Reviewed</p>
-                </div>
-              </div>
-            </mat-card-content>
-          </mat-card>
-
-          <mat-card class="stat-card">
-            <mat-card-content>
-              <div class="stat-content">
-                
-                <div class="stat-info">
-                  <h3>{{ getStatusCount('interview') }}</h3>
-                  <p>Interview</p>
-                </div>
-              </div>
-            </mat-card-content>
-          </mat-card>
-
-          <mat-card class="stat-card">
-            <mat-card-content>
-              <div class="stat-content">
-                
-                <div class="stat-info">
-                  <h3>{{ getStatusCount('accepted') }}</h3>
-                  <p>Accepted</p>
-                </div>
-              </div>
-            </mat-card-content>
-          </mat-card>
-        </div>
       </div>
     </div>
   
