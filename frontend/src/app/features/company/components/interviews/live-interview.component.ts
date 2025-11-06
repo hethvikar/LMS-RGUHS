@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter, OnInit, OnDestroy, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnInit, OnDestroy, AfterViewInit, ViewChild, ElementRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -115,7 +115,7 @@ export class LiveInterviewComponent implements OnInit, OnDestroy, AfterViewInit 
           break;
         case "answer":
           await this.peers[data.from]?.setRemoteDescription({ type: "answer", sdp: data.sdp });
-          //this.addMessage(`Received answer from ${data.from}`, "info");
+          this.addMessage(`Received answer from ${data.from}`, "info");
           break;
         case "candidate":
           try {
@@ -132,6 +132,20 @@ export class LiveInterviewComponent implements OnInit, OnDestroy, AfterViewInit 
           break;
       }
     };
+  }
+
+  private addMessage(msg: string, type: string = "system") {
+    const messageItem: MessageItem = {
+      text: msg,
+      type: type as 'system' | 'info' | 'user' | 'error'
+    };
+    this.messages.push(messageItem);
+    // Scroll to bottom
+    setTimeout(() => {
+      if (this.messagesContainer) {
+        this.messagesContainer.nativeElement.scrollTop = this.messagesContainer.nativeElement.scrollHeight;
+      }
+    });
   }
 
   private addVideo(stream: MediaStream, name: string, muted: boolean = false) {
@@ -173,7 +187,7 @@ export class LiveInterviewComponent implements OnInit, OnDestroy, AfterViewInit 
       const offer = await pc.createOffer();
       await pc.setLocalDescription(offer);
       this.ws.send(JSON.stringify({ type: "offer", target: peerName, sdp: offer.sdp }));
-      //this.addMessage(`Sent offer to ${peerName}`, "info");
+      this.addMessage(`Sent offer to ${peerName}`, "info");
     }
   }
 
@@ -241,7 +255,7 @@ export class LiveInterviewComponent implements OnInit, OnDestroy, AfterViewInit 
           name: this.currentUserName,
           room: this.interview?.channelId
         }));
-        this.addMessage(`You joined interview room as ${this.currentUserName}`, 'info');
+        this.addMessage(`You joined room "${this.interview?.channelId}" as ${this.currentUserName}`, 'info');
       }
     })
     .catch(error => {
@@ -249,18 +263,6 @@ export class LiveInterviewComponent implements OnInit, OnDestroy, AfterViewInit 
       console.error('Error message:', error.message);
       alert(`Cannot access camera/microphone: ${error.name} - ${error.message}`);
     });
-  }
-
-
-
-  addMessage(text: string, type: 'system' | 'info' | 'user' | 'error' = 'system') {
-    const messageItem: MessageItem = {
-      text,
-      type
-    };
-    this.messages.push(messageItem);
-
-    console.log(`Message [${type}]: ${text}`);
   }
 
   onLeaveClick() {

@@ -29,6 +29,10 @@ export const COMPANY_ROUTES: Routes = [
       {
         path: 'interviews',
         loadComponent: () => import('./components/interviews/interviews.component').then(m => m.CompanyInterviewsComponent)
+      },
+      {
+        path: 'liveinterview',
+        loadComponent: () => import('./components/interviews/live-interview.component').then(m => m.LiveInterviewComponent)
       }
     ]
   }

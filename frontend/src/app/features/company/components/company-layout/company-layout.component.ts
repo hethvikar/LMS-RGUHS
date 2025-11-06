@@ -52,6 +52,11 @@ import { MatButtonModule } from '@angular/material/button';
             <mat-icon matListItemIcon>video_call</mat-icon>
             <span matListItemTitle>Interviews</span>
           </a>
+          
+          <a mat-list-item routerLink="/company/liveinterview" routerLinkActive="active">
+            <mat-icon matListItemIcon>video_call</mat-icon>
+            <span matListItemTitle>Live Interview</span>
+          </a>
         </mat-nav-list>
       </mat-sidenav>
 
