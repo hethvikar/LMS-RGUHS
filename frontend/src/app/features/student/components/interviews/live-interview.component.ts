@@ -53,7 +53,7 @@ export class LiveInterviewComponent implements OnInit, OnDestroy, AfterViewInit 
   private ws: WebSocket;
   private localStream: MediaStream | null = null;
   private peers: { [key: string]: RTCPeerConnection } = {};
-  private config = { iceServers: [{ urls: "stun:stun.l.google.com:19302" }] };
+  private config = { iceServers: LIVE_INTERVIEW_CONSTANTS.ICE_SERVERS };
   isScreenSharing: boolean = false;
 
   constructor(private authService: AuthService) {
@@ -161,6 +161,17 @@ export class LiveInterviewComponent implements OnInit, OnDestroy, AfterViewInit 
     if (this.peers[peerName]) return;
     const pc = new RTCPeerConnection(this.config);
     this.peers[peerName] = pc;
+
+    // Add connection state logging
+    pc.onconnectionstatechange = () => {
+      console.log(`Peer ${peerName} connection state:`, pc.connectionState);
+      this.addMessage(`Connection to ${peerName}: ${pc.connectionState}`, "info");
+    };
+
+    pc.oniceconnectionstatechange = () => {
+      console.log(`Peer ${peerName} ICE connection state:`, pc.iceConnectionState);
+    };
+
     if (this.localStream) {
       this.localStream.getTracks().forEach((t: MediaStreamTrack) => pc.addTrack(t, this.localStream!));
     }
