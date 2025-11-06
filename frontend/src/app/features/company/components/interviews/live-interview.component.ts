@@ -59,6 +59,21 @@ export class LiveInterviewComponent implements OnInit, OnDestroy, AfterViewInit 
   constructor(private authService: AuthService) {
     this.loadCurrentUserName();
     this.ws = new WebSocket(LIVE_INTERVIEW_CONSTANTS.WEBSOCKET_URL);
+
+    this.ws.onopen = () => {
+      console.log('WebSocket connected');
+      this.addMessage('Connected to signaling server', 'info');
+    };
+
+    this.ws.onclose = () => {
+      console.log('WebSocket disconnected');
+      this.addMessage('Disconnected from signaling server', 'error');
+    };
+
+    this.ws.onerror = (error) => {
+      console.error('WebSocket error:', error);
+      this.addMessage('Signaling server connection error', 'error');
+    };
   }
 
   private loadCurrentUserName(): void {
@@ -119,6 +134,7 @@ export class LiveInterviewComponent implements OnInit, OnDestroy, AfterViewInit 
           break;
         case "candidate":
           try {
+            console.log(`Adding ICE candidate from ${data.from}:`, data.candidate.type);
             await this.peers[data.from]?.addIceCandidate(new RTCIceCandidate(data.candidate));
           } catch (err) {
             console.warn("Bad ICE:", err);
@@ -191,13 +207,25 @@ export class LiveInterviewComponent implements OnInit, OnDestroy, AfterViewInit 
     }
     pc.ontrack = (e: RTCTrackEvent) => this.addVideo(e.streams[0], peerName);
     pc.onicecandidate = (e: RTCPeerConnectionIceEvent) => {
-      if (e.candidate)
-        this.ws.send(JSON.stringify({ type: "candidate", target: peerName, candidate: e.candidate }));
+      if (e.candidate) {
+        console.log(`ICE candidate for ${peerName}:`, e.candidate.type, e.candidate);
+        if (this.ws.readyState === WebSocket.OPEN) {
+          this.ws.send(JSON.stringify({ type: "candidate", target: peerName, candidate: e.candidate }));
+        } else {
+          console.warn('WebSocket not ready for candidate');
+        }
+      } else {
+        console.log(`ICE gathering complete for ${peerName}`);
+      }
     };
     if (isInitiator) {
       const offer = await pc.createOffer();
       await pc.setLocalDescription(offer);
-      this.ws.send(JSON.stringify({ type: "offer", target: peerName, sdp: offer.sdp }));
+      if (this.ws.readyState === WebSocket.OPEN) {
+        this.ws.send(JSON.stringify({ type: "offer", target: peerName, sdp: offer.sdp }));
+      } else {
+        console.warn('WebSocket not ready for offer');
+      }
       this.addMessage(`Sent offer to ${peerName}`, "info");
     }
   }
@@ -208,7 +236,11 @@ export class LiveInterviewComponent implements OnInit, OnDestroy, AfterViewInit 
     await this.peers[from].setRemoteDescription({ type: "offer", sdp: data.sdp });
     const answer = await this.peers[from].createAnswer();
     await this.peers[from].setLocalDescription(answer);
-    this.ws.send(JSON.stringify({ type: "answer", target: from, sdp: answer.sdp }));
+    if (this.ws.readyState === WebSocket.OPEN) {
+      this.ws.send(JSON.stringify({ type: "answer", target: from, sdp: answer.sdp }));
+    } else {
+      console.warn('WebSocket not ready for answer');
+    }
     //this.addMessage(`Sent answer to ${from}`, "info");
   }
 
