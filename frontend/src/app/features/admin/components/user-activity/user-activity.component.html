@@ -12,10 +12,10 @@
       </div>
 
       <div class="activity-stats">
-        <mat-card class="stat-card">
+        <mat-card class="stat-card gradient-crimson">
           <mat-card-content>
             <div class="stat-content">
-              
+              <mat-icon>analytics</mat-icon>
               <div class="stat-info">
                 <h3>{{ activityLogs.length }}</h3>
                 <p>Total Activities</p>
@@ -24,10 +24,10 @@
           </mat-card-content>
         </mat-card>
 
-        <mat-card class="stat-card">
+        <mat-card class="stat-card gradient-sky">
           <mat-card-content>
             <div class="stat-content">
-              
+              <mat-icon>today</mat-icon>
               <div class="stat-info">
                 <h3>{{ getTodaysActivities() }}</h3>
                 <p>Today</p>
@@ -36,10 +36,10 @@
           </mat-card-content>
         </mat-card>
 
-        <mat-card class="stat-card">
+        <mat-card class="stat-card gradient-peach">
           <mat-card-content>
             <div class="stat-content">
-              
+              <mat-icon>warning</mat-icon>
               <div class="stat-info">
                 <h3>{{ getCriticalActivities() }}</h3>
                 <p>Critical Events</p>

@@ -11,8 +11,11 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { CommonModule } from '@angular/common';
 import { EnrollmentCalendarComponent, EnrollmentEvent } from '../../../../shared/components/enrollment-calendar/enrollment-calendar.component';
+import { EnrollStudentDialogComponent } from './enroll-student-dialog.component';
 
 interface Student {
   id: number;
@@ -59,6 +62,8 @@ interface Enrollment {
     MatAutocompleteModule,
     MatTabsModule,
     MatTooltipModule,
+    MatDialogModule,
+    MatSnackBarModule,
     EnrollmentCalendarComponent
   ],
   templateUrl: './course-enrollment.component.html',
@@ -129,6 +134,11 @@ export class CourseEnrollmentComponent implements OnInit {
   displayedColumns: string[] = ['student', 'course', 'progress', 'status', 'actions'];
 
   enrollmentEvents: EnrollmentEvent[] = [];
+
+  constructor(
+    private dialog: MatDialog,
+    private snackBar: MatSnackBar
+  ) {}
 
   ngOnInit() {
     // Load data from API
@@ -365,7 +375,68 @@ export class CourseEnrollmentComponent implements OnInit {
   }
 
   openEnrollmentDialog() {
-    console.log('Open enrollment dialog');
+    const dialogRef = this.dialog.open(EnrollStudentDialogComponent, {
+      width: '650px',
+      maxWidth: '90vw',
+      disableClose: false,
+      data: {
+        students: this.students,
+        courses: this.courses
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.handleEnrollmentResult(result);
+      }
+    });
+  }
+
+  handleEnrollmentResult(result: any) {
+    const student = this.students.find(s => s.id === result.studentId);
+    const course = this.courses.find(c => c.id === result.courseId);
+
+    if (!student || !course) {
+      this.snackBar.open('Error: Student or course not found', 'Close', {
+        duration: 3000,
+        panelClass: ['error-snackbar']
+      });
+      return;
+    }
+
+    // Check if already enrolled
+    if (this.enrollments.some(e => e.studentId === result.studentId && e.courseId === result.courseId)) {
+      this.snackBar.open('Student is already enrolled in this course', 'Close', {
+        duration: 3000,
+        panelClass: ['error-snackbar']
+      });
+      return;
+    }
+
+    // Create new enrollment
+    const newEnrollment: Enrollment = {
+      id: this.enrollments.length + 1,
+      studentId: student.id,
+      studentName: student.name,
+      courseId: course.id,
+      courseTitle: course.title,
+      enrollmentDate: result.enrollmentDate,
+      status: 'active',
+      progress: 0
+    };
+
+    this.enrollments.push(newEnrollment);
+    course.enrolledStudents++;
+    student.enrolledCourses.push(course.id);
+
+    this.snackBar.open(
+      `Successfully enrolled ${student.name} in ${course.title}`,
+      'Close',
+      {
+        duration: 5000,
+        panelClass: ['success-snackbar']
+      }
+    );
   }
 
   onEventClicked(event: EnrollmentEvent) {

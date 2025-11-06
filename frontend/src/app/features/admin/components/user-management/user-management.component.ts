@@ -185,7 +185,9 @@ export class UserManagementComponent implements OnInit {
 
   addNewUser() {
     const dialogRef = this.dialog.open(AddUserDialogComponent, {
-      width: '500px',
+      width: '800px',
+      maxWidth: '90vw',
+      disableClose: false,
       data: {}
     });
 
@@ -211,7 +213,9 @@ export class UserManagementComponent implements OnInit {
 
   editUser(user: User) {
     const dialogRef = this.dialog.open(AddUserDialogComponent, {
-      width: '500px',
+      width: '800px',
+      maxWidth: '90vw',
+      disableClose: false,
       data: { user }
     });
 

@@ -34,6 +34,21 @@
 
     .stat-card {
       text-align: center;
+      transition: all 0.3s ease;
+      cursor: pointer;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      border-radius: 12px;
+      overflow: hidden;
+      background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+      
+      &:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+      }
+
+      mat-card-content {
+        padding: 24px 16px;
+      }
     }
 
     .stat-content {
@@ -66,8 +81,48 @@
       letter-spacing: 0.5px;
     }
 
+    // Individual stat card color variations
+    .stat-card:nth-child(1) {
+      border-top: 4px solid #2196f3;
+      
+      .stat-icon {
+        color: #2196f3;
+      }
+    }
+
+    .stat-card:nth-child(2) {
+      border-top: 4px solid #4caf50;
+      
+      .stat-icon {
+        color: #4caf50;
+      }
+    }
+
+    .stat-card:nth-child(3) {
+      border-top: 4px solid #ff9800;
+      
+      .stat-icon {
+        color: #ff9800;
+      }
+    }
+
+    .stat-card:nth-child(4) {
+      border-top: 4px solid #9c27b0;
+      
+      .stat-icon {
+        color: #9c27b0;
+      }
+    }
+
     .roles-content {
       margin-bottom: 32px;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+      border-radius: 12px;
+      transition: box-shadow 0.3s ease;
+      
+      &:hover {
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
+      }
     }
 
     .roles-table {
@@ -119,6 +174,26 @@
 
     .permission-category-card {
       height: fit-content;
+      box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+      border-radius: 12px;
+      transition: all 0.3s ease;
+      border: 1px solid #e0e0e0;
+      
+      &:hover {
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
+        transform: translateY(-2px);
+        border-color: #2196f3;
+      }
+
+      mat-card-header {
+        background: linear-gradient(135deg, #f5f5f5 0%, #ffffff 100%);
+        padding: 16px;
+        border-bottom: 1px solid #e0e0e0;
+      }
+
+      mat-card-content {
+        padding: 16px;
+      }
     }
 
     .permissions-list {
@@ -155,6 +230,16 @@
     .mat-mdc-chip.custom { background-color: #e8f5e8; color: #2e7d32; }
 
     .mat-mdc-chip.permission-chip { background-color: #f3e5f5; color: #7b1fa2; }
+
+    // Snackbar styles
+    ::ng-deep .success-snackbar {
+      background-color: #4caf50 !important;
+      color: white !important;
+
+      .mat-simple-snackbar-action {
+        color: white !important;
+      }
+    }
 
     @media (max-width: 768px) {
       .user-roles-container {

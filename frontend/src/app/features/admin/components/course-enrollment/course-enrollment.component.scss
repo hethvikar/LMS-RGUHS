@@ -34,6 +34,89 @@
 
     .stat-card {
       text-align: center;
+      transition: all 0.3s ease;
+      cursor: pointer;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      border-radius: 12px;
+      overflow: hidden;
+      
+      &:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+      }
+
+      mat-card-content {
+        padding: 24px 16px;
+      }
+
+      // Gradient backgrounds for each stat card
+      &.gradient-ocean {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        
+        .stat-content {
+          color: white;
+          
+          mat-icon {
+            color: rgba(255, 255, 255, 0.9);
+          }
+        }
+
+        .stat-info h3,
+        .stat-info p {
+          color: white;
+        }
+      }
+
+      &.gradient-mint {
+        background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+        
+        .stat-content {
+          color: white;
+          
+          mat-icon {
+            color: rgba(255, 255, 255, 0.9);
+          }
+        }
+
+        .stat-info h3,
+        .stat-info p {
+          color: white;
+        }
+      }
+
+      &.gradient-sunset {
+        background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+        
+        .stat-content {
+          color: white;
+          
+          mat-icon {
+            color: rgba(255, 255, 255, 0.9);
+          }
+        }
+
+        .stat-info h3,
+        .stat-info p {
+          color: white;
+        }
+      }
+
+      &.gradient-purple {
+        background: linear-gradient(135deg, #7f7fd5 0%, #86a8e7 50%, #91eae4 100%);
+        
+        .stat-content {
+          color: white;
+          
+          mat-icon {
+            color: rgba(255, 255, 255, 0.9);
+          }
+        }
+
+        .stat-info h3,
+        .stat-info p {
+          color: white;
+        }
+      }
     }
 
     .stat-content {
@@ -247,6 +330,33 @@
       .course-stats {
         flex-direction: column;
         gap: 4px;
+      }
+    }
+
+    // Snackbar styles
+    ::ng-deep .success-snackbar {
+      background-color: #4caf50 !important;
+      color: white !important;
+
+      .mat-mdc-snack-bar-label {
+        color: white !important;
+      }
+
+      .mat-simple-snackbar-action {
+        color: white !important;
+      }
+    }
+
+    ::ng-deep .error-snackbar {
+      background-color: #f44336 !important;
+      color: white !important;
+
+      .mat-mdc-snack-bar-label {
+        color: white !important;
+      }
+
+      .mat-simple-snackbar-action {
+        color: white !important;
       }
     }
   

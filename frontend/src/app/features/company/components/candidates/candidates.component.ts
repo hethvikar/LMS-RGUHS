@@ -6,7 +6,13 @@ import { MatChipsModule } from '@angular/material/chips';
 import { MatTableModule } from '@angular/material/table';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatDialog } from '@angular/material/dialog';
 import { CommonModule } from '@angular/common';
+import { ViewProfileDialogComponent } from './view-profile-dialog.component';
+import { ScheduleInterviewDialogComponent } from './schedule-interview-dialog.component';
+import { UpdateStatusDialogComponent } from './update-status-dialog.component';
+import { DownloadResumeDialogComponent } from './download-resume-dialog.component';
+import { MakeOfferDialogComponent } from './make-offer-dialog.component';
 
 interface Candidate {
   id: number;
@@ -127,28 +133,115 @@ export class CompanyCandidatesComponent implements OnInit {
     return statusMap[status] || status;
   }
 
+  constructor(private dialog: MatDialog) {}
+
   viewCandidate(candidate: Candidate) {
-    console.log('View candidate profile:', candidate);
-    // Navigate to candidate detail view
+    const dialogRef = this.dialog.open(ViewProfileDialogComponent, {
+      data: candidate,
+      panelClass: 'view-profile-dialog-container',
+      width: '80vw',
+      maxWidth: '80vw',
+      height: 'auto',
+      maxHeight: '95vh'
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        if (result.action === 'scheduleInterview') {
+          this.scheduleInterview(result.candidate);
+        } else if (result.action === 'updateStatus') {
+          this.updateStatus(result.candidate);
+        }
+      }
+    });
   }
 
   downloadResume(candidate: Candidate) {
-    console.log('Download resume for:', candidate);
-    // Download resume file
+    const dialogRef = this.dialog.open(DownloadResumeDialogComponent, {
+      data: candidate,
+      panelClass: 'download-resume-dialog-container',
+      width: '80vw',
+      maxWidth: '80vw',
+      height: 'auto',
+      maxHeight: '95vh'
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        if (result.action === 'viewProfile') {
+          this.viewCandidate(result.candidate);
+        } else if (result.action === 'scheduleInterview') {
+          this.scheduleInterview(result.candidate);
+        } else if (result.action === 'updateStatus') {
+          this.updateStatus(result.candidate);
+        }
+      }
+    });
   }
 
   scheduleInterview(candidate: Candidate) {
-    console.log('Schedule interview for:', candidate);
-    // Open interview scheduling dialog
+    const dialogRef = this.dialog.open(ScheduleInterviewDialogComponent, {
+      data: candidate,
+      panelClass: 'schedule-interview-dialog-container',
+      width: '80vw',
+      maxWidth: '80vw',
+      height: 'auto',
+      maxHeight: '95vh'
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        console.log('Interview scheduled:', result);
+        // Handle interview scheduling
+        // Update candidate status to 'interviewed'
+        candidate.status = 'interviewed';
+      }
+    });
   }
 
   updateStatus(candidate: Candidate) {
-    console.log('Update status for:', candidate);
-    // Open status update dialog
+    const dialogRef = this.dialog.open(UpdateStatusDialogComponent, {
+      data: candidate,
+      panelClass: 'update-status-dialog-container',
+      width: '80vw',
+      maxWidth: '80vw',
+      height: 'auto',
+      maxHeight: '95vh'
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        console.log('Status updated:', result);
+        // Handle status update
+        candidate.status = result.newStatus;
+        
+        // If notification is enabled, send email
+        if (result.notifyCandidate) {
+          console.log('Sending notification to candidate');
+        }
+      }
+    });
   }
 
   makeOffer(candidate: Candidate) {
-    console.log('Make offer to:', candidate);
-    // Open offer creation dialog
+    const dialogRef = this.dialog.open(MakeOfferDialogComponent, {
+      data: candidate,
+      panelClass: 'make-offer-dialog-container',
+      width: '80vw',
+      maxWidth: '80vw',
+      height: 'auto',
+      maxHeight: '95vh'
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        console.log('Offer sent:', result);
+        // Handle offer sending
+        candidate.status = 'offered';
+        
+        // Send offer email to candidate
+        console.log('Sending offer email to:', candidate.email);
+      }
+    });
   }
 }

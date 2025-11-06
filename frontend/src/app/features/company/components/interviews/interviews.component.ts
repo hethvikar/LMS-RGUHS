@@ -9,6 +9,9 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatTabsModule } from '@angular/material/tabs';
 import { CommonModule } from '@angular/common';
 import { ScheduleInterviewDialogComponent } from './schedule-interview-dialog.component';
+import { JoinInterviewDialogComponent } from './join-interview-dialog.component';
+import { AddFeedbackDialogComponent } from './add-feedback-dialog.component';
+import { ViewInterviewDialogComponent } from './view-interview-dialog.component';
 import { CalendarModule, CalendarUtils } from 'angular-calendar';
 import { CalendarEvent } from 'angular-calendar';
 import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
@@ -207,18 +210,58 @@ export class CompanyInterviewsComponent implements OnInit {
   }
 
   viewInterview(interview: CompanyInterview) {
-    console.log('View interview details:', interview);
-    // Open interview detail dialog
+    const dialogRef = this.dialog.open(ViewInterviewDialogComponent, {
+      width: '100%',
+      maxWidth: '100vw',
+      maxHeight: '90vh',
+      height: 'auto',
+      data: interview,
+      panelClass: 'view-interview-dialog-container'
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result?.action === 'edit') {
+        console.log('Edit interview:', result.data);
+        // Open edit dialog or navigate to edit page
+      }
+    });
   }
 
   joinInterview(interview: CompanyInterview) {
-    console.log('Join interview:', interview);
-    // Open video conference link
+    const dialogRef = this.dialog.open(JoinInterviewDialogComponent, {
+      width: '100%',
+      maxWidth: '100vw',
+      height: 'auto',
+      data: interview,
+      panelClass: 'join-interview-dialog-container'
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result?.action === 'joined') {
+        console.log('Interview joined successfully');
+        // You can add additional logic here, like updating the interview status
+      }
+    });
   }
 
   addFeedback(interview: CompanyInterview) {
-    console.log('Add feedback for:', interview);
-    // Open feedback dialog
+    const dialogRef = this.dialog.open(AddFeedbackDialogComponent, {
+      width: '850px',
+      maxWidth: '95vw',
+      maxHeight: '90vh',
+      data: interview,
+      panelClass: 'feedback-dialog-container'
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result?.action === 'submitted') {
+        console.log('Feedback submitted:', result.data);
+        // Update the interview with feedback
+        interview.feedback = result.data.feedback;
+        interview.rating = result.data.feedback.overallRating;
+        // You can also call a service to save the feedback to the backend
+      }
+    });
   }
 
   rescheduleInterview(interview: CompanyInterview) {

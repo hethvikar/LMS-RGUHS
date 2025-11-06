@@ -5,6 +5,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { MatTabsModule } from '@angular/material/tabs';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { CommonModule } from '@angular/common';
 
 interface Resource {
@@ -32,7 +33,8 @@ interface Resource {
     MatIconModule,
     MatChipsModule,
     MatGridListModule,
-    MatTabsModule
+    MatTabsModule,
+    MatTooltipModule
   ],
   templateUrl: './resources.component.html',
   styleUrls: ['./resources.component.scss']

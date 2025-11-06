@@ -5,7 +5,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { MatDatepickerModule } from '@angular/material/datepicker';
-import { MatNativeDateModule } from '@angular/material/core';
+import { MatNativeDateModule, MAT_DATE_LOCALE, DateAdapter, MAT_DATE_FORMATS, NativeDateAdapter } from '@angular/material/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 
@@ -37,6 +37,9 @@ interface Candidate {
     MatNativeDateModule,
     ReactiveFormsModule
   ],
+  providers: [
+    { provide: MAT_DATE_LOCALE, useValue: 'en-US' }
+  ],
   template: `
     <div class="schedule-dialog">
       <div class="dialog-header">
@@ -59,14 +62,18 @@ interface Candidate {
         <div class="form-row">
           <mat-form-field appearance="outline" class="form-field">
             <mat-label>Interview Date</mat-label>
-            <input matInput [matDatepicker]="picker" formControlName="interviewDate" readonly>
+            <input matInput [matDatepicker]="picker" formControlName="interviewDate">
             <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
             <mat-datepicker #picker></mat-datepicker>
           </mat-form-field>
 
           <mat-form-field appearance="outline" class="form-field">
             <mat-label>Interview Time</mat-label>
-            <input matInput type="time" formControlName="interviewTime">
+            <mat-select formControlName="interviewTime">
+              <mat-option *ngFor="let time of timeSlots" [value]="time">
+                {{ time }}
+              </mat-option>
+            </mat-select>
           </mat-form-field>
         </div>
 
@@ -207,6 +214,7 @@ interface Candidate {
 })
 export class ScheduleInterviewDialogComponent {
   scheduleForm: FormGroup;
+  timeSlots: string[] = [];
   candidates: Candidate[] = [
     {
       id: 1,
@@ -259,6 +267,9 @@ export class ScheduleInterviewDialogComponent {
     private dialogRef: MatDialogRef<ScheduleInterviewDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data?: any
   ) {
+    // Generate time slots from 8:00 AM to 6:00 PM in 30-minute intervals
+    this.timeSlots = this.generateTimeSlots();
+    
     this.scheduleForm = this.fb.group({
       candidateId: ['', [Validators.required]],
       interviewDate: ['', [Validators.required]],
@@ -270,6 +281,21 @@ export class ScheduleInterviewDialogComponent {
     });
   }
 
+  generateTimeSlots(): string[] {
+    const slots: string[] = [];
+    for (let hour = 8; hour <= 18; hour++) {
+      for (let minute = 0; minute < 60; minute += 30) {
+        const period = hour >= 12 ? 'PM' : 'AM';
+        const displayHour = hour > 12 ? hour - 12 : hour === 0 ? 12 : hour;
+        const displayMinute = minute.toString().padStart(2, '0');
+        const timeString = `${displayHour}:${displayMinute} ${period}`;
+        const valueString = `${hour.toString().padStart(2, '0')}:${displayMinute}`;
+        slots.push(timeString);
+      }
+    }
+    return slots;
+  }
+
   onSubmit() {
     if (this.scheduleForm.valid) {
       const formValue = this.scheduleForm.value;
@@ -278,8 +304,22 @@ export class ScheduleInterviewDialogComponent {
       if (selectedCandidate) {
         // Combine date and time
         const interviewDateTime = new Date(formValue.interviewDate);
-        const [hours, minutes] = formValue.interviewTime.split(':');
-        interviewDateTime.setHours(parseInt(hours), parseInt(minutes));
+        
+        // Parse time from format "HH:MM AM/PM"
+        const timeStr = formValue.interviewTime;
+        const [time, period] = timeStr.split(' ');
+        const [hourStr, minuteStr] = time.split(':');
+        let hours = parseInt(hourStr);
+        const minutes = parseInt(minuteStr);
+        
+        // Convert to 24-hour format
+        if (period === 'PM' && hours !== 12) {
+          hours += 12;
+        } else if (period === 'AM' && hours === 12) {
+          hours = 0;
+        }
+        
+        interviewDateTime.setHours(hours, minutes);
 
         const interviewData = {
           candidate: selectedCandidate,

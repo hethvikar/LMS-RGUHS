@@ -1,0 +1,329 @@
+.enrollment-dialog {
+  width: 600px;
+  max-width: 90vw;
+
+  .dialog-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 24px 24px 16px;
+
+    h2 {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin: 0;
+      font-size: 1.5rem;
+      font-weight: 500;
+      color: #333;
+
+      mat-icon {
+        color: #2196f3;
+        font-size: 28px;
+        width: 28px;
+        height: 28px;
+      }
+    }
+
+    .close-button {
+      mat-icon {
+        color: #666;
+      }
+    }
+  }
+
+  mat-dialog-content {
+    padding: 24px;
+    max-height: 70vh;
+    overflow-y: auto;
+
+    &::-webkit-scrollbar {
+      width: 8px;
+    }
+
+    &::-webkit-scrollbar-track {
+      background: #f1f1f1;
+      border-radius: 4px;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background: #888;
+      border-radius: 4px;
+
+      &:hover {
+        background: #555;
+      }
+    }
+  }
+
+  mat-dialog-actions {
+    padding: 16px 24px;
+    gap: 12px;
+
+    button {
+      min-width: 100px;
+
+      mat-icon {
+        margin-right: 8px;
+        font-size: 18px;
+        width: 18px;
+        height: 18px;
+      }
+    }
+  }
+
+  .enrollment-form {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+
+  .form-section {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 8px;
+
+      mat-icon {
+        color: #2196f3;
+        font-size: 24px;
+        width: 24px;
+        height: 24px;
+      }
+
+      h3 {
+        margin: 0;
+        font-size: 1.1rem;
+        font-weight: 500;
+        color: #333;
+      }
+    }
+  }
+
+  .full-width {
+    width: 100%;
+  }
+
+  .student-option,
+  .course-option {
+    display: flex;
+    flex-direction: column;
+    padding: 8px 0;
+  }
+
+  .student-option {
+    .student-name {
+      font-weight: 500;
+      color: #333;
+      font-size: 14px;
+    }
+
+    .student-email {
+      font-size: 12px;
+      color: #666;
+      margin-top: 2px;
+    }
+  }
+
+  .course-option {
+    .course-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 4px;
+
+      .course-title {
+        font-weight: 500;
+        color: #333;
+        font-size: 14px;
+      }
+
+      .full-chip {
+        background-color: #f44336 !important;
+        color: white !important;
+        font-size: 10px;
+        height: 20px;
+        padding: 0 8px;
+      }
+    }
+
+    .course-details {
+      display: flex;
+      justify-content: space-between;
+      font-size: 12px;
+      color: #666;
+
+      .instructor {
+        font-style: italic;
+      }
+
+      .seats {
+        font-weight: 500;
+      }
+    }
+  }
+
+  .info-card {
+    background: linear-gradient(135deg, #f5f7fa 0%, #ffffff 100%);
+    border-left: 4px solid #2196f3;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    transition: all 0.3s ease;
+
+    &:hover {
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+      transform: translateY(-2px);
+    }
+
+    mat-card-content {
+      padding: 16px;
+    }
+
+    .info-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 8px 0;
+      border-bottom: 1px solid #e0e0e0;
+
+      &:last-child {
+        border-bottom: none;
+      }
+
+      .label {
+        font-weight: 500;
+        color: #666;
+        font-size: 14px;
+      }
+
+      .value {
+        color: #333;
+        font-size: 14px;
+        text-align: right;
+      }
+
+      mat-chip {
+        height: 24px;
+        font-size: 12px;
+
+        &.status-active {
+          background-color: #4caf50;
+          color: white;
+        }
+
+        &.status-upcoming {
+          background-color: #ff9800;
+          color: white;
+        }
+
+        &.status-completed {
+          background-color: #9e9e9e;
+          color: white;
+        }
+      }
+    }
+  }
+
+  .validation-message {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 16px;
+    border-radius: 8px;
+    font-size: 14px;
+    animation: slideIn 0.3s ease;
+
+    mat-icon {
+      font-size: 20px;
+      width: 20px;
+      height: 20px;
+    }
+
+    &.error {
+      background-color: #ffebee;
+      color: #c62828;
+      border: 1px solid #ef5350;
+
+      mat-icon {
+        color: #c62828;
+      }
+    }
+
+    &.success {
+      background-color: #e8f5e9;
+      color: #2e7d32;
+      border: 1px solid #66bb6a;
+
+      mat-icon {
+        color: #2e7d32;
+      }
+    }
+  }
+
+  mat-divider {
+    margin: 0;
+  }
+
+  @keyframes slideIn {
+    from {
+      opacity: 0;
+      transform: translateY(-10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @media (max-width: 768px) {
+    width: 100%;
+    max-width: 100vw;
+
+    .dialog-header {
+      padding: 16px;
+
+      h2 {
+        font-size: 1.25rem;
+      }
+    }
+
+    mat-dialog-content {
+      padding: 16px;
+    }
+
+    mat-dialog-actions {
+      padding: 12px 16px;
+      flex-direction: column-reverse;
+
+      button {
+        width: 100%;
+      }
+    }
+
+    .info-row {
+      flex-direction: column;
+      align-items: flex-start !important;
+      gap: 4px;
+
+      .value {
+        text-align: left !important;
+      }
+    }
+  }
+}
+
+// Override Material Dialog Styles
+::ng-deep {
+  .mat-mdc-dialog-container .mdc-dialog__surface {
+    border-radius: 12px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+  }
+
+  .mat-mdc-select-panel {
+    max-height: 400px;
+  }
+}

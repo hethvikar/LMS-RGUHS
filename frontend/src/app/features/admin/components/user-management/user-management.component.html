@@ -6,7 +6,7 @@
           <p>Manage system users, roles, and permissions</p>
         </div>
         <button mat-raised-button color="primary" (click)="addNewUser()">
-          
+          <mat-icon>person_add</mat-icon>
           Add User
         </button>
       </div>
@@ -15,7 +15,7 @@
         <mat-card class="stat-card">
           <mat-card-content>
             <div class="stat-content">
-              
+              <mat-icon color="primary">group</mat-icon>
               <div class="stat-info">
                 <h3>{{ users.length }}</h3>
                 <p>Total Users</p>
@@ -27,7 +27,7 @@
         <mat-card class="stat-card">
           <mat-card-content>
             <div class="stat-content">
-              
+              <mat-icon color="accent">check_circle</mat-icon>
               <div class="stat-info">
                 <h3>{{ getUserCountByStatus('active') }}</h3>
                 <p>Active Users</p>
@@ -39,7 +39,7 @@
         <mat-card class="stat-card">
           <mat-card-content>
             <div class="stat-content">
-              
+              <mat-icon color="warn">pending</mat-icon>
               <div class="stat-info">
                 <h3>{{ getUserCountByStatus('pending') }}</h3>
                 <p>Pending Approval</p>
@@ -51,7 +51,7 @@
         <mat-card class="stat-card">
           <mat-card-content>
             <div class="stat-content">
-              
+              <mat-icon>admin_panel_settings</mat-icon>
               <div class="stat-info">
                 <h3>{{ getUserCountByRole('admin') }}</h3>
                 <p>Administrators</p>
@@ -152,16 +152,16 @@
                     <th mat-header-cell *matHeaderCellDef>Actions</th>
                     <td mat-cell *matCellDef="let user">
                       <button mat-icon-button [matTooltip]="'View Details'" (click)="viewUser(user)">
-                        
+                        <mat-icon>visibility</mat-icon>
                       </button>
                       <button mat-icon-button [matTooltip]="'Edit User'" (click)="editUser(user)">
-                        
+                        <mat-icon>edit</mat-icon>
                       </button>
                       <button mat-icon-button [matTooltip]="'Change Status'" (click)="changeUserStatus(user)">
-                        
+                        <mat-icon>toggle_on</mat-icon>
                       </button>
                       <button mat-icon-button [matTooltip]="'Delete User'" (click)="deleteUser(user)">
-                        
+                        <mat-icon>delete</mat-icon>
                       </button>
                     </td>
                   </ng-container>
@@ -178,7 +178,7 @@
                   <mat-card *ngFor="let user of getPendingUsers()" class="pending-user-card">
                     <mat-card-header>
                       <mat-card-title>{{ user.name }}</mat-card-title>
-                      
+                      <mat-icon>person</mat-icon>
                     </mat-card-header>
                     <mat-card-content>
                       <p class="user-email">{{ user.email }}</p>
@@ -187,11 +187,11 @@
                     </mat-card-content>
                     <mat-card-actions>
                       <button mat-raised-button color="primary" (click)="approveUser(user)">
-                        
+                        <mat-icon>check</mat-icon>
                         Approve
                       </button>
                       <button mat-button (click)="rejectUser(user)">
-                        
+                        <mat-icon>close</mat-icon>
                         Reject
                       </button>
                     </mat-card-actions>
@@ -208,7 +208,7 @@
                     <mat-card class="role-card">
                       <mat-card-header>
                         <mat-card-title>Administrator</mat-card-title>
-                        
+                        <mat-icon>admin_panel_settings</mat-icon>
                       </mat-card-header>
                       <mat-card-content>
                         <p>Full system access and management capabilities</p>
@@ -218,7 +218,7 @@
                       </mat-card-content>
                       <mat-card-actions>
                         <button mat-button (click)="editRolePermissions('admin')">
-                          
+                          <mat-icon>edit</mat-icon>
                           Edit Permissions
                         </button>
                       </mat-card-actions>
@@ -227,7 +227,7 @@
                     <mat-card class="role-card">
                       <mat-card-header>
                         <mat-card-title>Company</mat-card-title>
-                        
+                        <mat-icon>business</mat-icon>
                       </mat-card-header>
                       <mat-card-content>
                         <p>Manage company profile, job postings, and candidates</p>
@@ -237,7 +237,7 @@
                       </mat-card-content>
                       <mat-card-actions>
                         <button mat-button (click)="editRolePermissions('company')">
-                          
+                          <mat-icon>edit</mat-icon>
                           Edit Permissions
                         </button>
                       </mat-card-actions>
@@ -246,7 +246,7 @@
                     <mat-card class="role-card">
                       <mat-card-header>
                         <mat-card-title>Student</mat-card-title>
-                        
+                        <mat-icon>school</mat-icon>
                       </mat-card-header>
                       <mat-card-content>
                         <p>Access courses, assignments, and learning resources</p>
@@ -256,7 +256,7 @@
                       </mat-card-content>
                       <mat-card-actions>
                         <button mat-button (click)="editRolePermissions('student')">
-                          
+                          <mat-icon>edit</mat-icon>
                           Edit Permissions
                         </button>
                       </mat-card-actions>
@@ -265,7 +265,7 @@
                     <mat-card class="role-card">
                       <mat-card-header>
                         <mat-card-title>Instructor</mat-card-title>
-                        
+                        <mat-icon>person</mat-icon>
                       </mat-card-header>
                       <mat-card-content>
                         <p>Create and manage courses, assignments, and assessments</p>
@@ -275,7 +275,7 @@
                       </mat-card-content>
                       <mat-card-actions>
                         <button mat-button (click)="editRolePermissions('instructor')">
-                          
+                          <mat-icon>edit</mat-icon>
                           Edit Permissions
                         </button>
                       </mat-card-actions>

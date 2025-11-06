@@ -3,166 +3,37 @@
   color: #ffffff;
   margin-top: auto;
   position: relative;
-}
-
-.footer-content {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 0;
-}
-
-.footer-main {
-  display: grid;
-  grid-template-columns: 1fr 3fr;
-  gap: 32px;
-  padding: 40px 20px;
-}
-
-.footer-brand {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
-.brand-logo {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.brand-logo mat-icon {
-  font-size: 24px;
-  width: 24px;
-  height: 24px;
-  color: #2196f3;
-}
-
-.brand-name {
-  font-size: 18px;
-  font-weight: 600;
-  color: #ffffff;
-}
-
-.brand-description {
-  color: #b0b0b0;
-  line-height: 1.5;
-  font-size: 12px;
-}
-
-.social-links {
-  display: flex;
-  gap: 8px;
-}
-
-.social-link {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.1);
-  color: #ffffff;
-  text-decoration: none;
-  transition: all 0.2s ease;
-}
-
-.social-link:hover {
-  background: #2196f3;
-  transform: translateY(-2px);
-}
-
-.social-link mat-icon {
-  font-size: 16px;
-  width: 16px;
-  height: 16px;
-}
-
-.footer-links {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 24px;
-}
-
-.link-section h4 {
-  color: #ffffff;
-  font-size: 13px;
-  font-weight: 600;
-  margin-bottom: 12px;
-  position: relative;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-}
-
-.link-section h4::after {
-  content: '';
-  position: absolute;
-  bottom: -3px;
-  left: 0;
-  width: 20px;
-  height: 2px;
-  background: #2196f3;
-}
-
-.link-section ul {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
-
-.link-section li {
-  margin-bottom: 8px;
-}
-
-.link-section a {
-  color: #b0b0b0;
-  text-decoration: none;
-  font-size: 14px;
-  transition: color 0.2s ease;
-}
-
-.link-section a:hover {
-  color: #2196f3;
-}
-
-.contact-info {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
-.contact-item {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  color: #b0b0b0;
-  font-size: 14px;
-}
-
-.contact-item mat-icon {
-  font-size: 16px;
-  width: 16px;
-  height: 16px;
-  color: #2196f3;
+  width: 100%;
+  box-sizing: border-box;
+  overflow-x: hidden;
 }
 
 .footer-bottom {
-  border-top: 1px solid #333;
-  padding: 16px 20px;
+  width: 100%;
+  padding: 12px 16px;
   background: #0f0f0f;
+  border-top: 1px solid #333;
+  box-sizing: border-box;
 }
 
 .footer-bottom-content {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  max-width: 1200px;
-  margin: 0 auto;
+  width: 100%;
+  max-width: 100%;
+  padding: 0;
+  box-sizing: border-box;
+  gap: 16px;
 }
 
 .copyright {
   color: #888;
   font-size: 14px;
+  margin: 0;
+}
+
+.copyright p {
   margin: 0;
 }
 
@@ -194,62 +65,39 @@
 }
 
 /* Responsive Design */
-@media (max-width: 1024px) {
-  .footer-links {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 24px;
-  }
-
+@media (max-width: 768px) {
   .footer-bottom-content {
     flex-direction: column;
-    gap: 16px;
+    gap: 8px;
     text-align: center;
-  }
-}
-
-@media (max-width: 768px) {
-  .footer-main {
-    grid-template-columns: 1fr;
-    gap: 32px;
-    padding: 40px 24px;
-  }
-
-  .footer-links {
-    grid-template-columns: 1fr;
-    gap: 24px;
-  }
-
-  .social-links {
-    justify-content: center;
+    padding: 0;
   }
 
   .footer-bottom-links {
-    flex-direction: column;
-    gap: 8px;
+    flex-wrap: wrap;
+    justify-content: center;
   }
 
-  .footer-bottom-content {
-    flex-direction: column;
-    gap: 16px;
+  .footer-bottom {
+    padding: 12px 8px;
   }
 }
 
 @media (max-width: 480px) {
-  .footer-main {
-    padding: 32px 16px;
+  .footer-bottom-links {
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .separator {
+    display: none;
+  }
+
+  .footer-bottom-content {
+    padding: 0;
   }
 
   .footer-bottom {
-    padding: 16px;
-  }
-
-  .contact-item {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 4px;
-  }
-
-  .brand-description {
-    text-align: center;
+    padding: 10px 8px;
   }
 }

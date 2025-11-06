@@ -1,0 +1,153 @@
+<div class="role-dialog-container">
+  <!-- Header -->
+  <div class="dialog-header">
+    <div class="header-content">
+      <mat-icon class="header-icon">{{ isEditMode ? 'edit' : 'add_circle' }}</mat-icon>
+      <h2>{{ isEditMode ? 'Edit Role' : 'Create New Role' }}</h2>
+    </div>
+    <button mat-icon-button (click)="onCancel()" class="close-btn">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+
+  <mat-divider></mat-divider>
+
+  <!-- Content -->
+  <div class="dialog-content">
+    <form [formGroup]="roleForm">
+      <!-- Role Information Section -->
+      <div class="section">
+        <div class="section-header">
+          <mat-icon class="section-icon">info</mat-icon>
+          <h3>Role Information</h3>
+        </div>
+
+        <div class="form-fields">
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Role Name</mat-label>
+            <mat-icon matPrefix>badge</mat-icon>
+            <input 
+              matInput 
+              formControlName="name" 
+              placeholder="e.g., Content Manager"
+              required>
+            <mat-error *ngIf="roleForm.get('name')?.invalid">
+              {{ nameErrors }}
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Description</mat-label>
+            <mat-icon matPrefix>description</mat-icon>
+            <textarea 
+              matInput 
+              formControlName="description"
+              placeholder="Describe the role's purpose and responsibilities"
+              rows="3"
+              required></textarea>
+            <mat-error *ngIf="roleForm.get('description')?.invalid">
+              {{ descriptionErrors }}
+            </mat-error>
+          </mat-form-field>
+        </div>
+      </div>
+
+      <mat-divider></mat-divider>
+
+      <!-- Permissions Section -->
+      <div class="section">
+        <div class="section-header">
+          <mat-icon class="section-icon">security</mat-icon>
+          <h3>Permissions</h3>
+          <span class="selected-count">{{ selectedPermissionsCount }} selected</span>
+        </div>
+
+        <div class="permissions-grid">
+          <mat-card 
+            *ngFor="let category of permissionCategories" 
+            class="permission-category-card">
+            <mat-card-content>
+              <!-- Category Header -->
+              <div class="category-header">
+                <div class="category-info">
+                  <mat-icon 
+                    class="category-icon" 
+                    [style.color]="category.color">
+                    {{ category.icon }}
+                  </mat-icon>
+                  <div>
+                    <h4>{{ category.name }}</h4>
+                    <span class="category-count">
+                      {{ getCategorySelectedCount(category.id) }} / {{ getCategoryTotalCount(category.id) }} selected
+                    </span>
+                  </div>
+                </div>
+                <div class="category-actions">
+                  <button 
+                    mat-button 
+                    type="button"
+                    (click)="selectAllInCategory(category.id)"
+                    [disabled]="isCategoryFullySelected(category.id)">
+                    Select All
+                  </button>
+                  <button 
+                    mat-button 
+                    type="button"
+                    (click)="deselectAllInCategory(category.id)"
+                    [disabled]="getCategorySelectedCount(category.id) === 0">
+                    Clear
+                  </button>
+                </div>
+              </div>
+
+              <mat-divider></mat-divider>
+
+              <!-- Permissions List -->
+              <div class="permissions-list">
+                <div 
+                  *ngFor="let permission of getPermissionsByCategory(category.id)"
+                  class="permission-item">
+                  <mat-checkbox
+                    [checked]="isPermissionSelected(permission.id)"
+                    (change)="togglePermission(permission.id, $event)">
+                    <div class="permission-details">
+                      <span class="permission-name">{{ permission.name }}</span>
+                      <span class="permission-description">{{ permission.description }}</span>
+                    </div>
+                  </mat-checkbox>
+                </div>
+              </div>
+            </mat-card-content>
+          </mat-card>
+        </div>
+
+        <!-- Warning if no permissions selected -->
+        <div class="warning-message" *ngIf="selectedPermissionsCount === 0">
+          <mat-icon>warning</mat-icon>
+          <span>Please select at least one permission for this role</span>
+        </div>
+      </div>
+    </form>
+  </div>
+
+  <mat-divider></mat-divider>
+
+  <!-- Footer Actions -->
+  <div class="dialog-footer">
+    <button 
+      mat-stroked-button 
+      type="button"
+      (click)="onCancel()">
+      Cancel
+    </button>
+    <button 
+      mat-raised-button 
+      color="primary"
+      type="button"
+      (click)="onSave()"
+      [disabled]="!isFormValid">
+      <mat-icon>{{ isEditMode ? 'save' : 'add' }}</mat-icon>
+      {{ isEditMode ? 'Update Role' : 'Create Role' }}
+    </button>
+  </div>
+</div>
