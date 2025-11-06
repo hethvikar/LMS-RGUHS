@@ -48,6 +48,11 @@ import { MatButtonModule } from '@angular/material/button';
             <span matListItemTitle>Interviews</span>
           </a>
           
+          <a mat-list-item routerLink="/student/liveinterview" routerLinkActive="active">
+            <mat-icon matListItemIcon>video_call</mat-icon>
+            <span matListItemTitle>Live Interviews</span>
+          </a>
+
           <a mat-list-item routerLink="/student/placement-status" routerLinkActive="active">
             <mat-icon matListItemIcon>verified</mat-icon>
             <span matListItemTitle>Placement Status</span>

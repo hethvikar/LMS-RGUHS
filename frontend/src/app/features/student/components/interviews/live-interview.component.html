@@ -1,0 +1,111 @@
+<mat-card *ngIf="interview" class="live-interview-card" [ngClass]="getStatusClass()">
+  <div class="live-indicator" *ngIf="interview.status === 'live'">
+    <span class="pulse-dot"></span>
+    <span class="live-text">LIVE</span>
+  </div>
+
+  <mat-card-header class="interview-header">
+    <div class="header-main">
+      <div class="company-section">
+        <h2 class="company-name">{{ interview.companyName }}</h2>
+        <p class="position-title">{{ interview.position }}</p>
+      </div>
+      <mat-chip-set>
+        <mat-chip [ngClass]="getStatusClass()" selected>
+          <mat-icon matChipAvatar>
+            <span [class]="interview.status === 'live' ? 'pulse' : ''">
+              {{ interview.status === 'live' ? 'fiber_manual_record' : 'schedule' }}
+            </span>
+          </mat-icon>
+          {{ getStatusText() }}
+        </mat-chip>
+      </mat-chip-set>
+    </div>
+  </mat-card-header>
+
+  <mat-divider></mat-divider>
+
+  <mat-card-content class="interview-content">
+    <div class="details-grid">
+      <div class="detail-card">
+        <mat-icon class="detail-icon">person</mat-icon>
+        <div class="detail-info">
+          <span class="detail-label">Interviewer</span>
+          <span class="detail-value">{{ interview.interviewer }}</span>
+        </div>
+      </div>
+
+      <div class="detail-card">
+        <mat-icon class="detail-icon">schedule</mat-icon>
+        <div class="detail-info">
+          <span class="detail-label">Scheduled Time</span>
+          <span class="detail-value">{{ interview.startTime | date: 'MMM dd, yyyy • HH:mm' }}</span>
+        </div>
+      </div>
+
+      <div class="detail-card" *ngIf="isLive">
+        <mat-icon class="detail-icon">timer</mat-icon>
+        <div class="detail-info">
+          <span class="detail-label">Duration</span>
+          <span class="detail-value elapsed-time">{{ elapsedTime }}</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="video-chat-section" *ngIf="interview.status === 'live'">
+      <div class="videos-container" #videosContainer id="videos">
+      </div>
+
+      <div class="messages-container" #messagesContainer id="messages">
+        <div 
+          *ngFor="let message of messages" 
+          [ngClass]="'message message-' + message.type">
+          <span class="message-text">{{ message.text }}</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="interview-notes" *ngIf="interview.status === 'live'">
+      <p class="note-title">
+        <mat-icon>info</mat-icon>
+        Important Reminders
+      </p>
+      <ul class="note-list">
+        <li>Ensure your camera and microphone are working</li>
+        <li>Check your internet connection</li>
+        <li>Join 5 minutes early</li>
+        <li>Have your resume ready for reference</li>
+      </ul>
+    </div>
+  </mat-card-content>
+
+  <mat-divider></mat-divider>
+
+  <mat-card-actions class="interview-actions">
+    <button 
+      mat-raised-button 
+      color="primary"
+      (click)="onJoinClick()"
+      [disabled]="interview.status === 'ended'"
+      class="join-button">
+      <mat-icon>videocam</mat-icon>
+      <span>{{ isLive ? 'Join Now' : 'Join Interview' }}</span>
+    </button>
+    <button
+      mat-stroked-button
+      (click)="onLeaveClick()"
+      *ngIf="isLive"
+      class="leave-button">
+      <mat-icon>call_end</mat-icon>
+      <span>Leave Call</span>
+    </button>
+    <button
+      mat-stroked-button
+      (click)="toggleScreenShare()"
+      *ngIf="isLive"
+      class="screen-share-button">
+      <mat-icon>{{ isScreenSharing ? 'stop_screen_share' : 'screen_share' }}</mat-icon>
+      <span>{{ isScreenSharing ? 'Stop Sharing' : 'Share Screen' }}</span>
+    </button>
+  </mat-card-actions>
+</mat-card>
