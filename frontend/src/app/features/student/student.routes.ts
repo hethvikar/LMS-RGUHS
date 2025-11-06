@@ -27,6 +27,10 @@ export const STUDENT_ROUTES: Routes = [
         loadComponent: () => import('./components/interviews/interviews.component').then(m => m.StudentInterviewsComponent)
       },
       {
+        path: 'liveinterview',
+        loadComponent: () => import('./components/interviews/live-interview.component').then(m => m.LiveInterviewComponent)
+      },
+      {
         path: 'placement-status',
         loadComponent: () => import('./components/placement-status/placement-status.component').then(m => m.StudentPlacementStatusComponent)
       }
