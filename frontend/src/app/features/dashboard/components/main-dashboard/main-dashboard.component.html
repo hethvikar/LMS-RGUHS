@@ -6,61 +6,61 @@
       </div>
 
       <div class="dashboard-grid">
-        <mat-card class="dashboard-card">
+        <mat-card class="dashboard-card gradient-blue">
           <mat-card-header>
             <mat-card-title>Students</mat-card-title>
-            
+            <mat-icon>school</mat-icon>
           </mat-card-header>
           <mat-card-content>
             <p>Manage student profiles and applications</p>
           </mat-card-content>
           <mat-card-actions>
-            <button mat-raised-button color="primary" (click)="navigateTo('/student/dashboard')">
+            <button mat-raised-button (click)="navigateTo('/student/dashboard')">
               View Students
             </button>
           </mat-card-actions>
         </mat-card>
 
-        <mat-card class="dashboard-card">
+        <mat-card class="dashboard-card gradient-green">
           <mat-card-header>
             <mat-card-title>Companies</mat-card-title>
-            
+            <mat-icon>business</mat-icon>
           </mat-card-header>
           <mat-card-content>
             <p>Manage company profiles and job postings</p>
           </mat-card-content>
           <mat-card-actions>
-            <button mat-raised-button color="primary" (click)="navigateTo('/company/dashboard')">
+            <button mat-raised-button (click)="navigateTo('/company/dashboard')">
               View Companies
             </button>
           </mat-card-actions>
         </mat-card>
 
-        <mat-card class="dashboard-card">
+        <mat-card class="dashboard-card gradient-orange">
           <mat-card-header>
             <mat-card-title>LMS</mat-card-title>
-            
+            <mat-icon>menu_book</mat-icon>
           </mat-card-header>
           <mat-card-content>
             <p>Access learning management system</p>
           </mat-card-content>
           <mat-card-actions>
-            <button mat-raised-button color="primary" (click)="navigateTo('/lms/dashboard')">
+            <button mat-raised-button (click)="navigateTo('/lms/dashboard')">
               Access LMS
             </button>
           </mat-card-actions>
         </mat-card>
 
-        <mat-card class="dashboard-card">
+        <mat-card class="dashboard-card gradient-crimson">
           <mat-card-header>
             <mat-card-title>Admin</mat-card-title>
-            
+            <mat-icon>admin_panel_settings</mat-icon>
           </mat-card-header>
           <mat-card-content>
             <p>System administration and settings</p>
           </mat-card-content>
           <mat-card-actions>
-            <button mat-raised-button color="primary" (click)="navigateTo('/admin/dashboard')">
+            <button mat-raised-button (click)="navigateTo('/admin/dashboard')">
               Admin Panel
             </button>
           </mat-card-actions>

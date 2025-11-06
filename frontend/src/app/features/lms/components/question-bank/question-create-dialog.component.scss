@@ -8,6 +8,26 @@ mat-dialog-content {
   margin-bottom: 16px;
 }
 
+.row {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 16px;
+
+  mat-form-field {
+    flex: 1;
+  }
+}
+
+.difficulty-row {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 16px;
+
+  mat-form-field {
+    flex: 1;
+  }
+}
+
 .option-row {
   display: flex;
   align-items: center;
@@ -16,4 +36,82 @@ mat-dialog-content {
 
 .option-field {
   flex: 1;
+}
+
+.question-card {
+  margin-bottom: 16px;
+
+  &.selected {
+    border: 2px solid #1976d2;
+    background-color: #e3f2fd;
+  }
+
+  mat-card-content {
+    p {
+      margin: 8px 0;
+    }
+
+    ul {
+      margin: 8px 0;
+      padding-left: 20px;
+    }
+  }
+}
+
+.question-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.question-checkbox {
+  margin-right: 8px;
+}
+
+.question-number {
+  font-weight: 500;
+  color: #666;
+}
+
+.selection-controls {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+  padding: 12px;
+  background-color: #f5f5f5;
+  border-radius: 4px;
+
+  button {
+    min-width: auto;
+  }
+}
+
+.selection-count {
+  font-size: 14px;
+  color: #666;
+  margin-left: auto;
+}
+
+.action-buttons {
+  display: flex;
+  justify-content: flex-start;
+  margin-top: 16px;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.error-message {
+  color: #f44336;
+  font-size: 14px;
+  margin-bottom: 16px;
+}
+
+.manual-form {
+  margin-top: 32px;
+  padding-top: 24px;
+  border-top: 1px solid #e0e0e0;
 }

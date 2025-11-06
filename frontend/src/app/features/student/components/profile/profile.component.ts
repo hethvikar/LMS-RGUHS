@@ -13,7 +13,7 @@ import { MatNativeDateModule } from '@angular/material/core';
 import { MatSelectModule } from '@angular/material/select';
 import { CommonModule } from '@angular/common';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
-import { ResumeService, UploadResponse } from '@core/services/resume.service';
+import { ResumeService, UploadResponse, ExtractionResponse, ExtractedProfileData } from '@core/services/resume.service';
 
 @Component({
   selector: 'app-student-profile',
@@ -51,6 +51,12 @@ export class StudentProfileComponent implements OnInit {
   isUploading: boolean = false;
   uploadMessage: string = '';
   uploadSuccess: boolean = false;
+
+  // Data extraction properties
+  isExtracting: boolean = false;
+  extractionMessage: string = '';
+  extractionSuccess: boolean = false;
+  extractedData: ExtractedProfileData | null = null;
 
   // Additional document upload properties
   portfolioFile: File | null = null;
@@ -249,6 +255,8 @@ export class StudentProfileComponent implements OnInit {
 
   // Resume upload methods
   onResumeFileSelected(event: any) {
+    debugger;
+
     const files: FileList = event.target.files;
     if (files.length > 0) {
       const file = files[0];
@@ -276,6 +284,8 @@ export class StudentProfileComponent implements OnInit {
       this.resumeFileName = file.name;
       this.uploadMessage = `File selected: ${file.name}`;
       this.uploadSuccess = true;
+
+      this.extractDataFromResume(file)
     }
   }
 
@@ -307,8 +317,14 @@ export class StudentProfileComponent implements OnInit {
         this.uploadSuccess = true;
         this.isUploading = false;
         this.uploadProgress = 100;
+
+        // Trigger data extraction after successful upload
+        if (this.resumeFile) {
+          this.extractDataFromResume(this.resumeFile);
+        }
+
         this.resumeFile = null;
-        
+
         // Clear message after 5 seconds
         setTimeout(() => {
           this.uploadMessage = '';
@@ -331,6 +347,228 @@ export class StudentProfileComponent implements OnInit {
     this.uploadMessage = '';
     this.uploadSuccess = false;
     this.isUploading = false;
+    // Also clear extraction state
+    this.clearExtractionState();
+  }
+
+  private clearExtractionState() {
+    this.isExtracting = false;
+    this.extractionMessage = '';
+    this.extractionSuccess = false;
+    this.extractedData = null;
+  }
+
+  private async extractDataFromResume(file: File) {
+    debugger;
+    this.isExtracting = true;
+    this.extractionMessage = 'Extracting text from resume...';
+    this.extractionSuccess = false;
+
+    try {
+      // Step 1: Extract text from the file
+      const resumeText = await this.resumeService.extractTextFromResume(file);
+      this.extractionMessage = 'Analyzing extracted text with AI...';
+
+      // Step 2: Send text to AI for analysis
+      this.resumeService.extractProfileDataFromText(resumeText).then((response: ExtractionResponse) => {
+        this.isExtracting = false;
+        if (response.success && response.extractedData) {
+          this.extractedData = response.extractedData;
+          this.extractionSuccess = true;
+          this.extractionMessage = `Data extracted successfully! Confidence: ${response.confidence || 0}%`;
+
+          // Auto-fill the form with extracted data
+          this.autoFillFormWithExtractedData(response.extractedData);
+
+          // Clear message after 10 seconds
+          setTimeout(() => {
+            this.extractionMessage = '';
+          }, 10000);
+        } else {
+          this.extractionMessage = response.message || 'Data extraction completed but no data was found.';
+          this.extractionSuccess = false;
+        }
+      }).catch((error: Error) => {
+        this.isExtracting = false;
+        this.extractionMessage = error.message || 'AI analysis failed. Please fill the form manually.';
+        this.extractionSuccess = false;
+      });
+    } catch (error) {
+      this.isExtracting = false;
+      this.extractionMessage = error instanceof Error ? error.message : 'Text extraction failed. Please fill the form manually.';
+      this.extractionSuccess = false;
+    }
+  }
+
+  private autoFillFormWithExtractedData(rawData: any) {
+    // Convert raw AI output to ExtractedProfileData model
+    const data: ExtractedProfileData = this.convertRawDataToExtractedProfileData(rawData);
+
+    console.log('Converted data:', data);
+
+    // Personal Information
+    if (data.firstName) this.profileForm.patchValue({ firstName: data.firstName });
+    if (data.middleName) this.profileForm.patchValue({ middleName: data.middleName });
+    if (data.lastName) this.profileForm.patchValue({ lastName: data.lastName });
+    if (data.email) this.profileForm.patchValue({ email: data.email });
+    if (data.phone) this.profileForm.patchValue({ phone: data.phone });
+    if (data.alternatePhone) this.profileForm.patchValue({ alternatePhone: data.alternatePhone });
+    if (data.location) this.profileForm.patchValue({ location: data.location });
+    if (data.linkedInProfile) this.profileForm.patchValue({ linkedInProfile: data.linkedInProfile });
+
+    // Academic Information
+    if (data.enrollmentNumber) this.profileForm.patchValue({ enrollmentNumber: data.enrollmentNumber });
+    if (data.course) this.profileForm.patchValue({ course: data.course });
+    if (data.branch) this.profileForm.patchValue({ branch: data.branch });
+    if (data.yearOfStudy) this.profileForm.patchValue({ yearOfStudy: data.yearOfStudy });
+    if (data.cgpa) this.profileForm.patchValue({ cgpa: data.cgpa });
+
+    // Employment History
+    if (data.employmentHistory && data.employmentHistory.length > 0) {
+      // Clear existing employment history
+      while (this.employmentHistory.length > 0) {
+        this.employmentHistory.removeAt(0);
+      }
+
+      // Add extracted employment history
+      data.employmentHistory.forEach(emp => {
+        const employmentGroup = this.fb.group({
+          currentCompany: [emp.currentCompany || '', [Validators.required]],
+          jobTitle: [emp.jobTitle || '', [Validators.required]],
+          experienceYears: [emp.experienceYears || '', [Validators.required, Validators.min(0)]],
+          experienceMonths: [emp.experienceMonths || '', [Validators.required, Validators.min(0), Validators.max(11)]],
+          currentCTC: [emp.currentCTC || '', [Validators.required]],
+          noticePeriod: [emp.noticePeriod || '', [Validators.required]]
+        });
+        this.employmentHistory.push(employmentGroup);
+      });
+    }
+
+    // Education
+    if (data.education && data.education.length > 0) {
+      // Clear existing education
+      while (this.education.length > 0) {
+        this.education.removeAt(0);
+      }
+
+      // Add extracted education
+      data.education.forEach(edu => {
+        const educationGroup = this.fb.group({
+          university: [edu.university || '', [Validators.required]],
+          degree: [edu.degree || '', [Validators.required]],
+          specialization: [edu.specialization || ''],
+          completedYear: [edu.completedYear || '', [Validators.required]],
+          percentage: [edu.percentage || '', [Validators.required, Validators.min(0), Validators.max(100)]],
+          location: [edu.location || '', [Validators.required]]
+        });
+        this.education.push(educationGroup);
+      });
+    }
+
+    // Certifications
+    if (data.certifications && data.certifications.length > 0) {
+      // Clear existing certifications
+      while (this.certifications.length > 0) {
+        this.certifications.removeAt(0);
+      }
+
+      // Add extracted certifications
+      data.certifications.forEach(cert => {
+        const certificationGroup = this.fb.group({
+          certificateName: [cert.certificateName || '', [Validators.required]],
+          certificateValidTill: [cert.certificateValidTill || '', [Validators.required]],
+          providerName: [cert.providerName || '', [Validators.required]],
+          certificateFile: [null]
+        });
+        this.certifications.push(certificationGroup);
+      });
+    }
+
+    // Skills
+    if (data.skills && data.skills.length > 0) {
+      this.skillsList = data.skills;
+      this.updateSkillsInForm();
+    }
+  }
+
+  private convertRawDataToExtractedProfileData(rawData: any): ExtractedProfileData {
+    const data: ExtractedProfileData = {};
+
+    // Parse name into firstName, middleName, lastName
+    if (rawData.name) {
+      const nameParts = rawData.name.trim().split(' ');
+      if (nameParts.length >= 1) data.firstName = nameParts[0];
+      if (nameParts.length >= 2) data.middleName = nameParts.slice(1, -1).join(' ');
+      if (nameParts.length >= 2) data.lastName = nameParts[nameParts.length - 1];
+    }
+
+    // Contact information
+    if (rawData.contact) {
+      data.email = rawData.contact.email;
+      data.phone = rawData.contact.phone;
+      data.linkedInProfile = rawData.contact.linkedin;
+    }
+
+    // Location
+    data.location = rawData.location;
+
+    // Skills - flatten technical_skills into a single array
+    if (rawData.technical_skills) {
+      const skills: string[] = [];
+      if (rawData.technical_skills.programming_languages) {
+        skills.push(...rawData.technical_skills.programming_languages);
+      }
+      if (rawData.technical_skills.web_technologies) {
+        skills.push(...rawData.technical_skills.web_technologies);
+      }
+      if (rawData.technical_skills.databases) {
+        skills.push(...rawData.technical_skills.databases);
+      }
+      if (rawData.technical_skills.tools_and_platforms) {
+        skills.push(...rawData.technical_skills.tools_and_platforms);
+      }
+      if (rawData.technical_skills.methodologies) {
+        skills.push(...rawData.technical_skills.methodologies);
+      }
+      data.skills = skills;
+    }
+
+    // Employment History - map professional_experience
+    if (rawData.professional_experience && Array.isArray(rawData.professional_experience)) {
+      data.employmentHistory = rawData.professional_experience.map((exp: any) => ({
+        currentCompany: exp.company,
+        jobTitle: exp.job_title,
+        // Note: experienceYears and experienceMonths would need duration parsing
+        // For now, we'll leave them undefined and let user fill manually
+        experienceYears: undefined,
+        experienceMonths: undefined,
+        currentCTC: undefined, // Not available in raw data
+        noticePeriod: undefined // Not available in raw data
+      }));
+    }
+
+    // Education - convert single education object to array
+    if (rawData.education) {
+      data.education = [{
+        university: rawData.education.institution,
+        degree: rawData.education.degree,
+        specialization: undefined, // Not available in raw data
+        completedYear: rawData.education.year?.toString(),
+        percentage: undefined, // Not available in raw data
+        location: undefined // Not available in raw data
+      }];
+    }
+
+    // Certifications - map certifications array
+    if (rawData.certifications && Array.isArray(rawData.certifications)) {
+      data.certifications = rawData.certifications.map((cert: string) => ({
+        certificateName: cert,
+        certificateValidTill: undefined, // Not available in raw data
+        providerName: undefined // Not available in raw data
+      }));
+    }
+
+    return data;
   }
 
   // Additional document upload methods

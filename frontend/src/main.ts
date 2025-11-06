@@ -6,6 +6,7 @@ import { provideStore } from '@ngrx/store';
 import { provideEffects } from '@ngrx/effects';
 import { provideStoreDevtools } from '@ngrx/store-devtools';
 import { provideRouterStore, routerReducer } from '@ngrx/router-store';
+import { provideNativeDateAdapter } from '@angular/material/core';
 
 import { AppComponent } from './app/app.component';
 import { routes } from './app/app.routes';
@@ -17,6 +18,7 @@ bootstrapApplication(AppComponent, {
     provideRouter(routes),
     provideHttpClient(withInterceptorsFromDi()),
     provideAnimationsAsync(),
+    provideNativeDateAdapter(),
     provideStore(reducers, { metaReducers }),
     provideEffects([AuthEffects]),
     provideStoreDevtools({

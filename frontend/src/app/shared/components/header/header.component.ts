@@ -6,6 +6,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatDividerModule } from '@angular/material/divider';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { CommonModule } from '@angular/common';
 import { filter, map } from 'rxjs/operators';
 import { Store } from '@ngrx/store';
@@ -40,7 +41,8 @@ interface NavigationItem {
     MatIconModule,
     MatMenuModule,
     MatToolbarModule,
-    MatDividerModule
+    MatDividerModule,
+    MatTooltipModule
   ],
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.scss']

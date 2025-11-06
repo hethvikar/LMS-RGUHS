@@ -1,56 +1,162 @@
-<h1 mat-dialog-title>Create Question</h1>
+<h1 mat-dialog-title>Create Questions</h1>
 
 <mat-dialog-content>
-  <form [formGroup]="questionForm" (ngSubmit)="onSave()">
-    <mat-form-field appearance="outline" class="full-width">
-      <mat-label>Question Text</mat-label>
-      <input matInput formControlName="questionText" placeholder="Enter your question" />
-    </mat-form-field>
+  <!-- Generate Questions Form -->
+  <div *ngIf="showGenerateForm">
+    <h3>Generate Questions with AI</h3>
+    <form [formGroup]="generateForm" (ngSubmit)="generateQuestions()">
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Topic</mat-label>
+        <input matInput formControlName="topic" placeholder="e.g., Indian History, World War II" />
+      </mat-form-field>
 
-    <mat-form-field appearance="outline" class="full-width">
-      <mat-label>Question Type</mat-label>
-      <mat-select formControlName="questionType" (selectionChange)="onQuestionTypeChange($event.value)">
-        <mat-option *ngFor="let type of questionTypes" [value]="type.value">{{ type.label }}</mat-option>
-      </mat-select>
-    </mat-form-field>
+      <div class="row">
+        <mat-form-field appearance="outline">
+          <mat-label>Number of Questions</mat-label>
+          <input matInput type="number" formControlName="numQuestions" min="1" max="50" />
+        </mat-form-field>
 
-    <mat-form-field appearance="outline" class="full-width">
-      <mat-label>Difficulty</mat-label>
-      <mat-select formControlName="difficulty">
-        <mat-option *ngFor="let level of difficultyLevels" [value]="level.value">{{ level.label }}</mat-option>
-      </mat-select>
-    </mat-form-field>
-
-    <div
-      *ngIf="questionForm.get('questionType')?.value === 'mcq' || questionForm.get('questionType')?.value === 'true_false'">
-      <h4>Options</h4>
-      <div formArrayName="options">
-        <div *ngFor="let opt of options.controls; let i = index" class="option-row">
-          <mat-form-field appearance="outline" class="option-field">
-            <mat-label>Option {{ i + 1 }}</mat-label>
-            <input matInput [formControlName]="i" />
-          </mat-form-field>
-          <button mat-icon-button color="warn" *ngIf="questionForm.get('questionType')?.value === 'mcq'"
-            (click)="removeOption(i)">
-            <mat-icon>delete</mat-icon>
-          </button>
-        </div>
+        <mat-form-field appearance="outline">
+          <mat-label>Category</mat-label>
+          <input matInput formControlName="category" placeholder="e.g., History, Science" />
+        </mat-form-field>
       </div>
 
-      <button mat-stroked-button color="primary" type="button"
-        *ngIf="questionForm.get('questionType')?.value === 'mcq'" (click)="addOption()">
-        <mat-icon>add</mat-icon> Add Option
+      <h4>Difficulty Distribution</h4>
+      <div class="difficulty-row">
+        <mat-form-field appearance="outline">
+          <mat-label>Easy Questions</mat-label>
+          <input matInput type="number" formControlName="easyCount" min="0" />
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Medium Questions</mat-label>
+          <input matInput type="number" formControlName="mediumCount" min="0" />
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Hard Questions</mat-label>
+          <input matInput type="number" formControlName="hardCount" min="0" />
+        </mat-form-field>
+      </div>
+
+      <div *ngIf="generateForm.errors?.['countMismatch']" class="error-message">
+        The sum of easy, medium, and hard questions must equal total questions.
+      </div>
+
+      <button mat-raised-button color="primary" type="submit" [disabled]="generateForm.invalid || isGenerating">
+        <mat-icon *ngIf="isGenerating">refresh</mat-icon>
+        <mat-spinner *ngIf="isGenerating" diameter="20"></mat-spinner>
+        Generate Questions
       </button>
+    </form>
+  </div>
+
+  <!-- Generated Questions Display -->
+  <div *ngIf="!showGenerateForm && generatedQuestions.length > 0">
+    <h3>Generated Questions</h3>
+
+    <!-- Selection Controls -->
+    <div class="selection-controls">
+      <button mat-stroked-button (click)="selectAllQuestions()">Select All</button>
+      <button mat-stroked-button (click)="deselectAllQuestions()">Deselect All</button>
+      <span class="selection-count">{{ getSelectedQuestionsCount() }} of {{ generatedQuestions.length }} selected</span>
     </div>
 
-    <mat-form-field appearance="outline" class="full-width">
-      <mat-label>Correct Answer</mat-label>
-      <input matInput formControlName="correctAnswer" placeholder="Enter correct answer" />
-    </mat-form-field>
-  </form>
-</mat-dialog-content>
+    <mat-card *ngFor="let question of generatedQuestions; let i = index" class="question-card" [class.selected]="isQuestionSelected(i)">
+      <mat-card-content>
+        <div class="question-header">
+          <mat-checkbox
+            [checked]="isQuestionSelected(i)"
+            (change)="toggleQuestionSelection(i)"
+            class="question-checkbox">
+          </mat-checkbox>
+          <span class="question-number">Question {{ i + 1 }}</span>
+        </div>
+        <p><strong>Question:</strong> {{ question.question }}</p>
+        <p><strong>Type:</strong> {{ question.type }}</p>
+        <p><strong>Difficulty:</strong> {{ question.difficulty }}</p>
+        <p><strong>Points:</strong> {{ question.points }}</p>
+        <div *ngIf="question.options">
+          <strong>Options:</strong>
+          <ul>
+            <li *ngFor="let option of question.options">{{ option }}</li>
+          </ul>
+        </div>
+        <p *ngIf="question.correctAnswer"><strong>Answer:</strong> {{ question.correctAnswer }}</p>
+      </mat-card-content>
+    </mat-card>
 
-<mat-dialog-actions>
-  <button mat-button (click)="onCancel()">Cancel</button>
-  <button mat-raised-button color="primary" (click)="onSave()" [disabled]="questionForm.invalid">Save</button>
-</mat-dialog-actions>
+    <div class="action-buttons">
+      <button mat-button (click)="regenerateQuestions()" [disabled]="isGenerating">Regenerate</button>
+      <button mat-raised-button color="primary" (click)="addGeneratedQuestions()" [disabled]="getSelectedQuestionsCount() === 0">
+        Add Selected Questions ({{ getSelectedQuestionsCount() }})
+      </button>
+      <button mat-raised-button color="accent" (click)="onSave()" [disabled]="questions.length === 0">
+        Save Questions ({{ questions.length }})
+      </button>
+      <button mat-button (click)="onCancel()">Cancel</button>
+    </div>
+  </div>
+
+  <!-- Manual Question Creation Form -->
+  <div class="manual-form" *ngIf="showGenerateForm">
+    <h3>Or Create Question Manually</h3>
+    <form [formGroup]="questionForm" (ngSubmit)="onSubmit()">
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Question Text</mat-label>
+        <input matInput formControlName="questionText" placeholder="Enter your question" />
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Question Type</mat-label>
+        <mat-select formControlName="questionType" (selectionChange)="onQuestionTypeChange($event.value)">
+          <mat-option *ngFor="let type of questionTypes" [value]="type.value">{{ type.label }}</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Difficulty</mat-label>
+        <mat-select formControlName="difficulty">
+          <mat-option *ngFor="let level of difficultyLevels" [value]="level.value">{{ level.label }}</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <div
+        *ngIf="questionForm.get('questionType')?.value === 'mcq' || questionForm.get('questionType')?.value === 'true_false'">
+        <h4>Options</h4>
+        <div formArrayName="options">
+          <div *ngFor="let opt of options.controls; let i = index" class="option-row">
+            <mat-form-field appearance="outline" class="option-field">
+              <mat-label>Option {{ i + 1 }}</mat-label>
+              <input matInput [formControlName]="i" />
+            </mat-form-field>
+            <button mat-icon-button color="warn" *ngIf="questionForm.get('questionType')?.value === 'mcq'"
+              (click)="removeOption(i)">
+              <mat-icon>delete</mat-icon>
+            </button>
+          </div>
+        </div>
+
+        <button mat-stroked-button color="primary" type="button"
+          *ngIf="questionForm.get('questionType')?.value === 'mcq'" (click)="addOption()">
+          <mat-icon>add</mat-icon> Add Option
+        </button>
+      </div>
+
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Correct Answer</mat-label>
+        <input matInput formControlName="correctAnswer" placeholder="Enter correct answer" />
+      </mat-form-field>
+
+      <button mat-raised-button color="primary" type="submit" [disabled]="questionForm.invalid">Add Question</button>
+    </form>
+
+    <div class="action-buttons" *ngIf="questions.length > 0">
+      <button mat-raised-button color="accent" (click)="onSave()">
+        Save Questions ({{ questions.length }})
+      </button>
+      <button mat-button (click)="onCancel()">Cancel</button>
+    </div>
+  </div>
+</mat-dialog-content>

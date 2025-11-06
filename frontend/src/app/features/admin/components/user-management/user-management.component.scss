@@ -34,6 +34,78 @@
 
     .stat-card {
       text-align: center;
+      transition: all 0.3s ease;
+      cursor: pointer;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      border-radius: 12px;
+      overflow: hidden;
+      background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+      position: relative;
+      
+      &::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: linear-gradient(90deg, #2196f3, #21cbf3);
+        transition: height 0.3s ease;
+      }
+      
+      &:hover {
+        transform: translateY(-6px);
+        box-shadow: 0 12px 28px rgba(0, 0, 0, 0.15);
+
+        &::before {
+          height: 6px;
+        }
+      }
+
+      mat-card-content {
+        padding: 24px 16px;
+      }
+
+      // Individual stat card styling
+      &:nth-child(1) {
+        &::before {
+          background: linear-gradient(90deg, #2196f3, #21cbf3);
+        }
+
+        mat-icon {
+          color: #2196f3 !important;
+        }
+      }
+
+      &:nth-child(2) {
+        &::before {
+          background: linear-gradient(90deg, #4caf50, #8bc34a);
+        }
+
+        mat-icon {
+          color: #4caf50 !important;
+        }
+      }
+
+      &:nth-child(3) {
+        &::before {
+          background: linear-gradient(90deg, #ff9800, #ffc107);
+        }
+
+        mat-icon {
+          color: #ff9800 !important;
+        }
+      }
+
+      &:nth-child(4) {
+        &::before {
+          background: linear-gradient(90deg, #9c27b0, #e91e63);
+        }
+
+        mat-icon {
+          color: #9c27b0 !important;
+        }
+      }
     }
 
     .stat-content {
@@ -42,6 +114,13 @@
       justify-content: center;
       gap: 16px;
       padding: 16px 0;
+
+      mat-icon {
+        font-size: 36px;
+        width: 36px;
+        height: 36px;
+        filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+      }
     }
 
     .stat-icon {
@@ -58,8 +137,10 @@
     .stat-info h3 {
       margin: 0;
       font-size: 2rem;
-      font-weight: 500;
+      font-weight: 600;
       color: #333;
+      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+      animation: countUp 0.5s ease-out;
     }
 
     .stat-info p {
@@ -68,10 +149,33 @@
       color: #666;
       text-transform: uppercase;
       letter-spacing: 0.5px;
+      font-weight: 500;
+    }
+
+    @keyframes countUp {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
     }
 
     .users-content {
       margin-top: 24px;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+      border-radius: 12px;
+      transition: box-shadow 0.3s ease;
+      
+      &:hover {
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
+      }
+
+      ::ng-deep .mat-mdc-tab-header {
+        border-radius: 12px 12px 0 0;
+      }
     }
 
     .tab-content {
@@ -83,10 +187,36 @@
       gap: 16px;
       margin-bottom: 24px;
       flex-wrap: wrap;
+      padding: 16px;
+      background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+
+      mat-form-field {
+        min-width: 200px;
+        
+        ::ng-deep .mat-mdc-text-field-wrapper {
+          background-color: white;
+          border-radius: 8px;
+        }
+      }
     }
 
     .users-table {
       width: 100%;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+
+      .mat-mdc-header-row {
+        background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+      }
+
+      .mat-mdc-row {
+        transition: background-color 0.2s ease;
+
+        &:hover {
+          background-color: #f5f7fa;
+        }
+      }
     }
 
     .user-avatar {
@@ -99,6 +229,13 @@
       color: white;
       font-weight: 500;
       font-size: 16px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+      transition: all 0.3s ease;
+
+      &:hover {
+        transform: scale(1.1);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+      }
     }
 
     .user-info {
@@ -132,12 +269,17 @@
     }
 
     .pending-user-card {
-      transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+      transition: all 0.3s ease;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+      border-radius: 12px;
+      border-left: 4px solid #ff9800;
+      background: linear-gradient(135deg, #ffffff 0%, #fffaf0 100%);
     }
 
     .pending-user-card:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      transform: translateY(-4px);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+      border-left-width: 6px;
     }
 
     .user-email {
@@ -169,12 +311,27 @@
     }
 
     .role-card {
-      transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+      transition: all 0.3s ease;
+      box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+      border-radius: 12px;
+      border: 1px solid #e0e0e0;
+      overflow: hidden;
+      
+      mat-card-header {
+        background: linear-gradient(135deg, #f5f7fa 0%, #ffffff 100%);
+        padding: 16px;
+        border-bottom: 1px solid #e0e0e0;
+      }
     }
 
     .role-card:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      transform: translateY(-4px);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+      border-color: #2196f3;
+
+      mat-card-header {
+        background: linear-gradient(135deg, #e3f2fd 0%, #ffffff 100%);
+      }
     }
 
     .permissions-list {
@@ -184,17 +341,64 @@
     .mat-mdc-chip {
       font-size: 12px;
       margin: 2px;
+      font-weight: 500;
+      border-radius: 16px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      transition: all 0.2s ease;
+
+      &:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 3px 6px rgba(0, 0, 0, 0.15);
+      }
     }
 
-    .mat-mdc-chip.admin { background-color: #e3f2fd; color: #1976d2; }
-    .mat-mdc-chip.company { background-color: #f3e5f5; color: #7b1fa2; }
-    .mat-mdc-chip.student { background-color: #e8f5e8; color: #2e7d32; }
-    .mat-mdc-chip.instructor { background-color: #fff3e0; color: #f57c00; }
+    .mat-mdc-chip.admin { 
+      background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+      color: #1976d2; 
+      border: 1px solid #90caf9;
+    }
+    
+    .mat-mdc-chip.company { 
+      background: linear-gradient(135deg, #f3e5f5 0%, #e1bee7 100%);
+      color: #7b1fa2; 
+      border: 1px solid #ce93d8;
+    }
+    
+    .mat-mdc-chip.student { 
+      background: linear-gradient(135deg, #e8f5e8 0%, #c8e6c9 100%);
+      color: #2e7d32; 
+      border: 1px solid #81c784;
+    }
+    
+    .mat-mdc-chip.instructor { 
+      background: linear-gradient(135deg, #fff3e0 0%, #ffe0b2 100%);
+      color: #f57c00; 
+      border: 1px solid #ffb74d;
+    }
 
-    .mat-mdc-chip.active { background-color: #e8f5e8; color: #2e7d32; }
-    .mat-mdc-chip.inactive { background-color: #f5f5f5; color: #666; }
-    .mat-mdc-chip.suspended { background-color: #ffebee; color: #d32f2f; }
-    .mat-mdc-chip.pending { background-color: #fff3e0; color: #f57c00; }
+    .mat-mdc-chip.active { 
+      background: linear-gradient(135deg, #e8f5e8 0%, #c8e6c9 100%);
+      color: #2e7d32; 
+      border: 1px solid #81c784;
+    }
+    
+    .mat-mdc-chip.inactive { 
+      background: linear-gradient(135deg, #f5f5f5 0%, #e0e0e0 100%);
+      color: #666; 
+      border: 1px solid #bdbdbd;
+    }
+    
+    .mat-mdc-chip.suspended { 
+      background: linear-gradient(135deg, #ffebee 0%, #ffcdd2 100%);
+      color: #d32f2f; 
+      border: 1px solid #ef5350;
+    }
+    
+    .mat-mdc-chip.pending { 
+      background: linear-gradient(135deg, #fff3e0 0%, #ffe0b2 100%);
+      color: #f57c00; 
+      border: 1px solid #ffb74d;
+    }
 
     @media (max-width: 768px) {
       .user-management-container {

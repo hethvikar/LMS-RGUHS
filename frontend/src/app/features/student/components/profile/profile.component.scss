@@ -349,9 +349,35 @@
       color: #d32f2f;
     }
 
+    .extraction-message {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 12px;
+      border-radius: 6px;
+      font-size: 0.8rem;
+      margin-top: 8px;
+    }
+
+    .extraction-message.success {
+      background: #e3f2fd;
+      color: #1976d2;
+    }
+
+    .extraction-message.error {
+      background: #fff3e0;
+      color: #f57c00;
+    }
+
     .upload-progress {
       height: 4px;
       border-radius: 2px;
+    }
+
+    .extraction-progress {
+      height: 4px;
+      border-radius: 2px;
+      margin-top: 8px;
     }
 
     .upload-actions {

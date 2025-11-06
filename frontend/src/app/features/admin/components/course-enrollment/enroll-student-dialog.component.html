@@ -1,0 +1,172 @@
+<div class="enrollment-dialog">
+  <div class="dialog-header">
+    <h2 mat-dialog-title>
+      <mat-icon>person_add</mat-icon>
+      {{ isEditMode ? 'Edit Enrollment' : 'Enroll Student' }}
+    </h2>
+    <button mat-icon-button mat-dialog-close class="close-button">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+
+  <mat-divider></mat-divider>
+
+  <mat-dialog-content>
+    <form [formGroup]="enrollmentForm" class="enrollment-form">
+      <!-- Student Selection -->
+      <div class="form-section">
+        <div class="section-header">
+          <mat-icon>person</mat-icon>
+          <h3>Student Information</h3>
+        </div>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Select Student</mat-label>
+          <mat-select formControlName="studentId" [disabled]="isEditMode">
+            <mat-option *ngFor="let student of activeStudents" [value]="student.id">
+              <div class="student-option">
+                <span class="student-name">{{ student.name }}</span>
+                <span class="student-email">{{ student.email }}</span>
+              </div>
+            </mat-option>
+          </mat-select>
+          <mat-error *ngIf="enrollmentForm.get('studentId')?.hasError('required')">
+            Please select a student
+          </mat-error>
+        </mat-form-field>
+
+        <!-- Selected Student Info Card -->
+        <mat-card class="info-card" *ngIf="selectedStudent">
+          <mat-card-content>
+            <div class="info-row">
+              <span class="label">Name:</span>
+              <span class="value">{{ selectedStudent.name }}</span>
+            </div>
+            <div class="info-row">
+              <span class="label">Email:</span>
+              <span class="value">{{ selectedStudent.email }}</span>
+            </div>
+            <div class="info-row">
+              <span class="label">Current Enrollments:</span>
+              <span class="value">{{ selectedStudent.enrolledCourses.length }} courses</span>
+            </div>
+          </mat-card-content>
+        </mat-card>
+      </div>
+
+      <mat-divider></mat-divider>
+
+      <!-- Course Selection -->
+      <div class="form-section">
+        <div class="section-header">
+          <mat-icon>school</mat-icon>
+          <h3>Course Selection</h3>
+        </div>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Select Course</mat-label>
+          <mat-select formControlName="courseId" [disabled]="isEditMode">
+            <mat-option *ngFor="let course of availableCourses" 
+                       [value]="course.id"
+                       [disabled]="isCourseFull(course)">
+              <div class="course-option">
+                <div class="course-header">
+                  <span class="course-title">{{ course.title }}</span>
+                  <mat-chip *ngIf="isCourseFull(course)" class="full-chip">FULL</mat-chip>
+                </div>
+                <div class="course-details">
+                  <span class="instructor">{{ course.instructor }}</span>
+                  <span class="seats">{{ getAvailableSeats(course) }} seats available</span>
+                </div>
+              </div>
+            </mat-option>
+          </mat-select>
+          <mat-error *ngIf="enrollmentForm.get('courseId')?.hasError('required')">
+            Please select a course
+          </mat-error>
+        </mat-form-field>
+
+        <!-- Selected Course Info Card -->
+        <mat-card class="info-card" *ngIf="selectedCourse">
+          <mat-card-content>
+            <div class="info-row">
+              <span class="label">Course:</span>
+              <span class="value">{{ selectedCourse.title }}</span>
+            </div>
+            <div class="info-row">
+              <span class="label">Instructor:</span>
+              <span class="value">{{ selectedCourse.instructor }}</span>
+            </div>
+            <div class="info-row">
+              <span class="label">Capacity:</span>
+              <span class="value">
+                {{ selectedCourse.enrolledStudents }} / {{ selectedCourse.maxStudents }} enrolled
+              </span>
+            </div>
+            <div class="info-row">
+              <span class="label">Status:</span>
+              <mat-chip [class]="'status-' + selectedCourse.status">
+                {{ selectedCourse.status | titlecase }}
+              </mat-chip>
+            </div>
+          </mat-card-content>
+        </mat-card>
+      </div>
+
+      <mat-divider></mat-divider>
+
+      <!-- Enrollment Details -->
+      <div class="form-section">
+        <div class="section-header">
+          <mat-icon>event</mat-icon>
+          <h3>Enrollment Details</h3>
+        </div>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Enrollment Date</mat-label>
+          <input matInput [matDatepicker]="picker" formControlName="enrollmentDate">
+          <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+          <mat-datepicker #picker></mat-datepicker>
+          <mat-error *ngIf="enrollmentForm.get('enrollmentDate')?.hasError('required')">
+            Please select enrollment date
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Notes (Optional)</mat-label>
+          <textarea matInput 
+                   formControlName="notes" 
+                   rows="3"
+                   placeholder="Add any additional notes about this enrollment..."></textarea>
+        </mat-form-field>
+      </div>
+
+      <!-- Validation Message -->
+      <div class="validation-message error" *ngIf="getValidationMessage()">
+        <mat-icon>error</mat-icon>
+        <span>{{ getValidationMessage() }}</span>
+      </div>
+
+      <!-- Success Preview -->
+      <div class="validation-message success" *ngIf="selectedStudent && selectedCourse && !getValidationMessage()">
+        <mat-icon>check_circle</mat-icon>
+        <span>Ready to enroll {{ selectedStudent.name }} in {{ selectedCourse.title }}</span>
+      </div>
+    </form>
+  </mat-dialog-content>
+
+  <mat-divider></mat-divider>
+
+  <mat-dialog-actions align="end">
+    <button mat-button (click)="onCancel()" type="button">
+      Cancel
+    </button>
+    <button mat-raised-button 
+            color="primary" 
+            (click)="onSubmit()"
+            [disabled]="!enrollmentForm.valid || !canEnroll()">
+      <mat-icon>check</mat-icon>
+      {{ isEditMode ? 'Update Enrollment' : 'Enroll Student' }}
+    </button>
+  </mat-dialog-actions>
+</div>

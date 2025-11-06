@@ -11,6 +11,8 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { CommonModule } from '@angular/common';
+import { CreateRoleDialogComponent } from './create-role-dialog.component';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 
 interface Permission {
   id: string;
@@ -44,7 +46,8 @@ interface Role {
     MatInputModule,
     MatSelectModule,
     MatSlideToggleModule,
-    MatTooltipModule
+    MatTooltipModule,
+    MatSnackBarModule
   ],
   templateUrl: './user-roles.component.html',
   styleUrls: ['./user-roles.component.scss']
@@ -126,6 +129,11 @@ export class UserRolesComponent implements OnInit {
     'course_creation', 'assignment_management', 'student_assessment', 'resource_upload'
   ]);
 
+  constructor(
+    private dialog: MatDialog,
+    private snackBar: MatSnackBar
+  ) {}
+
   ngOnInit() {
     // Load roles and permissions from API
   }
@@ -178,13 +186,69 @@ export class UserRolesComponent implements OnInit {
   }
 
   createNewRole() {
-    console.log('Create new role');
-    // Open role creation dialog
+    console.log('Opening create role dialog...');
+    
+    const dialogRef = this.dialog.open(CreateRoleDialogComponent, {
+      width: '75vw',
+      maxWidth: '1400px',
+      maxHeight: '90vh',
+      panelClass: 'create-role-dialog',
+      data: {
+        permissions: this.permissions
+      },
+      disableClose: false,
+      autoFocus: true,
+      hasBackdrop: true
+    });
+    
+    console.log('Dialog opened successfully');
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        // Add the new role to the roles array
+        this.roles.push(result);
+        this.snackBar.open('Role created successfully!', 'Close', {
+          duration: 3000,
+          horizontalPosition: 'end',
+          verticalPosition: 'top',
+          panelClass: ['success-snackbar']
+        });
+        console.log('New role created:', result);
+      }
+    });
   }
 
   editRole(role: Role) {
-    console.log('Edit role:', role);
-    // Open role edit dialog
+    const dialogRef = this.dialog.open(CreateRoleDialogComponent, {
+      width: '75vw',
+      maxWidth: '1400px',
+      maxHeight: '90vh',
+      panelClass: 'create-role-dialog',
+      data: {
+        permissions: this.permissions,
+        existingRole: role
+      },
+      disableClose: false,
+      autoFocus: true,
+      hasBackdrop: true
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        // Update the existing role
+        const index = this.roles.findIndex(r => r.id === role.id);
+        if (index !== -1) {
+          this.roles[index] = result;
+          this.snackBar.open('Role updated successfully!', 'Close', {
+            duration: 3000,
+            horizontalPosition: 'end',
+            verticalPosition: 'top',
+            panelClass: ['success-snackbar']
+          });
+          console.log('Role updated:', result);
+        }
+      }
+    });
   }
 
   managePermissions(role: Role) {

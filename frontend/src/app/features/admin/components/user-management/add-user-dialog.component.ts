@@ -36,62 +36,66 @@ export interface User {
     <div class="dialog-container">
       <h2 mat-dialog-title>{{ data.user ? 'Edit User' : 'Add New User' }}</h2>
       
-      <mat-dialog-content>
-        <form [formGroup]="userForm">
-          <mat-form-field appearance="outline" class="full-width">
-            <mat-label>Full Name *</mat-label>
-            <input matInput formControlName="name" placeholder="Enter full name">
-            <mat-error *ngIf="userForm.get('name')?.hasError('required')">
-              Name is required
-            </mat-error>
-          </mat-form-field>
+      <mat-dialog-content class="dialog-content">
+        <form [formGroup]="userForm" class="two-column-form">
+          <div class="form-column">
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Full Name *</mat-label>
+              <input matInput formControlName="name" placeholder="Enter full name">
+              <mat-error *ngIf="userForm.get('name')?.hasError('required')">
+                Name is required
+              </mat-error>
+            </mat-form-field>
 
-          <mat-form-field appearance="outline" class="full-width">
-            <mat-label>Email *</mat-label>
-            <input matInput formControlName="email" placeholder="Enter email address">
-            <mat-error *ngIf="userForm.get('email')?.hasError('required')">
-              Email is required
-            </mat-error>
-            <mat-error *ngIf="userForm.get('email')?.hasError('email')">
-              Please enter a valid email
-            </mat-error>
-          </mat-form-field>
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Email *</mat-label>
+              <input matInput formControlName="email" placeholder="Enter email address">
+              <mat-error *ngIf="userForm.get('email')?.hasError('required')">
+                Email is required
+              </mat-error>
+              <mat-error *ngIf="userForm.get('email')?.hasError('email')">
+                Please enter a valid email
+              </mat-error>
+            </mat-form-field>
 
-          <mat-form-field appearance="outline" class="full-width">
-            <mat-label>Role *</mat-label>
-            <mat-select formControlName="role">
-              <mat-option value="admin">Administrator</mat-option>
-              <mat-option value="company">Company</mat-option>
-              <mat-option value="student">Student</mat-option>
-              <mat-option value="instructor">Instructor</mat-option>
-            </mat-select>
-            <mat-error *ngIf="userForm.get('role')?.hasError('required')">
-              Role is required
-            </mat-error>
-          </mat-form-field>
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Phone</mat-label>
+              <input matInput formControlName="phone" placeholder="Enter phone number">
+            </mat-form-field>
+          </div>
 
-          <mat-form-field appearance="outline" class="full-width">
-            <mat-label>Status *</mat-label>
-            <mat-select formControlName="status">
-              <mat-option value="active">Active</mat-option>
-              <mat-option value="inactive">Inactive</mat-option>
-              <mat-option value="suspended">Suspended</mat-option>
-              <mat-option value="pending">Pending</mat-option>
-            </mat-select>
-            <mat-error *ngIf="userForm.get('status')?.hasError('required')">
-              Status is required
-            </mat-error>
-          </mat-form-field>
+          <div class="form-column">
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Role *</mat-label>
+              <mat-select formControlName="role">
+                <mat-option value="admin">Administrator</mat-option>
+                <mat-option value="company">Company</mat-option>
+                <mat-option value="student">Student</mat-option>
+                <mat-option value="instructor">Instructor</mat-option>
+              </mat-select>
+              <mat-error *ngIf="userForm.get('role')?.hasError('required')">
+                Role is required
+              </mat-error>
+            </mat-form-field>
 
-          <mat-form-field appearance="outline" class="full-width">
-            <mat-label>Department</mat-label>
-            <input matInput formControlName="department" placeholder="Enter department">
-          </mat-form-field>
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Status *</mat-label>
+              <mat-select formControlName="status">
+                <mat-option value="active">Active</mat-option>
+                <mat-option value="inactive">Inactive</mat-option>
+                <mat-option value="suspended">Suspended</mat-option>
+                <mat-option value="pending">Pending</mat-option>
+              </mat-select>
+              <mat-error *ngIf="userForm.get('status')?.hasError('required')">
+                Status is required
+              </mat-error>
+            </mat-form-field>
 
-          <mat-form-field appearance="outline" class="full-width">
-            <mat-label>Phone</mat-label>
-            <input matInput formControlName="phone" placeholder="Enter phone number">
-          </mat-form-field>
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Department</mat-label>
+              <input matInput formControlName="department" placeholder="Enter department">
+            </mat-form-field>
+          </div>
         </form>
       </mat-dialog-content>
 
@@ -107,8 +111,32 @@ export interface User {
   `,
   styles: [`
     .dialog-container {
-      min-width: 400px;
-      padding: 20px;
+      min-width: 700px;
+      padding: 0;
+      overflow: hidden;
+    }
+
+    h2 {
+      margin: 0;
+      padding: 24px 24px 16px 24px;
+      border-bottom: 1px solid #e0e0e0;
+    }
+
+    .dialog-content {
+      padding: 24px !important;
+      overflow: visible !important;
+      max-height: none !important;
+    }
+
+    .two-column-form {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+    }
+
+    .form-column {
+      display: flex;
+      flex-direction: column;
     }
 
     mat-form-field.full-width {
@@ -117,12 +145,26 @@ export interface User {
     }
 
     mat-dialog-actions {
-      padding-top: 20px;
+      padding: 16px 24px;
+      margin: 0;
+      border-top: 1px solid #e0e0e0;
     }
 
-    h2 {
-      margin-top: 0;
-      margin-bottom: 20px;
+    /* Remove scrollbar */
+    ::ng-deep .mat-mdc-dialog-content {
+      overflow: visible !important;
+      max-height: none !important;
+    }
+
+    /* Responsive design for smaller screens */
+    @media (max-width: 768px) {
+      .two-column-form {
+        grid-template-columns: 1fr;
+      }
+      
+      .dialog-container {
+        min-width: 400px;
+      }
     }
   `]
 })

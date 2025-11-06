@@ -1,11 +1,11 @@
 <mat-toolbar class="app-header" [class]="getHeaderClass()">
   <div class="header-left">
     <button mat-icon-button (click)="toggleSidenav()" class="menu-button">
-      
+      <mat-icon>menu</mat-icon>
     </button>
 
     <div class="logo-section" routerLink="/">
-      
+      <mat-icon class="logo-icon">school</mat-icon>
       <span class="logo-text">Placement Cell</span>
     </div>
   </div>
@@ -18,7 +18,7 @@
               routerLinkActive="active"
               [routerLinkActiveOptions]="{exact: false}"
               class="nav-button">
-        
+        <mat-icon>{{ item.icon }}</mat-icon>
         <span>{{ item.label }}</span>
       </button>
     </nav>
@@ -27,16 +27,16 @@
   <div class="header-right">
     <div class="header-actions">
       <!-- Notifications -->
-      <button mat-icon-button [matMenuTriggerFor]="notificationsMenu" class="notification-button">
-        
+      <button mat-icon-button [matMenuTriggerFor]="notificationsMenu" class="notification-button" [matTooltip]="'Notifications'">
+        <mat-icon>notifications</mat-icon>
         <span class="notification-badge" *ngIf="unreadNotifications > 0">{{ unreadNotifications }}</span>
       </button>
 
       <!-- User Menu -->
-      <button mat-icon-button [matMenuTriggerFor]="userMenu" class="user-button">
+      <button mat-icon-button [matMenuTriggerFor]="userMenu" class="user-button" [matTooltip]="'Account'">
         <div class="user-avatar">
           <img *ngIf="currentUser?.avatar" [src]="currentUser!.avatar" alt="Avatar">
-          
+          <mat-icon *ngIf="!currentUser?.avatar">account_circle</mat-icon>
         </div>
       </button>
     </div>
@@ -50,7 +50,7 @@
     </div>
     <mat-divider></mat-divider>
     <div class="notification-item" *ngFor="let notification of notifications">
-      
+      <mat-icon>info</mat-icon>
       <div class="notification-content">
         <div class="notification-title">{{ notification.title }}</div>
         <div class="notification-message">{{ notification.message }}</div>
@@ -66,7 +66,7 @@
     <div class="user-info">
       <div class="user-avatar-large">
         <img *ngIf="currentUser?.avatar" [src]="currentUser!.avatar" alt="Avatar">
-        
+        <mat-icon *ngIf="!currentUser?.avatar">account_circle</mat-icon>
       </div>
       <div class="user-details">
         <div class="user-name">{{ currentUser?.name }}</div>
@@ -76,20 +76,20 @@
     </div>
     <mat-divider></mat-divider>
     <button mat-menu-item routerLink="/profile">
-      
+      <mat-icon>person</mat-icon>
       <span>Profile</span>
     </button>
     <button mat-menu-item routerLink="/settings">
-      
+      <mat-icon>settings</mat-icon>
       <span>Settings</span>
     </button>
     <button mat-menu-item routerLink="/help">
-      
+      <mat-icon>help</mat-icon>
       <span>Help & Support</span>
     </button>
     <mat-divider></mat-divider>
     <button mat-menu-item (click)="logout()">
-      
+      <mat-icon>logout</mat-icon>
       <span>Logout</span>
     </button>
   </mat-menu>
@@ -103,7 +103,7 @@
       <div class="user-info-mobile">
         <div class="user-avatar-mobile">
           <img *ngIf="currentUser?.avatar" [src]="currentUser!.avatar" alt="Avatar">
-          
+          <mat-icon *ngIf="!currentUser?.avatar">account_circle</mat-icon>
         </div>
         <div class="user-details-mobile">
           <div class="user-name-mobile">{{ currentUser?.name }}</div>
@@ -120,14 +120,14 @@
               [routerLinkActiveOptions]="{exact: false}"
               (click)="closeSidenav()"
               class="mobile-nav-button">
-        
+        <mat-icon>{{ item.icon }}</mat-icon>
         <span>{{ item.label }}</span>
       </button>
     </nav>
 
     <div class="drawer-footer">
       <button mat-button (click)="logout()" class="logout-button">
-        
+        <mat-icon>logout</mat-icon>
         <span>Logout</span>
       </button>
     </div>

@@ -12,10 +12,10 @@
       </div>
 
       <div class="assessment-stats">
-        <mat-card class="stat-card">
+        <mat-card class="stat-card gradient-blue">
           <mat-card-content>
             <div class="stat-content">
-              
+              <mat-icon>assignment</mat-icon>
               <div class="stat-info">
                 <h3>{{ assignments.length }}</h3>
                 <p>Total Assignments</p>
@@ -24,10 +24,10 @@
           </mat-card-content>
         </mat-card>
 
-        <mat-card class="stat-card">
+        <mat-card class="stat-card gradient-orange">
           <mat-card-content>
             <div class="stat-content">
-              
+              <mat-icon>pending_actions</mat-icon>
               <div class="stat-info">
                 <h3>{{ getPendingAssignments() }}</h3>
                 <p>Pending</p>
@@ -36,10 +36,10 @@
           </mat-card-content>
         </mat-card>
 
-        <mat-card class="stat-card">
+        <mat-card class="stat-card gradient-green">
           <mat-card-content>
             <div class="stat-content">
-              
+              <mat-icon>check_circle</mat-icon>
               <div class="stat-info">
                 <h3>{{ getSubmittedAssignments() }}</h3>
                 <p>Submitted</p>
@@ -48,10 +48,10 @@
           </mat-card-content>
         </mat-card>
 
-        <mat-card class="stat-card">
+        <mat-card class="stat-card gradient-purple">
           <mat-card-content>
             <div class="stat-content">
-              
+              <mat-icon>grading</mat-icon>
               <div class="stat-info">
                 <h3>{{ getGradedAssignments() }}</h3>
                 <p>Graded</p>
