@@ -8,6 +8,7 @@ import { User } from '../store/auth/auth.reducer';
 export interface LoginRequest {
   email: string;
   password: string;
+  role?: string;
   rememberMe?: boolean;
 }
 

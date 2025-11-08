@@ -1,16 +1,13 @@
 
     <div class="placement-container">
-      <div class="placement-header">
-        <h1>Placement Status</h1>
-        <p>Track your job placement progress</p>
-      </div>
-
       <div class="placement-content">
         <div class="stats-overview">
-          <mat-card class="stat-card">
+          <mat-card class="stat-card applied-card">
             <mat-card-content>
               <div class="stat-content">
-                
+                <div class="stat-icon applied-icon">
+                  <mat-icon>send</mat-icon>
+                </div>
                 <div class="stat-info">
                   <h3>{{ getStatusCount('applied') }}</h3>
                   <p>Applied</p>
@@ -19,10 +16,12 @@
             </mat-card-content>
           </mat-card>
 
-          <mat-card class="stat-card">
+          <mat-card class="stat-card interview-card">
             <mat-card-content>
               <div class="stat-content">
-                
+                <div class="stat-icon interview-icon">
+                  <mat-icon>event_seat</mat-icon>
+                </div>
                 <div class="stat-info">
                   <h3>{{ getStatusCount('interview') }}</h3>
                   <p>Interviews</p>
@@ -31,10 +30,12 @@
             </mat-card-content>
           </mat-card>
 
-          <mat-card class="stat-card">
+          <mat-card class="stat-card offer-card">
             <mat-card-content>
               <div class="stat-content">
-                
+                <div class="stat-icon offer-icon">
+                  <mat-icon>card_giftcard</mat-icon>
+                </div>
                 <div class="stat-info">
                   <h3>{{ getStatusCount('offer') }}</h3>
                   <p>Offers</p>
@@ -43,10 +44,12 @@
             </mat-card-content>
           </mat-card>
 
-          <mat-card class="stat-card">
+          <mat-card class="stat-card placed-card">
             <mat-card-content>
               <div class="stat-content">
-                
+                <div class="stat-icon placed-icon">
+                  <mat-icon>celebration</mat-icon>
+                </div>
                 <div class="stat-info">
                   <h3>{{ getStatusCount('joined') }}</h3>
                   <p>Placed</p>
@@ -65,7 +68,7 @@
             <div class="timeline-container">
               <div *ngFor="let placement of placements; let i = index" class="timeline-item">
                 <div class="timeline-marker" [class]="getStatusClass(placement.status)">
-                  
+                  <mat-icon>{{ getStatusIcon(placement.status) }}</mat-icon>
                 </div>
                 <div class="timeline-content">
                   <div class="timeline-header">
@@ -80,7 +83,7 @@
                     <span class="date">Last Update: {{ placement.lastUpdate | date:'short' }}</span>
                   </div>
                   <div class="next-step" *ngIf="placement.nextStep">
-                    
+                    <mat-icon>trending_flat</mat-icon>
                     <span>Next: {{ placement.nextStep }}</span>
                   </div>
                   <div class="offer-details" *ngIf="placement.offerDetails">
@@ -103,29 +106,31 @@
 
         <mat-card class="placement-tips">
           <mat-card-header>
-            <mat-card-title>Placement Tips</mat-card-title>
-            
+            <mat-card-title>
+              <mat-icon>lightbulb</mat-icon>
+              Placement Tips
+            </mat-card-title>
           </mat-card-header>
           <mat-card-content>
             <mat-list>
               <mat-list-item>
-                
+                <mat-icon matListItemIcon>description</mat-icon>
                 <div mat-line>Keep your resume updated with latest projects</div>
               </mat-list-item>
               <mat-list-item>
-                
+                <mat-icon matListItemIcon>code</mat-icon>
                 <div mat-line>Practice coding problems regularly</div>
               </mat-list-item>
               <mat-list-item>
-                
+                <mat-icon matListItemIcon>people</mat-icon>
                 <div mat-line>Network with alumni and industry professionals</div>
               </mat-list-item>
               <mat-list-item>
-                
+                <mat-icon matListItemIcon>psychology</mat-icon>
                 <div mat-line>Prepare for common interview questions</div>
               </mat-list-item>
               <mat-list-item>
-                
+                <mat-icon matListItemIcon>schedule</mat-icon>
                 <div mat-line>Follow up on applications after 1-2 weeks</div>
               </mat-list-item>
             </mat-list>

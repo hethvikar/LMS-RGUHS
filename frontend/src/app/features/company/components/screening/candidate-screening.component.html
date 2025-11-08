@@ -1,0 +1,425 @@
+<div class="screening-container">
+  <div class="page-header">
+    <div class="header-content">
+      <mat-icon class="header-icon">filter_list</mat-icon>
+      <div class="header-text">
+        <h1>Candidate Screening</h1>
+        <p>Review and manage candidate applications</p>
+      </div>
+    </div>
+
+    <button mat-raised-button color="primary" (click)="requestMoreProfiles()">
+      <mat-icon>person_add</mat-icon>
+      Request More Profiles
+    </button>
+  </div>
+
+  <!-- Job Selection -->
+  <mat-card class="job-selector-card">
+    <mat-card-content>
+      <mat-form-field appearance="outline" class="job-select">
+        <mat-label>Select Job Position</mat-label>
+        <mat-select [(ngModel)]="selectedJobId">
+          <mat-option *ngFor="let job of jobRequests" [value]="job.id">
+            {{ job.jobTitle }} ({{ job.candidatesReceived }}/{{ job.candidatesNeeded }})
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <div class="job-stats" *ngIf="selectedJob">
+        <div class="stat-card">
+          <mat-icon>people</mat-icon>
+          <div>
+            <h3>{{ selectedJob.candidatesReceived }}</h3>
+            <p>Received</p>
+          </div>
+        </div>
+        <div class="stat-card">
+          <mat-icon>check_circle</mat-icon>
+          <div>
+            <h3>{{ selectedJob.shortlisted }}</h3>
+            <p>Shortlisted</p>
+          </div>
+        </div>
+        <div class="stat-card">
+          <mat-icon>cancel</mat-icon>
+          <div>
+            <h3>{{ selectedJob.rejected }}</h3>
+            <p>Rejected</p>
+          </div>
+        </div>
+        <div class="stat-card">
+          <mat-icon>hourglass_empty</mat-icon>
+          <div>
+            <h3>{{ pendingCandidates.length }}</h3>
+            <p>Pending Review</p>
+          </div>
+        </div>
+      </div>
+    </mat-card-content>
+  </mat-card>
+
+  <!-- Candidates Tabs -->
+  <mat-card class="candidates-card">
+    <mat-card-header>
+      <mat-icon>people</mat-icon>
+      <mat-card-title>Candidates</mat-card-title>
+      <div class="header-actions" *ngIf="selectedCandidates.size > 0">
+        <button mat-raised-button color="primary" (click)="shortlistSelected()">
+          <mat-icon>check_circle</mat-icon>
+          Shortlist ({{ selectedCandidates.size }})
+        </button>
+        <button mat-raised-button color="warn" (click)="rejectSelected()">
+          <mat-icon>cancel</mat-icon>
+          Reject ({{ selectedCandidates.size }})
+        </button>
+        <button mat-button (click)="deselectAll()">
+          Clear Selection
+        </button>
+      </div>
+    </mat-card-header>
+
+    <mat-card-content>
+      <mat-tab-group>
+        <!-- Pending Review Tab -->
+        <mat-tab>
+          <ng-template mat-tab-label>
+            <mat-icon>schedule</mat-icon>
+            <span>Pending Review</span>
+            <span class="tab-badge pending">{{ pendingCandidates.length }}</span>
+          </ng-template>
+
+          <div class="tab-content">
+            <div class="table-actions" *ngIf="pendingCandidates.length > 0">
+              <button mat-button (click)="selectAllPending()">
+                <mat-icon>done_all</mat-icon>
+                Select All
+              </button>
+              <button mat-button (click)="exportCandidates('pending')">
+                <mat-icon>download</mat-icon>
+                Export List
+              </button>
+            </div>
+
+            <div class="table-container" *ngIf="pendingCandidates.length > 0; else noPending">
+              <table mat-table [dataSource]="pendingCandidates" class="candidates-table">
+                <!-- Checkbox Column -->
+                <ng-container matColumnDef="select">
+                  <th mat-header-cell *matHeaderCellDef>Select</th>
+                  <td mat-cell *matCellDef="let candidate">
+                    <mat-checkbox
+                      [checked]="isCandidateSelected(candidate.id)"
+                      (change)="toggleCandidateSelection(candidate.id)">
+                    </mat-checkbox>
+                  </td>
+                </ng-container>
+
+                <!-- Name Column -->
+                <ng-container matColumnDef="name">
+                  <th mat-header-cell *matHeaderCellDef>Candidate</th>
+                  <td mat-cell *matCellDef="let candidate">
+                    <div class="candidate-info">
+                      <strong>{{ candidate.name }}</strong>
+                      <span class="email">{{ candidate.email }}</span>
+                    </div>
+                  </td>
+                </ng-container>
+
+                <!-- Batch Column -->
+                <ng-container matColumnDef="batch">
+                  <th mat-header-cell *matHeaderCellDef>Batch</th>
+                  <td mat-cell *matCellDef="let candidate">
+                    <mat-chip class="batch-chip">{{ candidate.batch }}</mat-chip>
+                  </td>
+                </ng-container>
+
+                <!-- CGPA Column -->
+                <ng-container matColumnDef="cgpa">
+                  <th mat-header-cell *matHeaderCellDef>CGPA</th>
+                  <td mat-cell *matCellDef="let candidate">
+                    <span class="cgpa-badge" [class.high-cgpa]="candidate.cgpa >= 8">
+                      {{ candidate.cgpa.toFixed(2) }}
+                    </span>
+                  </td>
+                </ng-container>
+
+                <!-- Skills Column -->
+                <ng-container matColumnDef="skills">
+                  <th mat-header-cell *matHeaderCellDef>Skills</th>
+                  <td mat-cell *matCellDef="let candidate">
+                    <div class="skills-chips">
+                      <mat-chip *ngFor="let skill of candidate.skills.slice(0, 2)">
+                        {{ skill }}
+                      </mat-chip>
+                      <mat-chip *ngIf="candidate.skills.length > 2" [matTooltip]="candidate.skills.slice(2).join(', ')">
+                        +{{ candidate.skills.length - 2 }}
+                      </mat-chip>
+                    </div>
+                  </td>
+                </ng-container>
+
+                <!-- Assessment Score Column -->
+                <ng-container matColumnDef="score">
+                  <th mat-header-cell *matHeaderCellDef>Score</th>
+                  <td mat-cell *matCellDef="let candidate">
+                    <div class="score-badge" [class.high-score]="candidate.assessmentScore >= 85">
+                      {{ candidate.assessmentScore }}%
+                    </div>
+                  </td>
+                </ng-container>
+
+                <!-- Source Column -->
+                <ng-container matColumnDef="source">
+                  <th mat-header-cell *matHeaderCellDef>Source</th>
+                  <td mat-cell *matCellDef="let candidate">
+                    <mat-chip [class]="candidate.source === 'admin-shared' ? 'source-admin' : 'source-direct'">
+                      <mat-icon>{{ getSourceIcon(candidate.source) }}</mat-icon>
+                      {{ getSourceLabel(candidate.source) }}
+                    </mat-chip>
+                  </td>
+                </ng-container>
+
+                <!-- Actions Column -->
+                <ng-container matColumnDef="actions">
+                  <th mat-header-cell *matHeaderCellDef>Actions</th>
+                  <td mat-cell *matCellDef="let candidate">
+                    <div class="action-buttons">
+                      <button mat-icon-button [matTooltip]="'View Details'" (click)="viewCandidateDetails(candidate)">
+                        <mat-icon>visibility</mat-icon>
+                      </button>
+                      <button mat-icon-button [matTooltip]="'Download Resume'" (click)="downloadResume(candidate.resumeUrl)">
+                        <mat-icon>download</mat-icon>
+                      </button>
+                      <button mat-icon-button color="primary" [matTooltip]="'Shortlist'" (click)="shortlistCandidate(candidate.id)">
+                        <mat-icon>check_circle</mat-icon>
+                      </button>
+                      <button mat-icon-button color="warn" [matTooltip]="'Reject'" (click)="rejectCandidate(candidate.id)">
+                        <mat-icon>cancel</mat-icon>
+                      </button>
+                    </div>
+                  </td>
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+              </table>
+            </div>
+
+            <ng-template #noPending>
+              <div class="no-data">
+                <mat-icon>inbox</mat-icon>
+                <h3>No Pending Candidates</h3>
+                <p>All candidates have been reviewed</p>
+              </div>
+            </ng-template>
+          </div>
+        </mat-tab>
+
+        <!-- Shortlisted Tab -->
+        <mat-tab>
+          <ng-template mat-tab-label>
+            <mat-icon>check_circle</mat-icon>
+            <span>Shortlisted</span>
+            <span class="tab-badge shortlisted">{{ shortlistedCandidates.length }}</span>
+          </ng-template>
+
+          <div class="tab-content">
+            <div class="table-actions" *ngIf="shortlistedCandidates.length > 0">
+              <button mat-button (click)="exportCandidates('shortlisted')">
+                <mat-icon>download</mat-icon>
+                Export Shortlisted
+              </button>
+            </div>
+
+            <div class="table-container" *ngIf="shortlistedCandidates.length > 0; else noShortlisted">
+              <table mat-table [dataSource]="shortlistedCandidates" class="candidates-table">
+                <ng-container matColumnDef="select">
+                  <th mat-header-cell *matHeaderCellDef></th>
+                  <td mat-cell *matCellDef="let candidate"></td>
+                </ng-container>
+
+                <ng-container matColumnDef="name">
+                  <th mat-header-cell *matHeaderCellDef>Candidate</th>
+                  <td mat-cell *matCellDef="let candidate">
+                    <div class="candidate-info">
+                      <strong>{{ candidate.name }}</strong>
+                      <span class="email">{{ candidate.email }}</span>
+                    </div>
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="batch">
+                  <th mat-header-cell *matHeaderCellDef>Batch</th>
+                  <td mat-cell *matCellDef="let candidate">
+                    <mat-chip class="batch-chip">{{ candidate.batch }}</mat-chip>
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="cgpa">
+                  <th mat-header-cell *matHeaderCellDef>CGPA</th>
+                  <td mat-cell *matCellDef="let candidate">
+                    <span class="cgpa-badge" [class.high-cgpa]="candidate.cgpa >= 8">
+                      {{ candidate.cgpa.toFixed(2) }}
+                    </span>
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="skills">
+                  <th mat-header-cell *matHeaderCellDef>Skills</th>
+                  <td mat-cell *matCellDef="let candidate">
+                    <div class="skills-chips">
+                      <mat-chip *ngFor="let skill of candidate.skills.slice(0, 2)">
+                        {{ skill }}
+                      </mat-chip>
+                      <mat-chip *ngIf="candidate.skills.length > 2" [matTooltip]="candidate.skills.slice(2).join(', ')">
+                        +{{ candidate.skills.length - 2 }}
+                      </mat-chip>
+                    </div>
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="score">
+                  <th mat-header-cell *matHeaderCellDef>Score</th>
+                  <td mat-cell *matCellDef="let candidate">
+                    <div class="score-badge" [class.high-score]="candidate.assessmentScore >= 85">
+                      {{ candidate.assessmentScore }}%
+                    </div>
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="source">
+                  <th mat-header-cell *matHeaderCellDef>Source</th>
+                  <td mat-cell *matCellDef="let candidate">
+                    <mat-chip [class]="candidate.source === 'admin-shared' ? 'source-admin' : 'source-direct'">
+                      <mat-icon>{{ getSourceIcon(candidate.source) }}</mat-icon>
+                      {{ getSourceLabel(candidate.source) }}
+                    </mat-chip>
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="actions">
+                  <th mat-header-cell *matHeaderCellDef>Actions</th>
+                  <td mat-cell *matCellDef="let candidate">
+                    <div class="action-buttons">
+                      <button mat-icon-button [matTooltip]="'View Details'" (click)="viewCandidateDetails(candidate)">
+                        <mat-icon>visibility</mat-icon>
+                      </button>
+                      <button mat-icon-button [matTooltip]="'Download Resume'" (click)="downloadResume(candidate.resumeUrl)">
+                        <mat-icon>download</mat-icon>
+                      </button>
+                    </div>
+                  </td>
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+              </table>
+            </div>
+
+            <ng-template #noShortlisted>
+              <div class="no-data">
+                <mat-icon>people_outline</mat-icon>
+                <h3>No Shortlisted Candidates</h3>
+                <p>Shortlist candidates from the pending review tab</p>
+              </div>
+            </ng-template>
+          </div>
+        </mat-tab>
+
+        <!-- Rejected Tab -->
+        <mat-tab>
+          <ng-template mat-tab-label>
+            <mat-icon>cancel</mat-icon>
+            <span>Rejected</span>
+            <span class="tab-badge rejected">{{ rejectedCandidates.length }}</span>
+          </ng-template>
+
+          <div class="tab-content">
+            <div class="table-container" *ngIf="rejectedCandidates.length > 0; else noRejected">
+              <table mat-table [dataSource]="rejectedCandidates" class="candidates-table">
+                <ng-container matColumnDef="select">
+                  <th mat-header-cell *matHeaderCellDef></th>
+                  <td mat-cell *matCellDef="let candidate"></td>
+                </ng-container>
+
+                <ng-container matColumnDef="name">
+                  <th mat-header-cell *matHeaderCellDef>Candidate</th>
+                  <td mat-cell *matCellDef="let candidate">
+                    <div class="candidate-info">
+                      <strong>{{ candidate.name }}</strong>
+                      <span class="email">{{ candidate.email }}</span>
+                    </div>
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="batch">
+                  <th mat-header-cell *matHeaderCellDef>Batch</th>
+                  <td mat-cell *matCellDef="let candidate">
+                    <mat-chip class="batch-chip">{{ candidate.batch }}</mat-chip>
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="cgpa">
+                  <th mat-header-cell *matHeaderCellDef>CGPA</th>
+                  <td mat-cell *matCellDef="let candidate">
+                    <span class="cgpa-badge">{{ candidate.cgpa.toFixed(2) }}</span>
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="skills">
+                  <th mat-header-cell *matHeaderCellDef>Skills</th>
+                  <td mat-cell *matCellDef="let candidate">
+                    <div class="skills-chips">
+                      <mat-chip *ngFor="let skill of candidate.skills.slice(0, 2)">
+                        {{ skill }}
+                      </mat-chip>
+                      <mat-chip *ngIf="candidate.skills.length > 2">
+                        +{{ candidate.skills.length - 2 }}
+                      </mat-chip>
+                    </div>
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="score">
+                  <th mat-header-cell *matHeaderCellDef>Score</th>
+                  <td mat-cell *matCellDef="let candidate">
+                    <div class="score-badge">{{ candidate.assessmentScore }}%</div>
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="source">
+                  <th mat-header-cell *matHeaderCellDef>Source</th>
+                  <td mat-cell *matCellDef="let candidate">
+                    <mat-chip [class]="candidate.source === 'admin-shared' ? 'source-admin' : 'source-direct'">
+                      {{ getSourceLabel(candidate.source) }}
+                    </mat-chip>
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="actions">
+                  <th mat-header-cell *matHeaderCellDef>Actions</th>
+                  <td mat-cell *matCellDef="let candidate">
+                    <button mat-icon-button [matTooltip]="'View Details'" (click)="viewCandidateDetails(candidate)">
+                      <mat-icon>visibility</mat-icon>
+                    </button>
+                  </td>
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+              </table>
+            </div>
+
+            <ng-template #noRejected>
+              <div class="no-data">
+                <mat-icon>check</mat-icon>
+                <h3>No Rejected Candidates</h3>
+                <p>All candidates are either pending or shortlisted</p>
+              </div>
+            </ng-template>
+          </div>
+        </mat-tab>
+      </mat-tab-group>
+    </mat-card-content>
+  </mat-card>
+</div>

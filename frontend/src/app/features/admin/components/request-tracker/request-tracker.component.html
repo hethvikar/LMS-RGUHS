@@ -1,0 +1,451 @@
+<div class="request-tracker-container">
+  <div class="page-header">
+    <div class="header-content">
+      <mat-icon class="header-icon">track_changes</mat-icon>
+      <div class="header-text">
+        <h1>Candidate Request Tracker</h1>
+        <p>Monitor and manage all company candidate requests</p>
+      </div>
+    </div>
+
+    <button mat-raised-button color="primary" (click)="exportRequests()">
+      <mat-icon>download</mat-icon>
+      Export All Requests
+    </button>
+  </div>
+
+  <!-- Statistics Cards -->
+  <div class="stats-grid">
+    <mat-card class="stat-card pending">
+      <mat-icon>schedule</mat-icon>
+      <div class="stat-content">
+        <h2>{{ pendingRequests.length }}</h2>
+        <p>Pending Requests</p>
+      </div>
+    </mat-card>
+
+    <mat-card class="stat-card in-progress">
+      <mat-icon>autorenew</mat-icon>
+      <div class="stat-content">
+        <h2>{{ inProgressRequests.length }}</h2>
+        <p>In Progress</p>
+      </div>
+    </mat-card>
+
+    <mat-card class="stat-card fulfilled">
+      <mat-icon>check_circle</mat-icon>
+      <div class="stat-content">
+        <h2>{{ fulfilledRequests.length }}</h2>
+        <p>Fulfilled</p>
+      </div>
+    </mat-card>
+
+    <mat-card class="stat-card total">
+      <mat-icon>assignment</mat-icon>
+      <div class="stat-content">
+        <h2>{{ requests.length }}</h2>
+        <p>Total Requests</p>
+      </div>
+    </mat-card>
+  </div>
+
+  <!-- Requests Table with Tabs -->
+  <mat-card class="requests-card">
+    <mat-tab-group>
+      <!-- All Requests Tab -->
+      <mat-tab>
+        <ng-template mat-tab-label>
+          <mat-icon>list</mat-icon>
+          All Requests
+          <span class="tab-badge">{{ requests.length }}</span>
+        </ng-template>
+        <div class="tab-content">
+          <div class="table-container">
+            <table mat-table [dataSource]="requests" class="requests-table">
+              <!-- Company Column -->
+              <ng-container matColumnDef="company">
+                <th mat-header-cell *matHeaderCellDef>Company</th>
+                <td mat-cell *matCellDef="let request">
+                  <div class="company-cell">
+                    <mat-icon>business</mat-icon>
+                    <span>{{ request.companyName }}</span>
+                  </div>
+                </td>
+              </ng-container>
+
+              <!-- Job Title Column -->
+              <ng-container matColumnDef="jobTitle">
+                <th mat-header-cell *matHeaderCellDef>Position</th>
+                <td mat-cell *matCellDef="let request">{{ request.jobTitle }}</td>
+              </ng-container>
+
+              <!-- Request Type Column -->
+              <ng-container matColumnDef="requestType">
+                <th mat-header-cell *matHeaderCellDef>Type</th>
+                <td mat-cell *matCellDef="let request">
+                  <mat-chip [class]="request.requestType === 'open-job' ? 'type-open' : 'type-direct'">
+                    <mat-icon>{{ getRequestTypeIcon(request.requestType) }}</mat-icon>
+                    {{ getRequestTypeLabel(request.requestType) }}
+                  </mat-chip>
+                </td>
+              </ng-container>
+
+              <!-- Requested Date Column -->
+              <ng-container matColumnDef="requested">
+                <th mat-header-cell *matHeaderCellDef>Requested</th>
+                <td mat-cell *matCellDef="let request">{{ request.requestedDate | date:'short' }}</td>
+              </ng-container>
+
+              <!-- Progress Column -->
+              <ng-container matColumnDef="progress">
+                <th mat-header-cell *matHeaderCellDef>Progress</th>
+                <td mat-cell *matCellDef="let request">
+                  <div class="progress-cell">
+                    <div class="progress-mini">
+                      <div class="progress-fill" [style.width.%]="getProgressPercentage(request)"></div>
+                    </div>
+                    <span class="progress-text">
+                      {{ request.matchedCandidates }}/{{ request.numberOfCandidates }}
+                    </span>
+                  </div>
+                </td>
+              </ng-container>
+
+              <!-- Status Column -->
+              <ng-container matColumnDef="status">
+                <th mat-header-cell *matHeaderCellDef>Status</th>
+                <td mat-cell *matCellDef="let request">
+                  <mat-chip [class]="getStatusClass(request.status)">
+                    <mat-icon>{{ getStatusIcon(request.status) }}</mat-icon>
+                    {{ request.status }}
+                  </mat-chip>
+                </td>
+              </ng-container>
+
+              <!-- Priority Column -->
+              <ng-container matColumnDef="priority">
+                <th mat-header-cell *matHeaderCellDef>Priority</th>
+                <td mat-cell *matCellDef="let request">
+                  <mat-chip [class]="getPriorityClass(request.priority)">
+                    {{ request.priority }}
+                  </mat-chip>
+                </td>
+              </ng-container>
+
+              <!-- Officer Column -->
+              <ng-container matColumnDef="officer">
+                <th mat-header-cell *matHeaderCellDef>Assigned Officer</th>
+                <td mat-cell *matCellDef="let request">
+                  <mat-form-field appearance="outline" class="officer-select">
+                    <mat-select [(ngModel)]="request.assignedOfficer" 
+                                (selectionChange)="assignToOfficer(request, request.assignedOfficer || '')"
+                                placeholder="Assign...">
+                      <mat-option [value]="undefined">Unassigned</mat-option>
+                      <mat-option *ngFor="let officer of placementOfficers" [value]="officer">
+                        {{ officer }}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </td>
+              </ng-container>
+
+              <!-- Actions Column -->
+              <ng-container matColumnDef="actions">
+                <th mat-header-cell *matHeaderCellDef>Actions</th>
+                <td mat-cell *matCellDef="let request">
+                  <div class="action-buttons">
+                    <button mat-icon-button [matTooltip]="'View Details'" (click)="viewRequestDetails(request)">
+                      <mat-icon>visibility</mat-icon>
+                    </button>
+                    <button mat-icon-button [matTooltip]="'Mark as Fulfilled'" 
+                            (click)="markAsFulfilled(request)"
+                            *ngIf="request.status === 'in-progress'"
+                            color="primary">
+                      <mat-icon>check_circle</mat-icon>
+                    </button>
+                  </div>
+                </td>
+              </ng-container>
+
+              <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+              <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+            </table>
+          </div>
+        </div>
+      </mat-tab>
+
+      <!-- Pending Tab -->
+      <mat-tab>
+        <ng-template mat-tab-label>
+          <mat-icon>schedule</mat-icon>
+          Pending
+          <span class="tab-badge pending" *ngIf="pendingRequests.length > 0">
+            {{ pendingRequests.length }}
+          </span>
+        </ng-template>
+        <div class="tab-content">
+          <div class="table-container" *ngIf="pendingRequests.length > 0; else noData">
+            <table mat-table [dataSource]="pendingRequests" class="requests-table">
+              <ng-container matColumnDef="company">
+                <th mat-header-cell *matHeaderCellDef>Company</th>
+                <td mat-cell *matCellDef="let request">
+                  <div class="company-cell">
+                    <mat-icon>business</mat-icon>
+                    <span>{{ request.companyName }}</span>
+                  </div>
+                </td>
+              </ng-container>
+              <ng-container matColumnDef="jobTitle">
+                <th mat-header-cell *matHeaderCellDef>Position</th>
+                <td mat-cell *matCellDef="let request">{{ request.jobTitle }}</td>
+              </ng-container>
+              <ng-container matColumnDef="requestType">
+                <th mat-header-cell *matHeaderCellDef>Type</th>
+                <td mat-cell *matCellDef="let request">
+                  <mat-chip [class]="request.requestType === 'open-job' ? 'type-open' : 'type-direct'">
+                    <mat-icon>{{ getRequestTypeIcon(request.requestType) }}</mat-icon>
+                    {{ getRequestTypeLabel(request.requestType) }}
+                  </mat-chip>
+                </td>
+              </ng-container>
+              <ng-container matColumnDef="requested">
+                <th mat-header-cell *matHeaderCellDef>Requested</th>
+                <td mat-cell *matCellDef="let request">{{ request.requestedDate | date:'short' }}</td>
+              </ng-container>
+              <ng-container matColumnDef="progress">
+                <th mat-header-cell *matHeaderCellDef>Progress</th>
+                <td mat-cell *matCellDef="let request">
+                  <div class="progress-cell">
+                    <span class="progress-text">{{ request.matchedCandidates }}/{{ request.numberOfCandidates }}</span>
+                  </div>
+                </td>
+              </ng-container>
+              <ng-container matColumnDef="status">
+                <th mat-header-cell *matHeaderCellDef>Status</th>
+                <td mat-cell *matCellDef="let request">
+                  <mat-chip [class]="getStatusClass(request.status)">
+                    <mat-icon>{{ getStatusIcon(request.status) }}</mat-icon>
+                    {{ request.status }}
+                  </mat-chip>
+                </td>
+              </ng-container>
+              <ng-container matColumnDef="priority">
+                <th mat-header-cell *matHeaderCellDef>Priority</th>
+                <td mat-cell *matCellDef="let request">
+                  <mat-chip [class]="getPriorityClass(request.priority)">{{ request.priority }}</mat-chip>
+                </td>
+              </ng-container>
+              <ng-container matColumnDef="officer">
+                <th mat-header-cell *matHeaderCellDef>Assigned Officer</th>
+                <td mat-cell *matCellDef="let request">
+                  <mat-form-field appearance="outline" class="officer-select">
+                    <mat-select [(ngModel)]="request.assignedOfficer" 
+                                (selectionChange)="assignToOfficer(request, request.assignedOfficer || '')"
+                                placeholder="Assign...">
+                      <mat-option [value]="undefined">Unassigned</mat-option>
+                      <mat-option *ngFor="let officer of placementOfficers" [value]="officer">{{ officer }}</mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </td>
+              </ng-container>
+              <ng-container matColumnDef="actions">
+                <th mat-header-cell *matHeaderCellDef>Actions</th>
+                <td mat-cell *matCellDef="let request">
+                  <div class="action-buttons">
+                    <button mat-icon-button [matTooltip]="'View Details'" (click)="viewRequestDetails(request)">
+                      <mat-icon>visibility</mat-icon>
+                    </button>
+                  </div>
+                </td>
+              </ng-container>
+              <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+              <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+            </table>
+          </div>
+        </div>
+      </mat-tab>
+
+      <!-- In Progress Tab -->
+      <mat-tab>
+        <ng-template mat-tab-label>
+          <mat-icon>autorenew</mat-icon>
+          In Progress
+          <span class="tab-badge in-progress" *ngIf="inProgressRequests.length > 0">
+            {{ inProgressRequests.length }}
+          </span>
+        </ng-template>
+        <div class="tab-content">
+          <div class="table-container" *ngIf="inProgressRequests.length > 0; else noData">
+            <table mat-table [dataSource]="inProgressRequests" class="requests-table">
+              <ng-container matColumnDef="company">
+                <th mat-header-cell *matHeaderCellDef>Company</th>
+                <td mat-cell *matCellDef="let request">
+                  <div class="company-cell">
+                    <mat-icon>business</mat-icon>
+                    <span>{{ request.companyName }}</span>
+                  </div>
+                </td>
+              </ng-container>
+              <ng-container matColumnDef="jobTitle">
+                <th mat-header-cell *matHeaderCellDef>Position</th>
+                <td mat-cell *matCellDef="let request">{{ request.jobTitle }}</td>
+              </ng-container>
+              <ng-container matColumnDef="requestType">
+                <th mat-header-cell *matHeaderCellDef>Type</th>
+                <td mat-cell *matCellDef="let request">
+                  <mat-chip [class]="request.requestType === 'open-job' ? 'type-open' : 'type-direct'">
+                    <mat-icon>{{ getRequestTypeIcon(request.requestType) }}</mat-icon>
+                    {{ getRequestTypeLabel(request.requestType) }}
+                  </mat-chip>
+                </td>
+              </ng-container>
+              <ng-container matColumnDef="requested">
+                <th mat-header-cell *matHeaderCellDef>Requested</th>
+                <td mat-cell *matCellDef="let request">{{ request.requestedDate | date:'short' }}</td>
+              </ng-container>
+              <ng-container matColumnDef="progress">
+                <th mat-header-cell *matHeaderCellDef>Progress</th>
+                <td mat-cell *matCellDef="let request">
+                  <div class="progress-cell">
+                    <div class="progress-mini">
+                      <div class="progress-fill" [style.width.%]="getProgressPercentage(request)"></div>
+                    </div>
+                    <span class="progress-text">{{ request.matchedCandidates }}/{{ request.numberOfCandidates }}</span>
+                  </div>
+                </td>
+              </ng-container>
+              <ng-container matColumnDef="status">
+                <th mat-header-cell *matHeaderCellDef>Status</th>
+                <td mat-cell *matCellDef="let request">
+                  <mat-chip [class]="getStatusClass(request.status)">
+                    <mat-icon>{{ getStatusIcon(request.status) }}</mat-icon>
+                    {{ request.status }}
+                  </mat-chip>
+                </td>
+              </ng-container>
+              <ng-container matColumnDef="priority">
+                <th mat-header-cell *matHeaderCellDef>Priority</th>
+                <td mat-cell *matCellDef="let request">
+                  <mat-chip [class]="getPriorityClass(request.priority)">{{ request.priority }}</mat-chip>
+                </td>
+              </ng-container>
+              <ng-container matColumnDef="officer">
+                <th mat-header-cell *matHeaderCellDef>Assigned Officer</th>
+                <td mat-cell *matCellDef="let request">
+                  <span class="officer-name">{{ request.assignedOfficer }}</span>
+                </td>
+              </ng-container>
+              <ng-container matColumnDef="actions">
+                <th mat-header-cell *matHeaderCellDef>Actions</th>
+                <td mat-cell *matCellDef="let request">
+                  <div class="action-buttons">
+                    <button mat-icon-button [matTooltip]="'View Details'" (click)="viewRequestDetails(request)">
+                      <mat-icon>visibility</mat-icon>
+                    </button>
+                    <button mat-icon-button [matTooltip]="'Mark as Fulfilled'" 
+                            (click)="markAsFulfilled(request)"
+                            color="primary">
+                      <mat-icon>check_circle</mat-icon>
+                    </button>
+                  </div>
+                </td>
+              </ng-container>
+              <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+              <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+            </table>
+          </div>
+        </div>
+      </mat-tab>
+
+      <!-- Fulfilled Tab -->
+      <mat-tab>
+        <ng-template mat-tab-label>
+          <mat-icon>check_circle</mat-icon>
+          Fulfilled
+          <span class="tab-badge fulfilled" *ngIf="fulfilledRequests.length > 0">
+            {{ fulfilledRequests.length }}
+          </span>
+        </ng-template>
+        <div class="tab-content">
+          <div class="table-container" *ngIf="fulfilledRequests.length > 0; else noData">
+            <table mat-table [dataSource]="fulfilledRequests" class="requests-table">
+              <ng-container matColumnDef="company">
+                <th mat-header-cell *matHeaderCellDef>Company</th>
+                <td mat-cell *matCellDef="let request">
+                  <div class="company-cell">
+                    <mat-icon>business</mat-icon>
+                    <span>{{ request.companyName }}</span>
+                  </div>
+                </td>
+              </ng-container>
+              <ng-container matColumnDef="jobTitle">
+                <th mat-header-cell *matHeaderCellDef>Position</th>
+                <td mat-cell *matCellDef="let request">{{ request.jobTitle }}</td>
+              </ng-container>
+              <ng-container matColumnDef="requestType">
+                <th mat-header-cell *matHeaderCellDef>Type</th>
+                <td mat-cell *matCellDef="let request">
+                  <mat-chip [class]="request.requestType === 'open-job' ? 'type-open' : 'type-direct'">
+                    <mat-icon>{{ getRequestTypeIcon(request.requestType) }}</mat-icon>
+                    {{ getRequestTypeLabel(request.requestType) }}
+                  </mat-chip>
+                </td>
+              </ng-container>
+              <ng-container matColumnDef="requested">
+                <th mat-header-cell *matHeaderCellDef>Requested</th>
+                <td mat-cell *matCellDef="let request">{{ request.requestedDate | date:'short' }}</td>
+              </ng-container>
+              <ng-container matColumnDef="progress">
+                <th mat-header-cell *matHeaderCellDef>Candidates</th>
+                <td mat-cell *matCellDef="let request">
+                  <div class="fulfilled-count">
+                    <mat-icon>people</mat-icon>
+                    {{ request.matchedCandidates }}
+                  </div>
+                </td>
+              </ng-container>
+              <ng-container matColumnDef="status">
+                <th mat-header-cell *matHeaderCellDef>Status</th>
+                <td mat-cell *matCellDef="let request">
+                  <mat-chip [class]="getStatusClass(request.status)">
+                    <mat-icon>{{ getStatusIcon(request.status) }}</mat-icon>
+                    {{ request.status }}
+                  </mat-chip>
+                </td>
+              </ng-container>
+              <ng-container matColumnDef="priority">
+                <th mat-header-cell *matHeaderCellDef>Priority</th>
+                <td mat-cell *matCellDef="let request">
+                  <mat-chip [class]="getPriorityClass(request.priority)">{{ request.priority }}</mat-chip>
+                </td>
+              </ng-container>
+              <ng-container matColumnDef="officer">
+                <th mat-header-cell *matHeaderCellDef>Assigned Officer</th>
+                <td mat-cell *matCellDef="let request">
+                  <span class="officer-name">{{ request.assignedOfficer }}</span>
+                </td>
+              </ng-container>
+              <ng-container matColumnDef="actions">
+                <th mat-header-cell *matHeaderCellDef>Actions</th>
+                <td mat-cell *matCellDef="let request">
+                  <button mat-icon-button [matTooltip]="'View Details'" (click)="viewRequestDetails(request)">
+                    <mat-icon>visibility</mat-icon>
+                  </button>
+                </td>
+              </ng-container>
+              <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+              <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+            </table>
+          </div>
+        </div>
+      </mat-tab>
+    </mat-tab-group>
+  </mat-card>
+
+  <ng-template #noData>
+    <div class="no-data">
+      <mat-icon>inbox</mat-icon>
+      <h3>No requests in this category</h3>
+    </div>
+  </ng-template>
+</div>

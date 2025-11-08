@@ -19,6 +19,16 @@ html, body {
   max-width: 100%;
   overflow-x: hidden;
   box-sizing: border-box;
+  
+  /* Hide scrollbars globally */
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
+
+/* Hide scrollbar for Chrome, Safari and Opera */
+html::-webkit-scrollbar,
+body::-webkit-scrollbar {
+  display: none;
 }
 
 body {

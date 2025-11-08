@@ -6,6 +6,7 @@ import { MatChipsModule } from '@angular/material/chips';
 import { MatTableModule } from '@angular/material/table';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatDialogModule, MatDialog } from '@angular/material/dialog';
 import { CommonModule } from '@angular/common';
 
 interface Assignment {
@@ -34,7 +35,8 @@ interface Assignment {
     MatChipsModule,
     MatTableModule,
     MatTabsModule,
-    MatTooltipModule
+    MatTooltipModule,
+    MatDialogModule
   ],
   templateUrl: './assignments.component.html',
   styleUrls: ['./assignments.component.scss']
@@ -88,6 +90,10 @@ export class LmsAssignmentsComponent implements OnInit {
   ];
 
   displayedColumns: string[] = ['title', 'dueDate', 'status', 'priority', 'grade', 'actions'];
+  selectedAssignment: Assignment | null = null;
+  showDetailsModal = false;
+
+  constructor(public dialog: MatDialog) {}
 
   ngOnInit() {
     // Load assignments from API
@@ -170,8 +176,13 @@ export class LmsAssignmentsComponent implements OnInit {
   }
 
   viewAssignment(assignment: Assignment) {
-    console.log('View assignment:', assignment);
-    // Open assignment detail modal
+    this.selectedAssignment = assignment;
+    this.showDetailsModal = true;
+  }
+
+  closeDetailsModal() {
+    this.showDetailsModal = false;
+    this.selectedAssignment = null;
   }
 
   submitAssignment(assignment: Assignment) {

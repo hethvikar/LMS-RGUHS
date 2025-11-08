@@ -21,9 +21,9 @@ public class AuthService : IAuthService
         _configuration = configuration;
     }
 
-    public async Task<(bool Success, string Token, string Message, User user)> LoginAsync(string email, string password)
+    public async Task<(bool Success, string Token, string Message, User user)> LoginAsync(string email, string password, string role)
     {
-        var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == email && u.PasswordHash == password && u.IsActive);
+        var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == email && u.PasswordHash == password && u.Role == role && u.IsActive);
         if (user == null)
             return (false, null, "Invalid email or password", user);
         user.PasswordHash = "";

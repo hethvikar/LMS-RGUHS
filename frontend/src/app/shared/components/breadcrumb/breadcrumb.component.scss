@@ -1,0 +1,210 @@
+.breadcrumb-container {
+  padding: 8px 16px;
+  background-color: var(--mat-sys-surface-container-low, #f8f9fa);
+  border-bottom: 1px solid var(--mat-sys-outline-variant, #e0e0e0);
+  min-height: 48px;
+  display: flex;
+  align-items: center;
+  position: relative;
+  overflow-x: auto;
+  
+  // Material Design elevation
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+}
+
+.breadcrumb-list {
+  display: flex;
+  align-items: center;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  flex-wrap: nowrap;
+  min-width: fit-content;
+}
+
+.breadcrumb-item {
+  display: flex;
+  align-items: center;
+  white-space: nowrap;
+
+  &:not(:last-child) {
+    margin-right: 4px;
+  }
+
+  &.active {
+    .breadcrumb-current {
+      color: var(--mat-sys-primary, #1976d2);
+      font-weight: 500;
+    }
+  }
+}
+
+.breadcrumb-link {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  color: var(--mat-sys-on-surface-variant, #666);
+  padding: 6px 8px;
+  border-radius: 4px;
+  transition: all 0.2s ease-in-out;
+  min-height: 32px;
+
+  &:hover {
+    background-color: var(--mat-sys-primary-container, rgba(25, 118, 210, 0.1));
+    color: var(--mat-sys-on-primary-container, #1976d2);
+    text-decoration: none;
+  }
+
+  &:focus {
+    outline: 2px solid var(--mat-sys-primary, #1976d2);
+    outline-offset: 2px;
+  }
+}
+
+.breadcrumb-current {
+  display: flex;
+  align-items: center;
+  color: var(--mat-sys-on-surface, #333);
+  padding: 6px 8px;
+  font-weight: 500;
+}
+
+.breadcrumb-icon {
+  font-size: 18px;
+  width: 18px;
+  height: 18px;
+  margin-right: 6px;
+  vertical-align: middle;
+
+  &.current {
+    color: var(--mat-sys-primary, #1976d2);
+  }
+}
+
+.breadcrumb-label {
+  font-size: 14px;
+  line-height: 1.4;
+  vertical-align: middle;
+}
+
+.breadcrumb-separator {
+  font-size: 16px;
+  width: 16px;
+  height: 16px;
+  color: var(--mat-sys-on-surface-variant, #999);
+  margin: 0 4px;
+  flex-shrink: 0;
+}
+
+// Responsive design
+@media (max-width: 768px) {
+  .breadcrumb-container {
+    padding: 6px 12px;
+    min-height: 42px;
+  }
+
+  .breadcrumb-label {
+    font-size: 13px;
+  }
+
+  .breadcrumb-icon {
+    font-size: 16px;
+    width: 16px;
+    height: 16px;
+    margin-right: 4px;
+  }
+
+  .breadcrumb-separator {
+    font-size: 14px;
+    width: 14px;
+    height: 14px;
+    margin: 0 2px;
+  }
+
+  .breadcrumb-link,
+  .breadcrumb-current {
+    padding: 4px 6px;
+  }
+}
+
+@media (max-width: 480px) {
+  .breadcrumb-container {
+    padding: 4px 8px;
+    min-height: 36px;
+  }
+
+  .breadcrumb-label {
+    font-size: 12px;
+  }
+
+  // Hide icons on very small screens to save space
+  .breadcrumb-icon {
+    display: none;
+  }
+
+  .breadcrumb-link,
+  .breadcrumb-current {
+    padding: 3px 4px;
+  }
+
+  .breadcrumb-separator {
+    margin: 0 1px;
+  }
+}
+
+// Dark theme support
+@media (prefers-color-scheme: dark) {
+  .breadcrumb-container {
+    background-color: var(--mat-sys-surface-container-low, #2c2c2c);
+    border-bottom-color: var(--mat-sys-outline-variant, #404040);
+    color: var(--mat-sys-on-surface, #e0e0e0);
+  }
+
+  .breadcrumb-link {
+    color: var(--mat-sys-on-surface-variant, #b0b0b0);
+
+    &:hover {
+      background-color: var(--mat-sys-primary-container, rgba(144, 202, 249, 0.1));
+      color: var(--mat-sys-on-primary-container, #90caf9);
+    }
+  }
+
+  .breadcrumb-current {
+    color: var(--mat-sys-on-surface, #e0e0e0);
+  }
+
+  .breadcrumb-separator {
+    color: var(--mat-sys-on-surface-variant, #808080);
+  }
+}
+
+// High contrast mode support
+@media (prefers-contrast: high) {
+  .breadcrumb-container {
+    border-bottom-width: 2px;
+  }
+
+  .breadcrumb-link {
+    &:hover,
+    &:focus {
+      background-color: var(--mat-sys-primary, #1976d2);
+      color: var(--mat-sys-on-primary, #fff);
+    }
+  }
+}
+
+// Animation for breadcrumb updates
+.breadcrumb-item {
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateX(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}

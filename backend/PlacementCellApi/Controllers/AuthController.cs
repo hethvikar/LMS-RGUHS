@@ -18,7 +18,7 @@ public class AuthController : ControllerBase
     [HttpPost("login")]
     public async Task<IActionResult> Login([FromBody] LoginRequest request)
     {
-        var (success, token, message, user) = await _authService.LoginAsync(request.Email, request.Password);
+        var (success, token, message, user) = await _authService.LoginAsync(request.Email, request.Password, request.Role);
 
         if (!success)
             return BadRequest(new { message });
@@ -67,6 +67,7 @@ public class LoginRequest
 {
     public string Email { get; set; }
     public string Password { get; set; }
+    public string  Role { get; set; }
 }
 
 public class RegisterRequest

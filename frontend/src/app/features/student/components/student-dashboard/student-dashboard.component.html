@@ -1,65 +1,72 @@
 <div class="student-dashboard-container">
-  <div class="dashboard-header">
-    <h1>Student Dashboard</h1>
-    <p>Manage your profile and applications</p>
-  </div>
-
   <div class="dashboard-grid">
-    <mat-card class="dashboard-card gradient-blue">
+    <mat-card class="dashboard-card gradient-ocean">
       <mat-card-header>
+        <div mat-card-avatar class="card-icon">
+          <mat-icon>person</mat-icon>
+        </div>
         <mat-card-title>Profile</mat-card-title>
-        <mat-icon>person</mat-icon>
+        <mat-card-subtitle>Personal Information</mat-card-subtitle>
       </mat-card-header>
       <mat-card-content>
         <p>View and update your profile information</p>
       </mat-card-content>
       <mat-card-actions>
-        <button mat-raised-button (click)="navigateToProfile()">
+        <button mat-raised-button color="primary" (click)="navigateToProfile()">
           View Profile
         </button>
       </mat-card-actions>
     </mat-card>
 
-    <mat-card class="dashboard-card gradient-orange">
+    <mat-card class="dashboard-card gradient-card">
       <mat-card-header>
+        <div mat-card-avatar class="card-icon">
+          <mat-icon>work</mat-icon>
+        </div>
         <mat-card-title>Job Applications</mat-card-title>
-        <mat-icon>work</mat-icon>
+        <mat-card-subtitle>Application Management</mat-card-subtitle>
       </mat-card-header>
       <mat-card-content>
         <p>View and manage your job applications</p>
       </mat-card-content>
       <mat-card-actions>
-        <button mat-raised-button (click)="navigateToApplications()">
+        <button mat-raised-button color="primary" (click)="navigateToApplications()">
           View Applications
         </button>
       </mat-card-actions>
     </mat-card>
 
-    <mat-card class="dashboard-card gradient-mint">
+    <mat-card class="dashboard-card gradient-peach">
       <mat-card-header>
+        <div mat-card-avatar class="card-icon">
+          <mat-icon>event</mat-icon>
+        </div>
         <mat-card-title>Interviews</mat-card-title>
-        <mat-icon>event</mat-icon>
+        <mat-card-subtitle>Scheduled Interviews</mat-card-subtitle>
       </mat-card-header>
       <mat-card-content>
         <p>Check your upcoming interviews</p>
       </mat-card-content>
       <mat-card-actions>
-        <button mat-raised-button (click)="navigateToInterviews()">
+        <button mat-raised-button color="primary" (click)="navigateToInterviews()">
           View Interviews
         </button>
       </mat-card-actions>
     </mat-card>
 
-    <mat-card class="dashboard-card gradient-purple">
+    <mat-card class="dashboard-card gradient-crimson">
       <mat-card-header>
+        <div mat-card-avatar class="card-icon">
+          <mat-icon>trending_up</mat-icon>
+        </div>
         <mat-card-title>Placement Status</mat-card-title>
-        <mat-icon>trending_up</mat-icon>
+        <mat-card-subtitle>Current Progress</mat-card-subtitle>
       </mat-card-header>
       <mat-card-content>
         <p>Check your current placement status</p>
       </mat-card-content>
       <mat-card-actions>
-        <button mat-raised-button (click)="navigateToPlacementStatus()">
+        <button mat-raised-button color="primary" (click)="navigateToPlacementStatus()">
           View Status
         </button>
       </mat-card-actions>

@@ -33,6 +33,11 @@ import { MatButtonModule } from '@angular/material/button';
             <span matListItemTitle>Dashboard</span>
           </a>
           
+          <a mat-list-item routerLink="/student/jobs" routerLinkActive="active">
+            <mat-icon matListItemIcon>work_outline</mat-icon>
+            <span matListItemTitle>Jobs</span>
+          </a>
+          
           <a mat-list-item routerLink="/student/profile" routerLinkActive="active">
             <mat-icon matListItemIcon>account_circle</mat-icon>
             <span matListItemTitle>Profile</span>
@@ -76,6 +81,8 @@ import { MatButtonModule } from '@angular/material/button';
       background: linear-gradient(180deg, #4facfe 0%, #00f2fe 100%);
       color: white;
       padding: 0;
+      overflow-x: hidden;
+      overflow-y: auto;
     }
 
     .sidebar-header {
@@ -135,10 +142,16 @@ import { MatButtonModule } from '@angular/material/button';
       padding: 0;
       background: #f5f5f5;
       overflow-x: hidden;
+      overflow-y: auto;
     }
 
     ::ng-deep .mat-drawer-inner-container {
-      overflow: visible !important;
+      overflow-x: hidden !important;
+      overflow-y: auto !important;
+    }
+
+    ::ng-deep .mat-sidenav-container {
+      overflow: hidden !important;
     }
   `]
 })

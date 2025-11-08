@@ -145,7 +145,14 @@ export class AssessmentTakingComponent implements OnInit, OnDestroy {
 
   get currentAnswer(): any {
     const answer = this.answers.find(a => a.questionId === this.currentQuestion.id);
-    return answer ? answer.answer : null;
+    if (!answer) return null;
+    
+    // For multiple-select questions, ensure we return an array
+    if (this.currentQuestion.type === 'multiple-select') {
+      return answer.answer || [];
+    }
+    
+    return answer.answer;
   }
 
   set currentAnswer(value: any) {
@@ -161,7 +168,7 @@ export class AssessmentTakingComponent implements OnInit, OnDestroy {
   initializeAnswers() {
     this.answers = this.assessment.questions.map(question => ({
       questionId: question.id,
-      answer: null
+      answer: question.type === 'multiple-select' ? [] : null
     }));
   }
 
@@ -222,6 +229,15 @@ export class AssessmentTakingComponent implements OnInit, OnDestroy {
 
   goToQuestion(index: number) {
     this.currentQuestionIndex = index;
+    
+    // Ensure multi-select answers are initialized as arrays
+    const question = this.assessment.questions[index];
+    if (question.type === 'multiple-select') {
+      const answer = this.answers.find(a => a.questionId === question.id);
+      if (answer && !Array.isArray(answer.answer)) {
+        answer.answer = [];
+      }
+    }
   }
 
   previousQuestion() {

@@ -1,0 +1,292 @@
+<div class="register-container">
+  <mat-card class="register-card">
+    <mat-card-header>
+      <div class="header-content">
+        <mat-icon class="register-icon">business</mat-icon>
+        <div>
+          <mat-card-title>Company Registration</mat-card-title>
+          <mat-card-subtitle>Join our placement network</mat-card-subtitle>
+        </div>
+      </div>
+    </mat-card-header>
+
+    <mat-card-content>
+      <mat-stepper #stepper linear>
+        <!-- Step 1: Company Information -->
+        <mat-step [stepControl]="companyInfoForm">
+          <ng-template matStepLabel>Company Information</ng-template>
+          <form [formGroup]="companyInfoForm" class="step-form">
+            <div class="form-section">
+              <h3>Company Details</h3>
+
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Company Name</mat-label>
+                <input matInput formControlName="companyName" placeholder="Enter legal company name" required>
+                <mat-icon matPrefix>business</mat-icon>
+                <mat-error *ngIf="companyInfoForm.get('companyName')?.hasError('required')">
+                  Company name is required
+                </mat-error>
+                <mat-error *ngIf="companyInfoForm.get('companyName')?.hasError('minlength')">
+                  Company name must be at least 3 characters
+                </mat-error>
+              </mat-form-field>
+
+              <div class="form-row">
+                <mat-form-field appearance="outline">
+                  <mat-label>Industry Domain</mat-label>
+                  <mat-select formControlName="industry" required>
+                    <mat-option *ngFor="let industry of industries" [value]="industry">
+                      {{ industry }}
+                    </mat-option>
+                  </mat-select>
+                  <mat-icon matPrefix>category</mat-icon>
+                  <mat-error>Industry is required</mat-error>
+                </mat-form-field>
+
+                <mat-form-field appearance="outline">
+                  <mat-label>Company Size</mat-label>
+                  <mat-select formControlName="companySize" required>
+                    <mat-option *ngFor="let size of companySizes" [value]="size">
+                      {{ size }}
+                    </mat-option>
+                  </mat-select>
+                  <mat-icon matPrefix>people</mat-icon>
+                  <mat-error>Company size is required</mat-error>
+                </mat-form-field>
+              </div>
+
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Company Website</mat-label>
+                <input matInput formControlName="website" placeholder="https://example.com" required>
+                <mat-icon matPrefix>language</mat-icon>
+                <mat-hint>Enter your official company website URL</mat-hint>
+                <mat-error *ngIf="companyInfoForm.get('website')?.hasError('required')">
+                  Website is required
+                </mat-error>
+                <mat-error *ngIf="companyInfoForm.get('website')?.hasError('pattern')">
+                  Please enter a valid URL
+                </mat-error>
+              </mat-form-field>
+
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Company Description</mat-label>
+                <textarea matInput formControlName="description" rows="4" 
+                          placeholder="Describe your company and what you do..." required></textarea>
+                <mat-hint align="end">{{ companyInfoForm.get('description')?.value?.length || 0 }}/500 (minimum 50 characters)</mat-hint>
+                <mat-error *ngIf="companyInfoForm.get('description')?.hasError('required')">
+                  Company description is required
+                </mat-error>
+                <mat-error *ngIf="companyInfoForm.get('description')?.hasError('minlength')">
+                  Description must be at least 50 characters
+                </mat-error>
+              </mat-form-field>
+            </div>
+
+            <div class="step-actions">
+              <button mat-raised-button color="primary" matStepperNext [disabled]="!companyInfoForm.valid">
+                Next
+                <mat-icon>arrow_forward</mat-icon>
+              </button>
+            </div>
+          </form>
+        </mat-step>
+
+        <!-- Step 2: Contact Details -->
+        <mat-step [stepControl]="contactDetailsForm">
+          <ng-template matStepLabel>Contact Details</ng-template>
+          <form [formGroup]="contactDetailsForm" class="step-form">
+            <div class="form-section">
+              <h3>Primary Contact Person</h3>
+
+              <div class="form-row">
+                <mat-form-field appearance="outline">
+                  <mat-label>Contact Person Name</mat-label>
+                  <input matInput formControlName="contactPersonName" placeholder="Full name" required>
+                  <mat-icon matPrefix>person</mat-icon>
+                  <mat-error>Contact person name is required</mat-error>
+                </mat-form-field>
+
+                <mat-form-field appearance="outline">
+                  <mat-label>Designation</mat-label>
+                  <input matInput formControlName="designation" placeholder="e.g., HR Manager" required>
+                  <mat-icon matPrefix>work</mat-icon>
+                  <mat-error>Designation is required</mat-error>
+                </mat-form-field>
+              </div>
+
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Official Email</mat-label>
+                <input matInput type="email" formControlName="officialEmail" 
+                       placeholder="name@company.com" required>
+                <mat-icon matPrefix>email</mat-icon>
+                <mat-hint>Use your company domain email only</mat-hint>
+                <mat-error *ngIf="contactDetailsForm.get('officialEmail')?.hasError('required')">
+                  Official email is required
+                </mat-error>
+                <mat-error *ngIf="contactDetailsForm.get('officialEmail')?.hasError('email')">
+                  Please enter a valid email
+                </mat-error>
+                <mat-error *ngIf="contactDetailsForm.get('officialEmail')?.hasError('nonCorporateEmail')">
+                  Please use your corporate email domain, not free email services
+                </mat-error>
+              </mat-form-field>
+
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Contact Phone</mat-label>
+                <input matInput formControlName="contactPhone" placeholder="10-15 digit phone number" required>
+                <mat-icon matPrefix>phone</mat-icon>
+                <mat-error *ngIf="contactDetailsForm.get('contactPhone')?.hasError('required')">
+                  Contact phone is required
+                </mat-error>
+                <mat-error *ngIf="contactDetailsForm.get('contactPhone')?.hasError('pattern')">
+                  Please enter a valid phone number (10-15 digits)
+                </mat-error>
+              </mat-form-field>
+
+              <div class="optional-section">
+                <h4>Optional Information</h4>
+                
+                <mat-form-field appearance="outline" class="full-width">
+                  <mat-label>HR Email (Optional)</mat-label>
+                  <input matInput type="email" formControlName="hrEmail" placeholder="hr@company.com">
+                  <mat-icon matPrefix>supervisor_account</mat-icon>
+                  <mat-error>Please enter a valid email</mat-error>
+                </mat-form-field>
+
+                <mat-form-field appearance="outline" class="full-width">
+                  <mat-label>LinkedIn Profile (Optional)</mat-label>
+                  <input matInput formControlName="linkedInProfile" 
+                         placeholder="https://linkedin.com/company/your-company">
+                  <mat-icon matPrefix>link</mat-icon>
+                  <mat-error>Please enter a valid LinkedIn URL</mat-error>
+                </mat-form-field>
+              </div>
+            </div>
+
+            <div class="step-actions">
+              <button mat-button matStepperPrevious>
+                <mat-icon>arrow_back</mat-icon>
+                Back
+              </button>
+              <button mat-raised-button color="primary" matStepperNext [disabled]="!contactDetailsForm.valid">
+                Next
+                <mat-icon>arrow_forward</mat-icon>
+              </button>
+            </div>
+          </form>
+        </mat-step>
+
+        <!-- Step 3: Verification & Security -->
+        <mat-step [stepControl]="verificationForm">
+          <ng-template matStepLabel>Verification</ng-template>
+          <form [formGroup]="verificationForm" class="step-form">
+            <div class="form-section">
+              <h3>Company Verification Details</h3>
+
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>GST Number</mat-label>
+                <input matInput formControlName="gstNumber" 
+                       placeholder="22AAAAA0000A1Z5" required maxlength="15">
+                <mat-icon matPrefix>receipt</mat-icon>
+                <mat-hint>15-character GST identification number</mat-hint>
+                <mat-error *ngIf="verificationForm.get('gstNumber')?.hasError('required')">
+                  GST number is required
+                </mat-error>
+                <mat-error *ngIf="verificationForm.get('gstNumber')?.hasError('pattern')">
+                  Invalid GST number format
+                </mat-error>
+              </mat-form-field>
+
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>CIN Number (Optional)</mat-label>
+                <input matInput formControlName="cinNumber" 
+                       placeholder="U72300KA2018PTC115546" maxlength="21">
+                <mat-icon matPrefix>verified_user</mat-icon>
+                <mat-hint>Corporate Identification Number (for registered companies)</mat-hint>
+                <mat-error>Invalid CIN number format</mat-error>
+              </mat-form-field>
+
+              <h3 class="section-title">Set Up Your Account</h3>
+
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Password</mat-label>
+                <input matInput [type]="hidePassword ? 'password' : 'text'" 
+                       formControlName="password" required>
+                <button mat-icon-button matSuffix (click)="hidePassword = !hidePassword" type="button">
+                  <mat-icon>{{ hidePassword ? 'visibility_off' : 'visibility' }}</mat-icon>
+                </button>
+                <mat-icon matPrefix>lock</mat-icon>
+                <mat-hint>Must contain uppercase, lowercase, number and special character</mat-hint>
+                <mat-error *ngIf="verificationForm.get('password')?.hasError('required')">
+                  Password is required
+                </mat-error>
+                <mat-error *ngIf="verificationForm.get('password')?.hasError('minlength')">
+                  Password must be at least 8 characters
+                </mat-error>
+                <mat-error *ngIf="verificationForm.get('password')?.hasError('weakPassword')">
+                  Password must contain uppercase, lowercase, number and special character
+                </mat-error>
+              </mat-form-field>
+
+              <div *ngIf="verificationForm.get('password')?.value" class="password-strength">
+                <span>Password Strength: </span>
+                <span [class]="'strength-' + getPasswordStrength()">
+                  {{ getPasswordStrength().toUpperCase() }}
+                </span>
+              </div>
+
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Confirm Password</mat-label>
+                <input matInput [type]="hideConfirmPassword ? 'password' : 'text'" 
+                       formControlName="confirmPassword" required>
+                <button mat-icon-button matSuffix (click)="hideConfirmPassword = !hideConfirmPassword" type="button">
+                  <mat-icon>{{ hideConfirmPassword ? 'visibility_off' : 'visibility' }}</mat-icon>
+                </button>
+                <mat-icon matPrefix>lock</mat-icon>
+                <mat-error *ngIf="verificationForm.get('confirmPassword')?.hasError('required')">
+                  Please confirm your password
+                </mat-error>
+                <mat-error *ngIf="verificationForm.hasError('passwordMismatch')">
+                  Passwords do not match
+                </mat-error>
+              </mat-form-field>
+
+              <mat-checkbox formControlName="agreeTerms" class="terms-checkbox">
+                I agree to the <a href="#" target="_blank">Terms and Conditions</a> and 
+                <a href="#" target="_blank">Privacy Policy</a>
+              </mat-checkbox>
+
+              <div class="verification-note">
+                <mat-icon>info</mat-icon>
+                <p>
+                  <strong>Note:</strong> Your registration will be reviewed by our team. 
+                  We will verify your company details and get back to you within 24-48 hours.
+                </p>
+              </div>
+            </div>
+
+            <div class="step-actions">
+              <button mat-button matStepperPrevious>
+                <mat-icon>arrow_back</mat-icon>
+                Back
+              </button>
+              <button mat-raised-button color="primary" 
+                      (click)="submitRegistration()" 
+                      [disabled]="!verificationForm.valid">
+                <mat-icon>check_circle</mat-icon>
+                Submit Registration
+              </button>
+            </div>
+          </form>
+        </mat-step>
+      </mat-stepper>
+    </mat-card-content>
+
+    <mat-card-footer>
+      <p class="footer-text">
+        Already have an account? 
+        <a routerLink="/auth/login" class="login-link">Login here</a>
+      </p>
+    </mat-card-footer>
+  </mat-card>
+</div>

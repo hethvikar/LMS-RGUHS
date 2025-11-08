@@ -1,0 +1,283 @@
+<div class="job-details-container">
+  <!-- Loading State -->
+  <div class="loading-container" *ngIf="loading">
+    <mat-spinner diameter="50"></mat-spinner>
+    <p>Loading job details...</p>
+  </div>
+
+  <!-- Job Details -->
+  <div class="job-details-content" *ngIf="!loading && job">
+    <!-- Header -->
+    <div class="job-header">
+      <button mat-icon-button (click)="goBack()" class="back-button">
+        <mat-icon>arrow_back</mat-icon>
+      </button>
+      
+      <div class="header-content">
+        <div class="company-info">
+          <div class="company-logo" *ngIf="job.companyLogo">
+            <img [src]="job.companyLogo" [alt]="job.company">
+          </div>
+          <div class="company-logo-placeholder" *ngIf="!job.companyLogo">
+            <mat-icon>business</mat-icon>
+          </div>
+          
+          <div class="company-details">
+            <h1>{{ job.title }}</h1>
+            <h2>{{ job.company }}</h2>
+          </div>
+        </div>
+
+        <div class="header-actions">
+          <button mat-icon-button (click)="toggleBookmark()" [matTooltip]="job.isBookmarked ? 'Remove bookmark' : 'Bookmark'">
+            <mat-icon [class.bookmarked]="job.isBookmarked">
+              {{ job.isBookmarked ? 'bookmark' : 'bookmark_border' }}
+            </mat-icon>
+          </button>
+          <button mat-icon-button (click)="shareJob()" matTooltip="Share">
+            <mat-icon>share</mat-icon>
+          </button>
+          <button mat-icon-button [matMenuTriggerFor]="menu" matTooltip="More options">
+            <mat-icon>more_vert</mat-icon>
+          </button>
+          <mat-menu #menu="matMenu">
+            <button mat-menu-item (click)="reportJob()">
+              <mat-icon>flag</mat-icon>
+              <span>Report Job</span>
+            </button>
+          </mat-menu>
+        </div>
+      </div>
+
+      <!-- Match Score -->
+      <div class="match-score" *ngIf="job.matchScore" [style.background]="getMatchColor(job.matchScore)">
+        <div class="score-value">{{ job.matchScore }}%</div>
+        <div class="score-label">Match</div>
+      </div>
+    </div>
+
+    <!-- Quick Info -->
+    <mat-card class="quick-info-card">
+      <div class="info-grid">
+        <div class="info-item">
+          <mat-icon>location_on</mat-icon>
+          <div>
+            <div class="label">Location</div>
+            <div class="value">{{ job.location }}</div>
+          </div>
+        </div>
+        <div class="info-item">
+          <mat-icon>work_outline</mat-icon>
+          <div>
+            <div class="label">Job Type</div>
+            <div class="value">{{ job.type | titlecase }}</div>
+          </div>
+        </div>
+        <div class="info-item">
+          <mat-icon>trending_up</mat-icon>
+          <div>
+            <div class="label">Experience</div>
+            <div class="value">{{ job.experienceRequired }}</div>
+          </div>
+        </div>
+        <div class="info-item">
+          <mat-icon>payments</mat-icon>
+          <div>
+            <div class="label">Salary</div>
+            <div class="value">{{ job.salaryRange || 'Not disclosed' }}</div>
+          </div>
+        </div>
+        <div class="info-item">
+          <mat-icon>event</mat-icon>
+          <div>
+            <div class="label">Posted</div>
+            <div class="value">{{ getDaysAgo(job.postedDate) }} days ago</div>
+          </div>
+        </div>
+        <div class="info-item">
+          <mat-icon>alarm</mat-icon>
+          <div>
+            <div class="label">Deadline</div>
+            <div class="value" *ngIf="job.applicationDeadline">
+              {{ getDaysUntil(job.applicationDeadline) }} days left
+            </div>
+            <div class="value" *ngIf="!job.applicationDeadline">No deadline</div>
+          </div>
+        </div>
+      </div>
+    </mat-card>
+
+    <!-- Apply Button Section -->
+    <mat-card class="apply-card" *ngIf="job.status === 'active'">
+      <div class="apply-content">
+        <div class="apply-info">
+          <mat-icon>people</mat-icon>
+          <span>{{ job.applicationsCount }} people have applied</span>
+          <span *ngIf="job.openings" class="openings">• {{ job.openings }} opening{{ job.openings > 1 ? 's' : '' }}</span>
+        </div>
+        <button mat-raised-button color="primary" (click)="openApplyDialog()" *ngIf="!job.hasApplied" class="apply-button">
+          <mat-icon>send</mat-icon>
+          Apply Now
+        </button>
+        <div class="applied-badge" *ngIf="job.hasApplied">
+          <mat-icon>check_circle</mat-icon>
+          <span>Applied</span>
+        </div>
+      </div>
+    </mat-card>
+
+    <!-- Main Content -->
+    <div class="details-grid">
+      <!-- Left Column -->
+      <div class="left-column">
+        <!-- Job Description -->
+        <mat-card>
+          <mat-card-header>
+            <mat-icon mat-card-avatar>description</mat-icon>
+            <mat-card-title>Job Description</mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <p>{{ job.description }}</p>
+          </mat-card-content>
+        </mat-card>
+
+        <!-- Responsibilities -->
+        <mat-card *ngIf="job.responsibilities && job.responsibilities.length > 0">
+          <mat-card-header>
+            <mat-icon mat-card-avatar>task</mat-icon>
+            <mat-card-title>Key Responsibilities</mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <ul class="bullet-list">
+              <li *ngFor="let responsibility of job.responsibilities">
+                {{ responsibility }}
+              </li>
+            </ul>
+          </mat-card-content>
+        </mat-card>
+
+        <!-- Requirements -->
+        <mat-card *ngIf="job.requirements && job.requirements.length > 0">
+          <mat-card-header>
+            <mat-icon mat-card-avatar>checklist</mat-icon>
+            <mat-card-title>Requirements</mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <ul class="bullet-list">
+              <li *ngFor="let requirement of job.requirements">
+                {{ requirement }}
+              </li>
+            </ul>
+          </mat-card-content>
+        </mat-card>
+
+        <!-- Benefits -->
+        <mat-card *ngIf="job.benefits && job.benefits.length > 0">
+          <mat-card-header>
+            <mat-icon mat-card-avatar>card_giftcard</mat-icon>
+            <mat-card-title>Benefits & Perks</mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <div class="benefits-grid">
+              <div class="benefit-item" *ngFor="let benefit of job.benefits">
+                <mat-icon>check_circle</mat-icon>
+                <span>{{ benefit }}</span>
+              </div>
+            </div>
+          </mat-card-content>
+        </mat-card>
+      </div>
+
+      <!-- Right Column -->
+      <div class="right-column">
+        <!-- Skills Required -->
+        <mat-card *ngIf="job.skills && job.skills.length > 0">
+          <mat-card-header>
+            <mat-icon mat-card-avatar>engineering</mat-icon>
+            <mat-card-title>Skills Required</mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <mat-chip-set>
+              <mat-chip *ngFor="let skill of job.skills">
+                {{ skill }}
+              </mat-chip>
+            </mat-chip-set>
+          </mat-card-content>
+        </mat-card>
+
+        <!-- Job Details -->
+        <mat-card>
+          <mat-card-header>
+            <mat-icon mat-card-avatar>info</mat-icon>
+            <mat-card-title>Job Details</mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <div class="detail-row">
+              <span class="detail-label">Department:</span>
+              <span class="detail-value">{{ job.department }}</span>
+            </div>
+            <mat-divider></mat-divider>
+            <div class="detail-row">
+              <span class="detail-label">Experience Level:</span>
+              <span class="detail-value">{{ job.experienceLevel | titlecase }}</span>
+            </div>
+            <mat-divider></mat-divider>
+            <div class="detail-row" *ngIf="job.education">
+              <span class="detail-label">Education:</span>
+              <span class="detail-value">{{ job.education }}</span>
+            </div>
+            <mat-divider *ngIf="job.education"></mat-divider>
+            <div class="detail-row">
+              <span class="detail-label">Remote Work:</span>
+              <span class="detail-value">
+                <mat-icon [style.color]="job.remoteWork ? '#48bb78' : '#cbd5e0'">
+                  {{ job.remoteWork ? 'check_circle' : 'cancel' }}
+                </mat-icon>
+                {{ job.remoteWork ? 'Yes' : 'No' }}
+              </span>
+            </div>
+            <mat-divider></mat-divider>
+            <div class="detail-row">
+              <span class="detail-label">Status:</span>
+              <span class="detail-value">
+                <mat-chip [style.background]="job.status === 'active' ? '#48bb78' : '#e53e3e'" [style.color]="'white'">
+                  {{ job.status | titlecase }}
+                </mat-chip>
+              </span>
+            </div>
+          </mat-card-content>
+        </mat-card>
+
+        <!-- Similar Jobs (Coming Soon) -->
+        <mat-card class="similar-jobs-card">
+          <mat-card-header>
+            <mat-icon mat-card-avatar>work_outline</mat-icon>
+            <mat-card-title>Similar Jobs</mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <p class="coming-soon">Similar job recommendations coming soon...</p>
+          </mat-card-content>
+        </mat-card>
+      </div>
+    </div>
+
+    <!-- Bottom Apply Button -->
+    <div class="bottom-apply" *ngIf="job.status === 'active' && !job.hasApplied">
+      <button mat-raised-button color="primary" (click)="openApplyDialog()" class="apply-button-large">
+        <mat-icon>send</mat-icon>
+        Apply for this Position
+      </button>
+    </div>
+  </div>
+
+  <!-- Not Found State -->
+  <div class="not-found" *ngIf="!loading && !job">
+    <mat-icon>work_off</mat-icon>
+    <h2>Job Not Found</h2>
+    <p>The job you're looking for doesn't exist or has been removed.</p>
+    <button mat-raised-button color="primary" (click)="goBack()">
+      <mat-icon>arrow_back</mat-icon>
+      Back to Jobs
+    </button>
+  </div>
+</div>

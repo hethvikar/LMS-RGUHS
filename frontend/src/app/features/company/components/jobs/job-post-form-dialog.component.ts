@@ -27,6 +27,11 @@ interface JobPosting {
   education?: string;
   remoteWork?: boolean;
   applicationDeadline?: Date;
+  // Phase 2 fields
+  batchPreference?: string[]; // e.g., ['2024', '2023', 'Any']
+  numberOfCandidates?: number;
+  requestType?: 'open-job' | 'direct-request'; // Open job posting vs Direct candidate request
+  isDirectRequest?: boolean; // Shortcut for requestType === 'direct-request'
 }
 
 @Component({
@@ -123,6 +128,43 @@ interface JobPosting {
           <mat-form-field appearance="outline" class="form-field" *ngIf="!data">
             <mat-label>Application Deadline (Optional)</mat-label>
             <input matInput type="date" formControlName="applicationDeadline">
+          </mat-form-field>
+        </div>
+
+        <!-- Phase 2 Fields: Batch Preference & Candidate Count -->
+        <div class="form-row">
+          <mat-form-field appearance="outline" class="form-field">
+            <mat-label>Batch Preference</mat-label>
+            <mat-select formControlName="batchPreference" multiple>
+              <mat-option value="2024">2024 Batch</mat-option>
+              <mat-option value="2023">2023 Batch</mat-option>
+              <mat-option value="2022">2022 Batch</mat-option>
+              <mat-option value="2021">2021 Batch</mat-option>
+              <mat-option value="Any">Any Batch</mat-option>
+            </mat-select>
+            <mat-hint>Select one or more batch years</mat-hint>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="form-field">
+            <mat-label>Number of Candidates Needed</mat-label>
+            <input matInput type="number" formControlName="numberOfCandidates" min="1" placeholder="e.g., 5">
+            <mat-hint>How many candidates are you looking for?</mat-hint>
+          </mat-form-field>
+        </div>
+
+        <!-- Phase 2 Field: Request Type -->
+        <div class="request-type-section">
+          <h3 class="section-title">Request Type</h3>
+          <mat-form-field appearance="outline" class="form-field full-width">
+            <mat-label>Posting Type</mat-label>
+            <mat-select formControlName="requestType">
+              <mat-option value="open-job">Open Job Posting</mat-option>
+              <mat-option value="direct-request">Direct Candidate Request (Admin Only)</mat-option>
+            </mat-select>
+            <mat-hint>
+              <strong>Open Job:</strong> Visible to all students | 
+              <strong>Direct Request:</strong> Admin will search and share matching profiles
+            </mat-hint>
           </mat-form-field>
         </div>
 
@@ -261,6 +303,21 @@ interface JobPosting {
       margin-bottom: 24px;
     }
 
+    .request-type-section {
+      margin-bottom: 24px;
+      padding: 20px;
+      background: #f8f9fa;
+      border-radius: 8px;
+      border-left: 4px solid #667eea;
+    }
+
+    .section-title {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: #2c3e50;
+      margin: 0 0 16px 0;
+    }
+
     .dynamic-fields {
       margin: 32px 0;
     }
@@ -382,6 +439,10 @@ export class JobPostFormDialogComponent {
       description: [data?.description || '', [Validators.required, Validators.minLength(50)]],
       remoteWork: [data?.remoteWork || false],
       applicationDeadline: [data?.applicationDeadline || ''],
+      // Phase 2 fields
+      batchPreference: [data?.batchPreference || [], [Validators.required]],
+      numberOfCandidates: [data?.numberOfCandidates || 1, [Validators.required, Validators.min(1)]],
+      requestType: [data?.requestType || 'open-job', [Validators.required]],
       requirements: this.fb.array(
         data?.requirements?.length
           ? data.requirements.map(req => this.fb.control(req))
@@ -462,7 +523,12 @@ export class JobPostFormDialogComponent {
         experience: formValue.experience,
         education: formValue.education,
         remoteWork: formValue.remoteWork,
-        applicationDeadline: formValue.applicationDeadline ? new Date(formValue.applicationDeadline) : undefined
+        applicationDeadline: formValue.applicationDeadline ? new Date(formValue.applicationDeadline) : undefined,
+        // Phase 2 fields
+        batchPreference: formValue.batchPreference || [],
+        numberOfCandidates: formValue.numberOfCandidates || 1,
+        requestType: formValue.requestType || 'open-job',
+        isDirectRequest: formValue.requestType === 'direct-request'
       };
 
       this.dialogRef.close({ action: this.data ? 'update' : 'create', job: jobPosting });

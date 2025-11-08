@@ -1,55 +1,133 @@
 
     .dashboard-container {
-      padding: 16px;
+      padding: 24px;
       max-width: 1200px;
       margin: 0 auto;
+      background: #f8f9fa;
+      min-height: calc(100vh - 64px);
+      
+      @media (max-width: 768px) {
+        padding: 16px;
+      }
     }
 
     .dashboard-header {
       text-align: center;
-      margin-bottom: 24px;
-    }
+      margin-bottom: 32px;
+      padding: 24px 0;
+      background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+      border-radius: 12px;
+      border: 1px solid #e9ecef;
+      
+      h1 {
+        font-size: 1.75rem;
+        font-weight: 700;
+        margin-bottom: 8px;
+        color: #2c3e50;
+        letter-spacing: -0.5px;
+      }
 
-    .dashboard-header h1 {
-      font-size: 1.4rem;
-      font-weight: 600;
-      margin-bottom: 8px;
-      color: #333;
-    }
-
-    .dashboard-header p {
-      font-size: 0.9rem;
-      color: #666;
+      p {
+        font-size: 1rem;
+        color: #7f8c8d;
+        margin: 0;
+        font-weight: 400;
+      }
     }
 
     .dashboard-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-      gap: 16px;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 24px;
+      margin-bottom: 24px;
+      
+      @media (max-width: 768px) {
+        grid-template-columns: 1fr;
+        gap: 16px;
+      }
     }
 
+    // Professional card styling
     .dashboard-card {
       transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+      border-radius: 12px !important;
+      border: 1px solid #e0e0e0;
+      
+      &.professional-card {
+        background: #ffffff;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08) !important;
+      }
+
+      &:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12) !important;
+      }
+
+      mat-card-header {
+        margin-bottom: 16px;
+        
+        .mat-mdc-card-title {
+          font-size: 1.1rem;
+          font-weight: 600;
+          color: #2c3e50;
+          margin-bottom: 4px;
+        }
+        
+        .mat-mdc-card-subtitle {
+          font-size: 0.875rem;
+          color: #7f8c8d;
+          font-weight: 400;
+        }
+      }
+
+      mat-card-content {
+        p {
+          color: #5a6c7d;
+          line-height: 1.5;
+          font-size: 0.9rem;
+          margin-bottom: 0;
+        }
+      }
+
+      mat-card-actions {
+        padding-top: 16px;
+        padding-bottom: 16px;
+        
+        button {
+          font-weight: 500;
+          text-transform: none;
+          border-radius: 6px;
+        }
+      }
     }
 
-    .dashboard-card:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
-    }
-
-    .dashboard-card mat-card-header {
-      margin-bottom: 12px;
-    }
-
-    .dashboard-card mat-card-title {
-      font-size: 0.95rem;
-      font-weight: 600;
-    }
-
-    .dashboard-card mat-card-content p {
-      color: #666;
-      line-height: 1.4;
-      font-size: 0.85rem;
+    // Professional icon styling
+    .card-icon {
+      width: 40px !important;
+      height: 40px !important;
+      border-radius: 8px !important;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      
+      mat-icon {
+        font-size: 20px;
+        width: 20px;
+        height: 20px;
+        color: white;
+      }
+      
+      &.students-icon {
+        background: linear-gradient(135deg, #3498db, #2980b9);
+      }
+      
+      &.companies-icon {
+        background: linear-gradient(135deg, #27ae60, #229954);
+      }
+      
+      &.lms-icon {
+        background: linear-gradient(135deg, #e67e22, #d35400);
+      }
     }
 
     .dashboard-card mat-card-actions {

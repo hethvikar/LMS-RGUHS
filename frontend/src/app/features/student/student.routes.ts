@@ -33,6 +33,14 @@ export const STUDENT_ROUTES: Routes = [
       {
         path: 'placement-status',
         loadComponent: () => import('./components/placement-status/placement-status.component').then(m => m.StudentPlacementStatusComponent)
+      },
+      {
+        path: 'jobs',
+        loadComponent: () => import('./components/jobs/job-search.component').then(m => m.JobSearchComponent)
+      },
+      {
+        path: 'jobs/:id',
+        loadComponent: () => import('./components/jobs/job-details.component').then(m => m.JobDetailsComponent)
       }
     ]
   }

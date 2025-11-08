@@ -1,0 +1,321 @@
+.screening-container {
+  padding: 24px;
+  max-width: 1600px;
+  margin: 0 auto;
+}
+
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+  gap: 16px;
+
+  .header-content {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+
+    .header-icon {
+      font-size: 48px;
+      width: 48px;
+      height: 48px;
+      color: #667eea;
+    }
+
+    .header-text {
+      h1 {
+        font-size: 2rem;
+        font-weight: 600;
+        margin: 0;
+        color: #2c3e50;
+      }
+
+      p {
+        margin: 4px 0 0 0;
+        color: #7f8c8d;
+        font-size: 0.95rem;
+      }
+    }
+  }
+
+  button {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+}
+
+.job-selector-card {
+  margin-bottom: 24px;
+
+  .job-select {
+    width: 400px;
+    margin-bottom: 20px;
+  }
+
+  .job-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 16px;
+
+    .stat-card {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 20px;
+      background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+      border-radius: 8px;
+      border-left: 4px solid #667eea;
+
+      mat-icon {
+        font-size: 36px;
+        width: 36px;
+        height: 36px;
+        color: #667eea;
+      }
+
+      h3 {
+        font-size: 1.8rem;
+        font-weight: 700;
+        margin: 0;
+        color: #667eea;
+      }
+
+      p {
+        margin: 4px 0 0 0;
+        color: #7f8c8d;
+        font-size: 0.9rem;
+      }
+    }
+  }
+}
+
+.candidates-card {
+  ::ng-deep {
+    mat-card-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 20px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      border-radius: 8px 8px 0 0;
+
+      mat-icon {
+        font-size: 28px;
+        width: 28px;
+        height: 28px;
+      }
+
+      mat-card-title {
+        font-size: 1.4rem;
+        font-weight: 600;
+        margin: 0;
+        flex: 1;
+      }
+
+      .header-actions {
+        display: flex;
+        gap: 8px;
+
+        button {
+          color: white;
+          border-color: white;
+        }
+      }
+    }
+
+    .mat-mdc-tab-label {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+
+      .tab-badge {
+        background: #667eea;
+        color: white;
+        padding: 2px 8px;
+        border-radius: 12px;
+        font-size: 11px;
+        font-weight: 600;
+        min-width: 24px;
+        text-align: center;
+
+        &.pending { background: #ffc107; color: #333; }
+        &.shortlisted { background: #4caf50; }
+        &.rejected { background: #f44336; }
+      }
+    }
+  }
+
+  .tab-content {
+    padding: 24px;
+    min-height: 400px;
+  }
+
+  .table-actions {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 16px;
+
+    button {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+  }
+}
+
+.table-container {
+  overflow-x: auto;
+  border-radius: 8px;
+  border: 1px solid #e9ecef;
+}
+
+.candidates-table {
+  width: 100%;
+
+  th {
+    background: #f8f9fa;
+    font-weight: 600;
+    color: #2c3e50;
+    padding: 16px 12px;
+  }
+
+  td {
+    padding: 16px 12px;
+    border-bottom: 1px solid #e9ecef;
+  }
+
+  tr:hover {
+    background: #f8f9fa;
+  }
+
+  .candidate-info {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+
+    strong {
+      font-weight: 600;
+      color: #2c3e50;
+    }
+
+    .email {
+      font-size: 12px;
+      color: #7f8c8d;
+    }
+  }
+
+  .batch-chip {
+    background: #667eea;
+    color: white;
+    font-weight: 500;
+  }
+
+  .cgpa-badge {
+    display: inline-block;
+    padding: 4px 12px;
+    background: #e9ecef;
+    color: #2c3e50;
+    border-radius: 12px;
+    font-weight: 600;
+
+    &.high-cgpa {
+      background: #d4edda;
+      color: #155724;
+    }
+  }
+
+  .skills-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+  }
+
+  .score-badge {
+    display: inline-block;
+    padding: 6px 12px;
+    background: #fff3cd;
+    color: #856404;
+    border-radius: 12px;
+    font-weight: 600;
+
+    &.high-score {
+      background: #d4edda;
+      color: #155724;
+    }
+  }
+
+  mat-chip {
+    font-size: 12px;
+    min-height: 28px;
+
+    &.source-admin {
+      background: #2196f3;
+      color: white;
+    }
+
+    &.source-direct {
+      background: #4caf50;
+      color: white;
+    }
+  }
+
+  .action-buttons {
+    display: flex;
+    gap: 4px;
+  }
+}
+
+.no-data {
+  text-align: center;
+  padding: 80px 20px;
+  color: #7f8c8d;
+
+  mat-icon {
+    font-size: 72px;
+    width: 72px;
+    height: 72px;
+    color: #bdc3c7;
+    margin-bottom: 16px;
+  }
+
+  h3 {
+    font-size: 1.3rem;
+    margin: 0;
+    color: #2c3e50;
+  }
+
+  p {
+    margin: 8px 0 0 0;
+  }
+}
+
+@media (max-width: 768px) {
+  .screening-container {
+    padding: 16px;
+  }
+
+  .page-header {
+    flex-direction: column;
+    align-items: flex-start;
+
+    button {
+      width: 100%;
+      justify-content: center;
+    }
+  }
+
+  .job-selector-card .job-select {
+    width: 100%;
+  }
+
+  .candidates-table {
+    th, td {
+      padding: 8px 6px;
+      font-size: 13px;
+    }
+  }
+}

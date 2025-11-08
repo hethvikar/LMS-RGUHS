@@ -1,0 +1,331 @@
+<div class="company-verification-container">
+  <div class="verification-header">
+    <h1>Company Verification & Whitelisting</h1>
+    <p>Review and approve company registrations</p>
+  </div>
+
+  <!-- Statistics Cards -->
+  <div class="stats-cards">
+    <mat-card class="stat-card gradient-orange">
+      <mat-card-content>
+        <div class="stat-content">
+          <mat-icon>pending</mat-icon>
+          <div class="stat-info">
+            <h3>{{ pendingCount }}</h3>
+            <p>Pending Approval</p>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="stat-card gradient-green">
+      <mat-card-content>
+        <div class="stat-content">
+          <mat-icon>verified</mat-icon>
+          <div class="stat-info">
+            <h3>{{ whitelistedCount }}</h3>
+            <p>Whitelisted</p>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="stat-card gradient-red">
+      <mat-card-content>
+        <div class="stat-content">
+          <mat-icon>block</mat-icon>
+          <div class="stat-info">
+            <h3>{{ rejectedCount }}</h3>
+            <p>Rejected</p>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="stat-card gradient-purple">
+      <mat-card-content>
+        <div class="stat-content">
+          <mat-icon>warning</mat-icon>
+          <div class="stat-info">
+            <h3>{{ flaggedCount }}</h3>
+            <p>Flagged/Suspicious</p>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+  <!-- Tabs for different statuses -->
+  <mat-card class="verification-content">
+    <mat-card-content>
+      <mat-tab-group>
+        <!-- Pending Approvals Tab -->
+        <mat-tab>
+          <ng-template matTabLabel>
+            <mat-icon>pending_actions</mat-icon>
+            Pending Approval
+            <mat-chip *ngIf="pendingCount > 0" class="count-badge">{{ pendingCount }}</mat-chip>
+          </ng-template>
+          
+          <div class="tab-content">
+            <table mat-table [dataSource]="pendingRegistrations" class="verification-table">
+              <!-- Company Column -->
+              <ng-container matColumnDef="company">
+                <th mat-header-cell *matHeaderCellDef>Company</th>
+                <td mat-cell *matCellDef="let company">
+                  <div class="company-info">
+                    <div class="company-header">
+                      <strong>{{ company.companyName }}</strong>
+                      <mat-chip *ngIf="isSuspicious(company)" class="suspicious-chip">
+                        <mat-icon>warning</mat-icon>
+                        Suspicious
+                      </mat-chip>
+                    </div>
+                    <div class="company-details">
+                      <span><mat-icon>category</mat-icon> {{ company.industry }}</span>
+                      <span><mat-icon>language</mat-icon> {{ company.website }}</span>
+                    </div>
+                    <div class="company-ids">
+                      <span><strong>GST:</strong> {{ company.gstNumber }}</span>
+                      <span *ngIf="company.cinNumber"><strong>CIN:</strong> {{ company.cinNumber }}</span>
+                    </div>
+                  </div>
+                </td>
+              </ng-container>
+
+              <!-- Contact Column -->
+              <ng-container matColumnDef="contact">
+                <th mat-header-cell *matHeaderCellDef>Contact</th>
+                <td mat-cell *matCellDef="let company">
+                  <div class="contact-info">
+                    <div><mat-icon>person</mat-icon> {{ company.contactPerson }}</div>
+                    <div><mat-icon>email</mat-icon> {{ company.contactEmail }}</div>
+                    <div><mat-icon>phone</mat-icon> {{ company.contactPhone }}</div>
+                  </div>
+                </td>
+              </ng-container>
+
+              <!-- Verification Column -->
+              <ng-container matColumnDef="verification">
+                <th mat-header-cell *matHeaderCellDef>Verification</th>
+                <td mat-cell *matCellDef="let company">
+                  <div class="verification-flags">
+                    <div class="verification-score">
+                      <span class="score-label">Score:</span>
+                      <mat-chip [class]="getVerificationScore(company.verificationFlags) >= 75 ? 'score-high' : 'score-low'">
+                        {{ getVerificationScore(company.verificationFlags) }}%
+                      </mat-chip>
+                    </div>
+                    <div class="flags-list">
+                      <mat-chip [class]="company.verificationFlags.websiteValid ? 'flag-valid' : 'flag-invalid'">
+                        <mat-icon>{{ company.verificationFlags.websiteValid ? 'check' : 'close' }}</mat-icon>
+                        Website
+                      </mat-chip>
+                      <mat-chip [class]="company.verificationFlags.gstValid ? 'flag-valid' : 'flag-invalid'">
+                        <mat-icon>{{ company.verificationFlags.gstValid ? 'check' : 'close' }}</mat-icon>
+                        GST
+                      </mat-chip>
+                      <mat-chip [class]="company.verificationFlags.emailDomainMatch ? 'flag-valid' : 'flag-invalid'">
+                        <mat-icon>{{ company.verificationFlags.emailDomainMatch ? 'check' : 'close' }}</mat-icon>
+                        Email
+                      </mat-chip>
+                      <mat-chip [class]="!company.verificationFlags.suspiciousDomain ? 'flag-valid' : 'flag-invalid'">
+                        <mat-icon>{{ !company.verificationFlags.suspiciousDomain ? 'check' : 'close' }}</mat-icon>
+                        Domain
+                      </mat-chip>
+                    </div>
+                  </div>
+                </td>
+              </ng-container>
+
+              <!-- Date Column -->
+              <ng-container matColumnDef="date">
+                <th mat-header-cell *matHeaderCellDef>Registered</th>
+                <td mat-cell *matCellDef="let company">
+                  {{ company.registrationDate | date:'medium' }}
+                </td>
+              </ng-container>
+
+              <!-- Actions Column -->
+              <ng-container matColumnDef="actions">
+                <th mat-header-cell *matHeaderCellDef>Actions</th>
+                <td mat-cell *matCellDef="let company">
+                  <div class="action-buttons">
+                    <button mat-mini-fab color="primary" (click)="approveCompany(company)" 
+                            matTooltip="Approve & Whitelist">
+                      <mat-icon>check</mat-icon>
+                    </button>
+                    <button mat-mini-fab color="warn" (click)="rejectCompany(company)" 
+                            matTooltip="Reject">
+                      <mat-icon>close</mat-icon>
+                    </button>
+                    <button mat-mini-fab (click)="requestClarification(company)" 
+                            matTooltip="Request Clarification">
+                      <mat-icon>help</mat-icon>
+                    </button>
+                    <button mat-mini-fab (click)="viewDetails(company)" 
+                            matTooltip="View Details">
+                      <mat-icon>visibility</mat-icon>
+                    </button>
+                  </div>
+                  <div class="verification-tools">
+                    <button mat-icon-button (click)="verifyWebsite(company)" 
+                            matTooltip="Open Website">
+                      <mat-icon>open_in_new</mat-icon>
+                    </button>
+                    <button mat-icon-button (click)="verifyGST(company)" 
+                            matTooltip="Verify GST">
+                      <mat-icon>verified_user</mat-icon>
+                    </button>
+                    <button mat-icon-button (click)="checkLinkedIn(company)" 
+                            matTooltip="Check LinkedIn">
+                      <mat-icon>business</mat-icon>
+                    </button>
+                  </div>
+                </td>
+              </ng-container>
+
+              <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+              <tr mat-row *matRowDef="let row; columns: displayedColumns;" 
+                  [class.suspicious-row]="isSuspicious(row)"></tr>
+            </table>
+
+            <div *ngIf="pendingRegistrations.length === 0" class="empty-state">
+              <mat-icon>inbox</mat-icon>
+              <h3>No Pending Approvals</h3>
+              <p>All company registrations have been reviewed</p>
+            </div>
+          </div>
+        </mat-tab>
+
+        <!-- Whitelisted Companies Tab -->
+        <mat-tab>
+          <ng-template matTabLabel>
+            <mat-icon>verified</mat-icon>
+            Whitelisted
+            <mat-chip *ngIf="whitelistedCount > 0" class="count-badge">{{ whitelistedCount }}</mat-chip>
+          </ng-template>
+          
+          <div class="tab-content">
+            <table mat-table [dataSource]="whitelistedCompanies" class="verification-table">
+              <ng-container matColumnDef="company">
+                <th mat-header-cell *matHeaderCellDef>Company</th>
+                <td mat-cell *matCellDef="let company">
+                  <div class="company-info">
+                    <strong>{{ company.companyName }}</strong>
+                    <div class="company-details">
+                      <span>{{ company.industry }}</span>
+                      <span>{{ company.website }}</span>
+                    </div>
+                  </div>
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="contact">
+                <th mat-header-cell *matHeaderCellDef>Contact</th>
+                <td mat-cell *matCellDef="let company">{{ company.contactEmail }}</td>
+              </ng-container>
+
+              <ng-container matColumnDef="verification">
+                <th mat-header-cell *matHeaderCellDef>Status</th>
+                <td mat-cell *matCellDef="let company">
+                  <mat-chip class="status-whitelisted">
+                    <mat-icon>verified</mat-icon>
+                    Whitelisted
+                  </mat-chip>
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="date">
+                <th mat-header-cell *matHeaderCellDef>Approved On</th>
+                <td mat-cell *matCellDef="let company">
+                  {{ company.registrationDate | date:'mediumDate' }}
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="actions">
+                <th mat-header-cell *matHeaderCellDef>Actions</th>
+                <td mat-cell *matCellDef="let company">
+                  <button mat-icon-button (click)="viewDetails(company)" matTooltip="View Details">
+                    <mat-icon>visibility</mat-icon>
+                  </button>
+                </td>
+              </ng-container>
+
+              <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+              <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+            </table>
+
+            <div *ngIf="whitelistedCompanies.length === 0" class="empty-state">
+              <mat-icon>inbox</mat-icon>
+              <h3>No Whitelisted Companies</h3>
+              <p>Approved companies will appear here</p>
+            </div>
+          </div>
+        </mat-tab>
+
+        <!-- Rejected Companies Tab -->
+        <mat-tab>
+          <ng-template matTabLabel>
+            <mat-icon>block</mat-icon>
+            Rejected
+            <mat-chip *ngIf="rejectedCount > 0" class="count-badge">{{ rejectedCount }}</mat-chip>
+          </ng-template>
+          
+          <div class="tab-content">
+            <table mat-table [dataSource]="rejectedCompanies" class="verification-table">
+              <ng-container matColumnDef="company">
+                <th mat-header-cell *matHeaderCellDef>Company</th>
+                <td mat-cell *matCellDef="let company">
+                  <div class="company-info">
+                    <strong>{{ company.companyName }}</strong>
+                    <div class="company-details">
+                      <span>{{ company.industry }}</span>
+                    </div>
+                  </div>
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="contact">
+                <th mat-header-cell *matHeaderCellDef>Contact</th>
+                <td mat-cell *matCellDef="let company">{{ company.contactEmail }}</td>
+              </ng-container>
+
+              <ng-container matColumnDef="verification">
+                <th mat-header-cell *matHeaderCellDef>Reason</th>
+                <td mat-cell *matCellDef="let company">
+                  {{ company.adminNotes || 'Not specified' }}
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="date">
+                <th mat-header-cell *matHeaderCellDef>Rejected On</th>
+                <td mat-cell *matCellDef="let company">
+                  {{ company.registrationDate | date:'mediumDate' }}
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="actions">
+                <th mat-header-cell *matHeaderCellDef>Actions</th>
+                <td mat-cell *matCellDef="let company">
+                  <button mat-icon-button (click)="viewDetails(company)" matTooltip="View Details">
+                    <mat-icon>visibility</mat-icon>
+                  </button>
+                </td>
+              </ng-container>
+
+              <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+              <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+            </table>
+
+            <div *ngIf="rejectedCompanies.length === 0" class="empty-state">
+              <mat-icon>inbox</mat-icon>
+              <h3>No Rejected Companies</h3>
+              <p>Rejected companies will appear here</p>
+            </div>
+          </div>
+        </mat-tab>
+      </mat-tab-group>
+    </mat-card-content>
+  </mat-card>
+</div>

@@ -14,7 +14,7 @@ export class AuthEffects {
     this.actions$.pipe(
       ofType(AuthActions.login),
       mergeMap(action =>
-        this.authService.login({ email: action.email, password: action.password }).pipe(
+        this.authService.login({ email: action.email, password: action.password, role: action.role }).pipe(
           map(response => {
             if (response.success && response.data && response.token) {
               return AuthActions.loginSuccess({ user: response.data, token: response.token });
@@ -50,7 +50,7 @@ export class AuthEffects {
           // Call auth service to clear session
           this.authService.logout();
           // Navigate to login page
-          this.router.navigate(['/login']);
+          this.router.navigate(['/']);
         })
       ),
     { dispatch: false }

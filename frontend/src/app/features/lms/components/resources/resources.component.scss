@@ -12,19 +12,6 @@
       margin-bottom: 32px;
     }
 
-    .header-content h1 {
-      font-size: 2.5rem;
-      font-weight: 300;
-      margin-bottom: 8px;
-      color: #333;
-    }
-
-    .header-content p {
-      font-size: 1.2rem;
-      color: #666;
-      margin: 0;
-    }
-
     .resources-stats {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -205,4 +192,17 @@
         grid-template-columns: 1fr;
       }
     }
+
+// Snackbar styles
+::ng-deep {
+  .success-snackbar {
+    --mdc-snackbar-container-color: #4caf50;
+    --mdc-snackbar-supporting-text-color: #ffffff;
+  }
+
+  .error-snackbar {
+    --mdc-snackbar-container-color: #f44336;
+    --mdc-snackbar-supporting-text-color: #ffffff;
+  }
+}
   

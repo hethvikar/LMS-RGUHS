@@ -1,0 +1,223 @@
+<div class="course-enrollment-container">
+  <div class="page-header">
+    <mat-icon>school</mat-icon>
+    <div>
+      <h1>Course Enrollment</h1>
+      <p>Browse and enroll in training courses to boost your skills</p>
+    </div>
+    <button mat-fab color="accent" [matBadge]="cart.length" matBadgeColor="warn" 
+            (click)="proceedToPayment()" *ngIf="cart.length > 0">
+      <mat-icon>shopping_cart</mat-icon>
+    </button>
+  </div>
+
+  <div class="content-wrapper">
+    <!-- Filters Sidebar -->
+    <div class="filters-sidebar">
+      <mat-card>
+        <mat-card-header>
+          <mat-icon>filter_list</mat-icon>
+          <mat-card-title>Filters</mat-card-title>
+        </mat-card-header>
+
+        <mat-card-content>
+          <form [formGroup]="filterForm">
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Search Courses</mat-label>
+              <input matInput formControlName="search" placeholder="Search by name or code">
+              <mat-icon matPrefix>search</mat-icon>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Category</mat-label>
+              <mat-select formControlName="category">
+                <mat-option *ngFor="let cat of categories" [value]="cat.value">
+                  {{ cat.label }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Mode</mat-label>
+              <mat-select formControlName="mode">
+                <mat-option *ngFor="let mode of modes" [value]="mode.value">
+                  {{ mode.label }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Level</mat-label>
+              <mat-select formControlName="level">
+                <mat-option *ngFor="let level of levels" [value]="level.value">
+                  {{ level.label }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Max Fee (₹)</mat-label>
+              <input matInput formControlName="maxFee" type="number" min="0" max="50000">
+            </mat-form-field>
+          </form>
+        </mat-card-content>
+      </mat-card>
+
+      <!-- Cart Summary -->
+      <mat-card *ngIf="cart.length > 0" class="cart-summary">
+        <mat-card-header>
+          <mat-icon>shopping_cart</mat-icon>
+          <mat-card-title>Your Cart ({{ cart.length }})</mat-card-title>
+        </mat-card-header>
+
+        <mat-card-content>
+          <div *ngFor="let course of cart" class="cart-item">
+            <div class="cart-item-info">
+              <strong>{{ course.code }}</strong>
+              <span>₹{{ course.fee }}</span>
+            </div>
+            <button mat-icon-button (click)="removeFromCart(course)">
+              <mat-icon>close</mat-icon>
+            </button>
+          </div>
+
+          <div class="cart-total">
+            <strong>Total:</strong>
+            <strong class="amount">₹{{ getTotalAmount() }}</strong>
+          </div>
+        </mat-card-content>
+
+        <mat-card-actions>
+          <button mat-raised-button color="accent" (click)="proceedToPayment()" class="full-width">
+            <mat-icon>payment</mat-icon>
+            Proceed to Payment
+          </button>
+        </mat-card-actions>
+      </mat-card>
+    </div>
+
+    <!-- Courses Grid -->
+    <div class="courses-grid">
+      <div class="results-header">
+        <h2>{{ filteredCourses.length }} Courses Available</h2>
+      </div>
+
+      <div *ngIf="filteredCourses.length === 0" class="empty-state">
+        <mat-icon>search_off</mat-icon>
+        <h3>No courses found</h3>
+        <p>Try adjusting your filters</p>
+      </div>
+
+      <div class="courses-list">
+        <mat-card *ngFor="let course of filteredCourses" class="course-card">
+          <div class="course-header">
+            <div class="course-badge" [class]="course.category">
+              <mat-icon>{{ getCategoryIcon(course.category) }}</mat-icon>
+            </div>
+            <mat-chip [color]="getLevelColor(course.level)">{{ course.level }}</mat-chip>
+          </div>
+
+          <mat-card-header>
+            <mat-card-title>{{ course.name }}</mat-card-title>
+            <mat-card-subtitle>{{ course.code }}</mat-card-subtitle>
+          </mat-card-header>
+
+          <mat-card-content>
+            <p class="description">{{ course.description }}</p>
+
+            <div class="course-stats">
+              <div class="stat">
+                <mat-icon>schedule</mat-icon>
+                <span>{{ course.duration }}</span>
+              </div>
+              <div class="stat">
+                <mat-icon>people</mat-icon>
+                <span>{{ course.enrolledStudents }} enrolled</span>
+              </div>
+              <div class="stat">
+                <mat-icon>star</mat-icon>
+                <span>{{ course.rating }}/5</span>
+              </div>
+            </div>
+
+            <div class="course-meta">
+              <div class="meta-item">
+                <mat-icon>person</mat-icon>
+                <span>{{ course.instructor }}</span>
+              </div>
+              <div class="meta-item">
+                <mat-icon>{{ course.mode === 'online' ? 'computer' : course.mode === 'offline' ? 'meeting_room' : 'hub' }}</mat-icon>
+                <span>{{ course.mode | titlecase }}</span>
+              </div>
+              <div class="meta-item">
+                <mat-icon>event</mat-icon>
+                <span>{{ course.startDate | date:'MMM d' }}</span>
+              </div>
+            </div>
+
+            <div class="skills-row">
+              <mat-chip-set>
+                <mat-chip *ngFor="let skill of course.skills.slice(0, 3)">{{ skill }}</mat-chip>
+                <mat-chip *ngIf="course.skills.length > 3">+{{ course.skills.length - 3 }}</mat-chip>
+              </mat-chip-set>
+            </div>
+
+            <mat-expansion-panel class="course-details">
+              <mat-expansion-panel-header>
+                <mat-panel-title>Course Details</mat-panel-title>
+              </mat-expansion-panel-header>
+
+              <div class="details-content">
+                <div class="detail-section">
+                  <h4><mat-icon>schedule</mat-icon> Schedule</h4>
+                  <p>{{ course.schedule }}</p>
+                </div>
+
+                <div class="detail-section">
+                  <h4><mat-icon>menu_book</mat-icon> Syllabus</h4>
+                  <ul>
+                    <li *ngFor="let topic of course.syllabus">{{ topic }}</li>
+                  </ul>
+                </div>
+
+                <div class="detail-section" *ngIf="course.prerequisites.length > 0">
+                  <h4><mat-icon>check_circle</mat-icon> Prerequisites</h4>
+                  <ul>
+                    <li *ngFor="let prereq of course.prerequisites">{{ prereq }}</li>
+                  </ul>
+                </div>
+
+                <div class="detail-section">
+                  <h4><mat-icon>event_seat</mat-icon> Seat Availability</h4>
+                  <div class="seats-info">
+                    <span class="seats-count">{{ course.seatsAvailable }} / {{ course.totalSeats }} available</span>
+                    <span class="seats-status" [class]="getSeatsStatus(course).color">
+                      {{ getSeatsStatus(course).text }}
+                    </span>
+                  </div>
+                  <div class="seats-progress">
+                    <div class="seats-bar" 
+                         [style.width.%]="(course.seatsAvailable / course.totalSeats) * 100"
+                         [class]="getSeatsStatus(course).color"></div>
+                  </div>
+                </div>
+              </div>
+            </mat-expansion-panel>
+          </mat-card-content>
+
+          <mat-card-actions>
+            <div class="price-section">
+              <span class="price">₹{{ course.fee }}</span>
+              <mat-icon *ngIf="course.certificateProvided" matTooltip="Certificate Provided">verified</mat-icon>
+            </div>
+            <button mat-raised-button color="primary" (click)="addToCart(course)"
+                    [disabled]="cart.find(c => c.id === course.id)">
+              <mat-icon>{{ cart.find(c => c.id === course.id) ? 'check' : 'add_shopping_cart' }}</mat-icon>
+              {{ cart.find(c => c.id === course.id) ? 'Added' : 'Add to Cart' }}
+            </button>
+          </mat-card-actions>
+        </mat-card>
+      </div>
+    </div>
+  </div>
+</div>

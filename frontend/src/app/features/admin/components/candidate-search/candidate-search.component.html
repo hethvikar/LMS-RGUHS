@@ -1,0 +1,255 @@
+<div class="candidate-search-container">
+  <div class="page-header">
+    <div class="header-content">
+      <mat-icon class="header-icon">manage_search</mat-icon>
+      <div class="header-text">
+        <h1>Candidate Search & Placement</h1>
+        <p>Search and filter students based on skills, assessments, and certifications</p>
+      </div>
+    </div>
+
+    <div class="action-buttons">
+      <button mat-raised-button color="primary" (click)="shareProfilesWithCompany()" 
+              [disabled]="selectedStudents.size === 0">
+        <mat-icon>share</mat-icon>
+        Share Profiles ({{ selectedStudents.size }})
+      </button>
+      <button mat-raised-button (click)="exportCandidateList()" 
+              [disabled]="selectedStudents.size === 0">
+        <mat-icon>download</mat-icon>
+        Export List
+      </button>
+    </div>
+  </div>
+
+  <!-- Filters Section -->
+  <mat-card class="filters-card">
+    <mat-card-header>
+      <mat-icon>filter_list</mat-icon>
+      <mat-card-title>Search Filters</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <!-- Search Bar -->
+      <div class="search-bar">
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Search by name, email, or skills</mat-label>
+          <input matInput [(ngModel)]="searchQuery" (ngModelChange)="applyFilters()" 
+                 placeholder="e.g., Rahul, JavaScript">
+          <mat-icon matPrefix>search</mat-icon>
+        </mat-form-field>
+      </div>
+
+      <!-- Filter Grid -->
+      <div class="filters-grid">
+        <!-- Skills Filter -->
+        <mat-form-field appearance="outline">
+          <mat-label>Required Skills</mat-label>
+          <mat-select [(ngModel)]="selectedSkills" multiple (selectionChange)="applyFilters()">
+            <mat-option *ngFor="let skill of availableSkills" [value]="skill">
+              {{ skill }}
+            </mat-option>
+          </mat-select>
+          <mat-hint>Students must have ALL selected skills</mat-hint>
+        </mat-form-field>
+
+        <!-- Batch Filter -->
+        <mat-form-field appearance="outline">
+          <mat-label>Batch Year</mat-label>
+          <mat-select [(ngModel)]="selectedBatches" multiple (selectionChange)="applyFilters()">
+            <mat-option *ngFor="let batch of availableBatches" [value]="batch">
+              {{ batch }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <!-- Department Filter -->
+        <mat-form-field appearance="outline">
+          <mat-label>Department</mat-label>
+          <mat-select [(ngModel)]="selectedDepartments" multiple (selectionChange)="applyFilters()">
+            <mat-option *ngFor="let dept of availableDepartments" [value]="dept">
+              {{ dept }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <!-- Certifications Filter -->
+        <mat-form-field appearance="outline">
+          <mat-label>Certifications</mat-label>
+          <mat-select [(ngModel)]="selectedCertifications" multiple (selectionChange)="applyFilters()">
+            <mat-option *ngFor="let cert of availableCertifications" [value]="cert">
+              {{ cert }}
+            </mat-option>
+          </mat-select>
+          <mat-hint>Students with ANY of these certifications</mat-hint>
+        </mat-form-field>
+
+        <!-- Training Filter -->
+        <mat-form-field appearance="outline">
+          <mat-label>Training Completed</mat-label>
+          <mat-select [(ngModel)]="selectedTrainings" multiple (selectionChange)="applyFilters()">
+            <mat-option *ngFor="let training of availableTrainings" [value]="training">
+              {{ training }}
+            </mat-option>
+          </mat-select>
+          <mat-hint>Students with ANY of these trainings</mat-hint>
+        </mat-form-field>
+
+        <!-- Placement Status Filter -->
+        <mat-form-field appearance="outline">
+          <mat-label>Placement Status</mat-label>
+          <mat-select [(ngModel)]="placementStatus" (selectionChange)="applyFilters()">
+            <mat-option value="">All Students</mat-option>
+            <mat-option value="available">Available</mat-option>
+            <mat-option value="placed">Placed</mat-option>
+            <mat-option value="not-interested">Not Interested</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+
+      <!-- Range Filters -->
+      <div class="range-filters">
+        <div class="range-filter">
+          <label>Minimum CGPA: {{ minCGPA.toFixed(1) }}</label>
+          <mat-slider min="0" max="10" step="0.1" showTickMarks discrete>
+            <input matSliderThumb [(ngModel)]="minCGPA" (ngModelChange)="applyFilters()">
+          </mat-slider>
+        </div>
+
+        <div class="range-filter">
+          <label>Assessment Score Range: {{ minAssessmentScore }} - {{ maxAssessmentScore }}</label>
+          <div class="dual-slider">
+            <mat-slider min="0" max="100" step="5" showTickMarks discrete>
+              <input matSliderStartThumb [(ngModel)]="minAssessmentScore" (ngModelChange)="applyFilters()">
+              <input matSliderEndThumb [(ngModel)]="maxAssessmentScore" (ngModelChange)="applyFilters()">
+            </mat-slider>
+          </div>
+        </div>
+      </div>
+
+      <!-- Clear Filters Button -->
+      <div class="filter-actions">
+        <button mat-button (click)="clearFilters()">
+          <mat-icon>clear</mat-icon>
+          Clear All Filters
+        </button>
+        <span class="results-count">{{ filteredStudents.length }} candidate(s) found</span>
+      </div>
+    </mat-card-content>
+  </mat-card>
+
+  <!-- Results Section -->
+  <mat-card class="results-card">
+    <mat-card-header>
+      <mat-icon>people</mat-icon>
+      <mat-card-title>Search Results</mat-card-title>
+      <div class="header-actions">
+        <button mat-button (click)="selectAllStudents()" *ngIf="filteredStudents.length > 0">
+          Select All
+        </button>
+        <button mat-button (click)="deselectAllStudents()" *ngIf="selectedStudents.size > 0">
+          Deselect All
+        </button>
+      </div>
+    </mat-card-header>
+    <mat-card-content>
+      <div class="table-container" *ngIf="filteredStudents.length > 0; else noResults">
+        <table mat-table [dataSource]="filteredStudents" class="students-table">
+          <!-- Checkbox Column -->
+          <ng-container matColumnDef="select">
+            <th mat-header-cell *matHeaderCellDef>Select</th>
+            <td mat-cell *matCellDef="let student">
+              <mat-checkbox 
+                [checked]="isStudentSelected(student.id)"
+                (change)="toggleStudentSelection(student.id)">
+              </mat-checkbox>
+            </td>
+          </ng-container>
+
+          <!-- Name Column -->
+          <ng-container matColumnDef="name">
+            <th mat-header-cell *matHeaderCellDef>Name</th>
+            <td mat-cell *matCellDef="let student">
+              <div class="student-info">
+                <strong>{{ student.name }}</strong>
+                <span class="email">{{ student.email }}</span>
+              </div>
+            </td>
+          </ng-container>
+
+          <!-- Batch Column -->
+          <ng-container matColumnDef="batch">
+            <th mat-header-cell *matHeaderCellDef>Batch</th>
+            <td mat-cell *matCellDef="let student">
+              <mat-chip class="batch-chip">{{ student.batch }}</mat-chip>
+            </td>
+          </ng-container>
+
+          <!-- Department Column -->
+          <ng-container matColumnDef="department">
+            <th mat-header-cell *matHeaderCellDef>Department</th>
+            <td mat-cell *matCellDef="let student">{{ student.department }}</td>
+          </ng-container>
+
+          <!-- CGPA Column -->
+          <ng-container matColumnDef="cgpa">
+            <th mat-header-cell *matHeaderCellDef>CGPA</th>
+            <td mat-cell *matCellDef="let student">
+              <span class="cgpa-badge" [class.high-cgpa]="student.cgpa >= 8">
+                {{ student.cgpa.toFixed(2) }}
+              </span>
+            </td>
+          </ng-container>
+
+          <!-- Skills Column -->
+          <ng-container matColumnDef="skills">
+            <th mat-header-cell *matHeaderCellDef>Skills</th>
+            <td mat-cell *matCellDef="let student">
+              <div class="skills-chips">
+                <mat-chip *ngFor="let skill of student.skills.slice(0, 3)">
+                  {{ skill }}
+                </mat-chip>
+                <mat-chip *ngIf="student.skills.length > 3" [matTooltip]="student.skills.slice(3).join(', ')">
+                  +{{ student.skills.length - 3 }}
+                </mat-chip>
+              </div>
+            </td>
+          </ng-container>
+
+          <!-- Assessment Score Column -->
+          <ng-container matColumnDef="assessmentScore">
+            <th mat-header-cell *matHeaderCellDef>Avg Score</th>
+            <td mat-cell *matCellDef="let student">
+              <div class="score-badge" [class.high-score]="student.assessmentScores.average >= 85">
+                {{ student.assessmentScores.average }}%
+              </div>
+            </td>
+          </ng-container>
+
+          <!-- Actions Column -->
+          <ng-container matColumnDef="actions">
+            <th mat-header-cell *matHeaderCellDef>Actions</th>
+            <td mat-cell *matCellDef="let student">
+              <button mat-icon-button [matTooltip]="'View Profile'" (click)="viewStudentProfile(student)">
+                <mat-icon>visibility</mat-icon>
+              </button>
+              <button mat-icon-button [matTooltip]="'Download Resume'" *ngIf="student.resumeUrl">
+                <mat-icon>download</mat-icon>
+              </button>
+            </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        </table>
+      </div>
+
+      <ng-template #noResults>
+        <div class="no-results">
+          <mat-icon>search_off</mat-icon>
+          <h3>No candidates found</h3>
+          <p>Try adjusting your filters or search criteria</p>
+        </div>
+      </ng-template>
+    </mat-card-content>
+  </mat-card>
+</div>

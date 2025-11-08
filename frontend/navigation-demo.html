@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Navigation Active States Preview</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Roboto', Arial, sans-serif;
+            line-height: 1.6;
+            background: #f8f9fa;
+        }
+        
+        /* Navigation Styles */
+        .main-header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 1rem 2rem;
+        }
+        
+        .logo-text h1 {
+            font-size: 1.5rem;
+            color: #1976d2;
+            margin: 0;
+        }
+        
+        .logo-text p {
+            font-size: 0.8rem;
+            color: #666;
+            margin: 0;
+        }
+        
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            gap: 2rem;
+            align-items: center;
+        }
+        
+        .nav-menu li {
+            margin: 0;
+            display: flex;
+            align-items: center;
+        }
+        
+        .nav-link {
+            color: #2c3e50;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.9rem;
+            padding: 0.5rem 0;
+            cursor: pointer;
+            position: relative;
+            display: inline-block;
+            white-space: nowrap;
+            transition: color 0.3s ease;
+        }
+        
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(90deg, #1976d2, #00bcd4);
+            transition: width 0.3s ease;
+            will-change: width;
+            transform: translateZ(0);
+        }
+        
+        .nav-link:hover,
+        .nav-link.active {
+            color: #1976d2;
+        }
+        
+        .nav-link:hover::after,
+        .nav-link.active::after {
+            width: 100%;
+        }
+        
+        .nav-link.active {
+            font-weight: 600;
+        }
+        
+        .nav-link.active::after {
+            background: linear-gradient(90deg, #1976d2, #ff4081);
+            height: 3px;
+        }
+        
+        /* Demo sections */
+        section {
+            min-height: 100vh;
+            padding: 6rem 2rem 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+        
+        #home { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; }
+        #gallery { background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); color: white; }
+        #placements { background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); color: white; }
+        #companies { background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%); color: white; }
+        #testimonials { background: linear-gradient(135deg, #fa709a 0%, #fee140 100%); color: white; }
+        
+        .section-content h2 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+        }
+        
+        .section-content p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        /* Demo features */
+        .features {
+            position: fixed;
+            top: 50%;
+            right: 20px;
+            transform: translateY(-50%);
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+            padding: 1rem;
+            border-radius: 10px;
+            border: 1px solid rgba(255,255,255,0.2);
+            max-width: 300px;
+        }
+        
+        .features h3 {
+            color: white;
+            font-size: 1rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .features ul {
+            list-style: none;
+            padding: 0;
+            font-size: 0.8rem;
+            color: rgba(255,255,255,0.9);
+        }
+        
+        .features li {
+            padding: 0.2rem 0;
+        }
+        
+        .features li:before {
+            content: "✓ ";
+            color: #4ade80;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation Header -->
+    <header class="main-header">
+        <nav class="navbar">
+            <div class="nav-container">
+                <!-- Logo -->
+                <div class="logo-section">
+                    <div class="logo-text">
+                        <h1>RGUHS Placement Cell</h1>
+                        <p>Empowering Careers, Building Futures</p>
+                    </div>
+                </div>
+
+                <!-- Navigation Menu -->
+                <ul class="nav-menu">
+                    <li><a href="#home" class="nav-link active" onclick="setActive(this)">Home</a></li>
+                    <li><a href="#gallery" class="nav-link" onclick="setActive(this)">Gallery</a></li>
+                    <li><a href="#placements" class="nav-link" onclick="setActive(this)">Placements</a></li>
+                    <li><a href="#companies" class="nav-link" onclick="setActive(this)">Companies</a></li>
+                    <li><a href="#testimonials" class="nav-link" onclick="setActive(this)">Testimonials</a></li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Demo Sections -->
+    <section id="home">
+        <div class="section-content">
+            <h2>🏠 Home Section</h2>
+            <p>Welcome to the RGUHS Placement Cell demo. Notice how the navigation automatically highlights the active section!</p>
+        </div>
+    </section>
+
+    <section id="gallery">
+        <div class="section-content">
+            <h2>🖼️ Gallery Section</h2>
+            <p>This section showcases placement photos and success stories from our students.</p>
+        </div>
+    </section>
+
+    <section id="placements">
+        <div class="section-content">
+            <h2>🎓 Placements Section</h2>
+            <p>Meet our star performers and their success stories with top companies.</p>
+        </div>
+    </section>
+
+    <section id="companies">
+        <div class="section-content">
+            <h2>🏢 Companies Section</h2>
+            <p>Our recruiting partners with beautiful circular logos and glassy effects!</p>
+        </div>
+    </section>
+
+    <section id="testimonials">
+        <div class="section-content">
+            <h2>💬 Testimonials Section</h2>
+            <p>Hear from our successful alumni and their career journeys.</p>
+        </div>
+    </section>
+
+    <!-- Features Info -->
+    <div class="features">
+        <h3>🎯 Active Navigation Features</h3>
+        <ul>
+            <li>Default "Home" selection</li>
+            <li>Click to highlight menu items</li>
+            <li>Scroll spy functionality</li>
+            <li>Smooth scroll transitions</li>
+            <li>Enhanced active states</li>
+            <li>Gradient underline effects</li>
+        </ul>
+    </div>
+
+    <script>
+        // Simple demo of active state management
+        function setActive(clickedLink) {
+            // Remove active class from all links
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.classList.remove('active');
+            });
+            
+            // Add active class to clicked link
+            clickedLink.classList.add('active');
+        }
+        
+        // Scroll spy functionality
+        function updateActiveSection() {
+            const sections = ['home', 'gallery', 'placements', 'companies', 'testimonials'];
+            const scrollPosition = window.scrollY + 100; // Offset for header
+            
+            for (let i = sections.length - 1; i >= 0; i--) {
+                const element = document.getElementById(sections[i]);
+                if (element && element.offsetTop <= scrollPosition) {
+                    // Remove active from all
+                    document.querySelectorAll('.nav-link').forEach(link => {
+                        link.classList.remove('active');
+                    });
+                    
+                    // Add active to current section
+                    const activeLink = document.querySelector(`a[href="#${sections[i]}"]`);
+                    if (activeLink) {
+                        activeLink.classList.add('active');
+                    }
+                    break;
+                }
+            }
+        }
+        
+        // Add scroll listener
+        window.addEventListener('scroll', updateActiveSection, { passive: true });
+        
+        // Initialize on load
+        document.addEventListener('DOMContentLoaded', updateActiveSection);
+    </script>
+</body>
+</html>

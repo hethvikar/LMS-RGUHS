@@ -1,10 +1,5 @@
 
     <div class="assignments-container">
-      <div class="assignments-header">
-        <h1>My Assignments</h1>
-        <p>Track and submit your course assignments</p>
-      </div>
-
       <div class="assignments-stats">
         <mat-card class="stat-card gradient-orange">
           <mat-card-content>
@@ -226,5 +221,111 @@
           </mat-tab-group>
         </mat-card-content>
       </mat-card>
+    </div>
+
+    <!-- Assignment Details Modal -->
+    <div class="modal-overlay" *ngIf="showDetailsModal" (click)="closeDetailsModal()">
+      <div class="modal-container" (click)="$event.stopPropagation()" *ngIf="selectedAssignment">
+        <div class="modal-header">
+          <h2>Assignment Details</h2>
+          <button mat-icon-button (click)="closeDetailsModal()" class="close-btn">
+            <mat-icon>close</mat-icon>
+          </button>
+        </div>
+
+        <div class="modal-content">
+          <div class="assignment-detail-section">
+            <div class="detail-header">
+              <mat-icon class="section-icon">assignment</mat-icon>
+              <h3>{{ selectedAssignment.title }}</h3>
+            </div>
+            <div class="course-badge">
+              <mat-icon>book</mat-icon>
+              <span>{{ selectedAssignment.courseName }}</span>
+            </div>
+          </div>
+
+          <div class="assignment-detail-section">
+            <h4>
+              <mat-icon>description</mat-icon>
+              Description
+            </h4>
+            <p class="description-text">{{ selectedAssignment.description }}</p>
+          </div>
+
+          <div class="assignment-detail-section">
+            <h4>
+              <mat-icon>info</mat-icon>
+              Assignment Information
+            </h4>
+            <div class="info-grid">
+              <div class="info-item">
+                <span class="info-label">Due Date:</span>
+                <span class="info-value">{{ selectedAssignment.dueDate | date:'fullDate' }}</span>
+              </div>
+              <div class="info-item">
+                <span class="info-label">Time:</span>
+                <span class="info-value">{{ selectedAssignment.dueDate | date:'shortTime' }}</span>
+              </div>
+              <div class="info-item">
+                <span class="info-label">Status:</span>
+                <mat-chip [class]="getStatusClass(selectedAssignment.status)">
+                  {{ getStatusText(selectedAssignment.status) }}
+                </mat-chip>
+              </div>
+              <div class="info-item">
+                <span class="info-label">Priority:</span>
+                <mat-chip [class]="getPriorityClass(selectedAssignment.priority)">
+                  {{ getPriorityText(selectedAssignment.priority) }}
+                </mat-chip>
+              </div>
+              <div class="info-item" *ngIf="selectedAssignment.submittedDate">
+                <span class="info-label">Submitted:</span>
+                <span class="info-value">{{ selectedAssignment.submittedDate | date:'medium' }}</span>
+              </div>
+              <div class="info-item" *ngIf="selectedAssignment.grade">
+                <span class="info-label">Grade:</span>
+                <span class="info-value grade-highlight">
+                  {{ selectedAssignment.grade }}{{ selectedAssignment.maxScore ? '/' + selectedAssignment.maxScore : '' }}
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <div class="assignment-detail-section" *ngIf="selectedAssignment.feedback">
+            <h4>
+              <mat-icon>feedback</mat-icon>
+              Instructor Feedback
+            </h4>
+            <div class="feedback-box">
+              <p>{{ selectedAssignment.feedback }}</p>
+            </div>
+          </div>
+
+          <div class="assignment-detail-section time-remaining-section">
+            <div class="time-remaining-card" [class]="getTimeRemainingClass(selectedAssignment.dueDate)">
+              <mat-icon>schedule</mat-icon>
+              <div class="time-info">
+                <span class="time-label">Time Remaining</span>
+                <span class="time-value">{{ getTimeRemainingText(selectedAssignment.dueDate) }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button mat-button (click)="closeDetailsModal()" class="cancel-btn">
+            Close
+          </button>
+          <button mat-raised-button color="primary" (click)="submitAssignment(selectedAssignment)" *ngIf="selectedAssignment.status === 'pending'">
+            <mat-icon>upload</mat-icon>
+            Submit Assignment
+          </button>
+          <button mat-raised-button color="accent" (click)="downloadSubmission(selectedAssignment)" *ngIf="selectedAssignment.status === 'submitted' || selectedAssignment.status === 'graded'">
+            <mat-icon>download</mat-icon>
+            Download Submission
+          </button>
+        </div>
+      </div>
     </div>
   

@@ -1,0 +1,256 @@
+<div class="job-search-container">
+  <!-- Header Section -->
+  <div class="page-header">
+    <div class="header-content">
+      <mat-icon>work</mat-icon>
+      <div>
+        <h1>Find Your Dream Job</h1>
+        <p>Discover opportunities that match your skills and aspirations</p>
+      </div>
+    </div>
+    <button mat-raised-button color="primary" (click)="toggleFilters()">
+      <mat-icon>{{ showFilters ? 'filter_list_off' : 'filter_list' }}</mat-icon>
+      {{ showFilters ? 'Hide' : 'Show' }} Filters
+      <span *ngIf="getActiveFiltersCount() > 0" class="filter-badge" [matBadge]="getActiveFiltersCount()" matBadgeColor="accent"></span>
+    </button>
+  </div>
+
+  <div class="content-wrapper">
+    <!-- Filters Sidebar -->
+    <mat-expansion-panel class="filter-panel" [expanded]="showFilters" *ngIf="showFilters">
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          <mat-icon>tune</mat-icon>
+          <span>Filters</span>
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+
+      <form [formGroup]="searchForm" class="filter-form">
+        <!-- Search Input -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Search jobs, companies, skills...</mat-label>
+          <input matInput formControlName="search" placeholder="e.g., Angular Developer">
+          <mat-icon matPrefix>search</mat-icon>
+        </mat-form-field>
+
+        <!-- Department Filter -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Department</mat-label>
+          <mat-select formControlName="department" (selectionChange)="applyFilters()">
+            <mat-option value="">All Departments</mat-option>
+            <mat-option *ngFor="let dept of departments" [value]="dept">{{ dept }}</mat-option>
+          </mat-select>
+          <mat-icon matPrefix>business_center</mat-icon>
+        </mat-form-field>
+
+        <!-- Location Filter -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Location</mat-label>
+          <mat-select formControlName="location" (selectionChange)="applyFilters()">
+            <mat-option value="">All Locations</mat-option>
+            <mat-option *ngFor="let loc of locations" [value]="loc">{{ loc }}</mat-option>
+          </mat-select>
+          <mat-icon matPrefix>location_on</mat-icon>
+        </mat-form-field>
+
+        <!-- Job Type Filter -->
+        <div class="filter-section">
+          <label class="filter-label">Job Type</label>
+          <div class="checkbox-group">
+            <mat-checkbox 
+              *ngFor="let type of jobTypes"
+              [value]="type.value"
+              [checked]="searchForm.get('types')?.value.includes(type.value)"
+              (change)="toggleType(type.value, $event.checked)">
+              {{ type.label }}
+            </mat-checkbox>
+          </div>
+        </div>
+
+        <!-- Experience Level Filter -->
+        <div class="filter-section">
+          <label class="filter-label">Experience Level</label>
+          <div class="checkbox-group">
+            <mat-checkbox 
+              *ngFor="let exp of experienceLevels"
+              [value]="exp.value"
+              [checked]="searchForm.get('experienceLevels')?.value.includes(exp.value)"
+              (change)="toggleExperienceLevel(exp.value, $event.checked)">
+              {{ exp.label }}
+            </mat-checkbox>
+          </div>
+        </div>
+
+        <!-- Salary Range -->
+        <div class="filter-section">
+          <label class="filter-label">Salary Range</label>
+          <div class="salary-display">
+            {{ formatSalary(searchForm.get('salaryMin')?.value) }} - {{ formatSalary(searchForm.get('salaryMax')?.value) }}
+          </div>
+          <mat-slider min="0" max="5000000" step="100000" discrete class="full-width">
+            <input matSliderStartThumb formControlName="salaryMin" (change)="applyFilters()">
+            <input matSliderEndThumb formControlName="salaryMax" (change)="applyFilters()">
+          </mat-slider>
+        </div>
+
+        <!-- Remote Work -->
+        <mat-checkbox formControlName="remoteWork" (change)="applyFilters()" class="full-width">
+          Remote Work Only
+        </mat-checkbox>
+
+        <!-- Posted Within -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Posted Within</mat-label>
+          <mat-select formControlName="postedWithin" (selectionChange)="applyFilters()">
+            <mat-option value="">Any time</mat-option>
+            <mat-option *ngFor="let option of postedWithinOptions" [value]="option.value">
+              {{ option.label }}
+            </mat-option>
+          </mat-select>
+          <mat-icon matPrefix>schedule</mat-icon>
+        </mat-form-field>
+
+        <!-- Clear Filters Button -->
+        <button mat-stroked-button color="warn" (click)="clearFilters()" class="full-width" 
+                *ngIf="getActiveFiltersCount() > 0">
+          <mat-icon>clear</mat-icon>
+          Clear All Filters
+        </button>
+      </form>
+    </mat-expansion-panel>
+
+    <!-- Jobs List -->
+    <div class="jobs-section">
+      <!-- Sort and Results Header -->
+      <div class="results-header">
+        <div class="results-info">
+          <h2>{{ filteredJobs.length }} Job{{ filteredJobs.length !== 1 ? 's' : '' }} Found</h2>
+          <p *ngIf="getActiveFiltersCount() > 0">
+            {{ getActiveFiltersCount() }} filter{{ getActiveFiltersCount() !== 1 ? 's' : '' }} applied
+          </p>
+        </div>
+        
+        <mat-form-field appearance="outline" class="sort-select">
+          <mat-label>Sort By</mat-label>
+          <mat-select [(value)]="currentSort" (selectionChange)="onSortChange(currentSort)">
+            <mat-option *ngFor="let option of sortOptions" [value]="option.value">
+              {{ option.label }}
+            </mat-option>
+          </mat-select>
+          <mat-icon matPrefix>sort</mat-icon>
+        </mat-form-field>
+      </div>
+
+      <!-- Loading Spinner -->
+      <div class="loading-container" *ngIf="loading">
+        <mat-spinner diameter="50"></mat-spinner>
+        <p>Loading jobs...</p>
+      </div>
+
+      <!-- Jobs Grid -->
+      <div class="jobs-grid" *ngIf="!loading && filteredJobs.length > 0">
+        <mat-card *ngFor="let job of filteredJobs" class="job-card" (click)="viewJobDetails(job.id)">
+          <!-- Match Score Badge -->
+          <div class="match-badge" [style.background]="getMatchColor(job.matchScore)" *ngIf="job.matchScore">
+            {{ job.matchScore }}% Match
+          </div>
+
+          <!-- Bookmark Icon -->
+          <button mat-icon-button class="bookmark-btn" (click)="toggleBookmark($event, job.id)"
+                  [matTooltip]="job.isBookmarked ? 'Remove from bookmarks' : 'Add to bookmarks'">
+            <mat-icon [class.bookmarked]="job.isBookmarked">
+              {{ job.isBookmarked ? 'bookmark' : 'bookmark_border' }}
+            </mat-icon>
+          </button>
+
+          <mat-card-header>
+            <div mat-card-avatar class="company-logo" *ngIf="job.companyLogo">
+              <img [src]="job.companyLogo" [alt]="job.company" (error)="onImageError($event, job)">
+            </div>
+            <div mat-card-avatar class="company-logo-placeholder" *ngIf="!job.companyLogo">
+              <mat-icon>business</mat-icon>
+            </div>
+            <mat-card-title>{{ job.title }}</mat-card-title>
+            <mat-card-subtitle>{{ job.company }}</mat-card-subtitle>
+          </mat-card-header>
+
+          <mat-card-content>
+            <div class="job-meta">
+              <div class="meta-item">
+                <mat-icon>location_on</mat-icon>
+                <span>{{ job.location }}</span>
+              </div>
+              <div class="meta-item">
+                <mat-icon>work_outline</mat-icon>
+                <span>{{ getTypeLabel(job.type) }}</span>
+              </div>
+              <div class="meta-item">
+                <mat-icon>trending_up</mat-icon>
+                <span>{{ getExperienceLabel(job.experienceLevel) }}</span>
+              </div>
+              <div class="meta-item" *ngIf="job.salaryRange">
+                <mat-icon>payments</mat-icon>
+                <span>{{ job.salaryRange }}</span>
+              </div>
+              <div class="meta-item" *ngIf="job.remoteWork">
+                <mat-icon>home</mat-icon>
+                <span>Remote</span>
+              </div>
+            </div>
+
+            <p class="job-description">{{ job.description | slice:0:150 }}...</p>
+
+            <!-- Skills -->
+            <div class="skills-container">
+              <mat-chip-set>
+                <mat-chip *ngFor="let skill of job.skills.slice(0, 4)">
+                  {{ skill }}
+                </mat-chip>
+                <mat-chip *ngIf="job.skills.length > 4">
+                  +{{ job.skills.length - 4 }} more
+                </mat-chip>
+              </mat-chip-set>
+            </div>
+
+            <div class="job-footer">
+              <div class="applications-count">
+                <mat-icon>people</mat-icon>
+                <span>{{ job.applicationsCount }} applicants</span>
+              </div>
+              <div class="posted-date">
+                <mat-icon>schedule</mat-icon>
+                <span>{{ getDaysAgo(job.postedDate) }} days ago</span>
+              </div>
+            </div>
+          </mat-card-content>
+
+          <mat-card-actions>
+            <button mat-raised-button color="primary" (click)="viewJobDetails(job.id); $event.stopPropagation()">
+              <mat-icon>visibility</mat-icon>
+              View Details
+            </button>
+            <button mat-button color="accent" *ngIf="!job.hasApplied">
+              <mat-icon>send</mat-icon>
+              Quick Apply
+            </button>
+            <span class="applied-badge" *ngIf="job.hasApplied">
+              <mat-icon>check_circle</mat-icon>
+              Applied
+            </span>
+          </mat-card-actions>
+        </mat-card>
+      </div>
+
+      <!-- No Results -->
+      <div class="no-results" *ngIf="!loading && filteredJobs.length === 0">
+        <mat-icon>work_off</mat-icon>
+        <h3>No jobs found</h3>
+        <p>Try adjusting your filters or search criteria</p>
+        <button mat-raised-button color="primary" (click)="clearFilters()">
+          <mat-icon>refresh</mat-icon>
+          Clear Filters
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

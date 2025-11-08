@@ -14,6 +14,7 @@ import { Observable } from 'rxjs';
 import * as AuthActions from '../../../core/store/auth/auth.actions';
 import * as fromAuth from '../../../core/store/auth/auth.reducer';
 import { AppState } from '../../../core/store';
+import { BreadcrumbComponent } from '../breadcrumb/breadcrumb.component';
 
 interface User {
   id: number;
@@ -42,7 +43,8 @@ interface NavigationItem {
     MatMenuModule,
     MatToolbarModule,
     MatDividerModule,
-    MatTooltipModule
+    MatTooltipModule,
+    BreadcrumbComponent
   ],
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.scss']

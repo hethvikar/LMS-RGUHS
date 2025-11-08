@@ -1,16 +1,5 @@
 
     <div class="assessment-results-container">
-      <div class="results-header">
-        <div class="header-content">
-          <h1>My Assessment Results</h1>
-          <p>View your assessment scores and performance</p>
-        </div>
-        <button mat-raised-button color="primary" (click)="downloadReport()">
-          
-          Download Report
-        </button>
-      </div>
-
       <div class="results-overview">
         <mat-card class="overview-card">
           <mat-card-content>
@@ -97,16 +86,16 @@
                     <th mat-header-cell *matHeaderCellDef>Actions</th>
                     <td mat-cell *matCellDef="let result">
                       <button mat-icon-button [matTooltip]="'View Details'" (click)="viewDetailedResult(result)">
-                        
+                        <mat-icon>visibility</mat-icon>
                       </button>
                       <button mat-icon-button [matTooltip]="'Download Certificate'" (click)="downloadCertificate(result)" *ngIf="result.status === 'passed'">
-                        
+                        <mat-icon>workspace_premium</mat-icon>
                       </button>
                       <button mat-icon-button [matTooltip]="'Retake Assessment'" (click)="retakeAssessment(result)" *ngIf="canRetake(result)">
-                        
+                        <mat-icon>replay</mat-icon>
                       </button>
                       <button mat-icon-button [matTooltip]="'View Feedback'" (click)="viewFeedback(result)" *ngIf="result.instructorFeedback">
-                        
+                        <mat-icon>feedback</mat-icon>
                       </button>
                     </td>
                   </ng-container>
@@ -199,7 +188,7 @@
                     <mat-card *ngFor="let result of getPassedAssessmentsList()" class="certificate-card">
                       <mat-card-content>
                         <div class="certificate-content">
-                          
+                          <mat-icon class="certificate-icon">workspace_premium</mat-icon>
                           <div class="certificate-details">
                             <h4>{{ result.assessmentTitle }}</h4>
                             <p>{{ result.courseName }}</p>
@@ -213,11 +202,11 @@
                       </mat-card-content>
                       <mat-card-actions>
                         <button mat-button (click)="downloadCertificate(result)">
-                          
+                          <mat-icon>download</mat-icon>
                           Download
                         </button>
                         <button mat-button (click)="shareCertificate(result)">
-                          
+                          <mat-icon>share</mat-icon>
                           Share
                         </button>
                       </mat-card-actions>
@@ -229,67 +218,5 @@
           </mat-tab-group>
         </mat-card-content>
       </mat-card>
-
-      <!-- Detailed Result Modal -->
-      <div class="detailed-result-modal" *ngIf="selectedResult">
-        <mat-card class="detailed-result-card">
-          <mat-card-header>
-            <mat-card-title>{{ selectedResult.assessmentTitle }}</mat-card-title>
-            
-          </mat-card-header>
-          <mat-card-content>
-            <div class="result-summary">
-              <div class="summary-metric">
-                <h3>{{ selectedResult.score }}/{{ selectedResult.maxScore }}</h3>
-                <p>Final Score</p>
-              </div>
-              <div class="summary-metric">
-                <h3>{{ selectedResult.percentage }}%</h3>
-                <p>Percentage</p>
-              </div>
-              <div class="summary-metric">
-                <h3>{{ selectedResult.grade }}</h3>
-                <p>Grade</p>
-              </div>
-              <div class="summary-metric">
-                <h3>{{ selectedResult.timeTaken }}m</h3>
-                <p>Time Taken</p>
-              </div>
-            </div>
-
-            <div class="question-review" *ngIf="detailedResults">
-              <h4>Question Review</h4>
-              <div class="question-item" *ngFor="let question of detailedResults; let i = index">
-                <div class="question-header">
-                  <span class="question-number">Question {{ i + 1 }}</span>
-                  <mat-chip [class]="question.isCorrect ? 'correct' : 'incorrect'">
-                    {{ question.isCorrect ? 'Correct' : 'Incorrect' }}
-                  </mat-chip>
-                  <span class="question-points">{{ question.points }}/{{ question.maxPoints }} pts</span>
-                </div>
-                <div class="question-text">{{ question.question }}</div>
-                <div class="answer-comparison">
-                  <div class="your-answer">
-                    <strong>Your Answer:</strong> {{ question.yourAnswer }}
-                  </div>
-                  <div class="correct-answer" *ngIf="!question.isCorrect">
-                    <strong>Correct Answer:</strong> {{ question.correctAnswer }}
-                  </div>
-                  <div class="explanation" *ngIf="question.explanation">
-                    <strong>Explanation:</strong> {{ question.explanation }}
-                  </div>
-                </div>
-              </div>
-            </div>
-          </mat-card-content>
-          <mat-card-actions>
-            <button mat-button (click)="closeDetailedResult()">Close</button>
-            <button mat-button (click)="retakeAssessment(selectedResult)" *ngIf="canRetake(selectedResult)">
-              
-              Retake Assessment
-            </button>
-          </mat-card-actions>
-        </mat-card>
-      </div>
     </div>
   

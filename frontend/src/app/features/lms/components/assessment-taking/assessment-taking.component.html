@@ -146,8 +146,6 @@
 
     <!-- Results View -->
     <div class="results-view" *ngIf="isSubmitted && results">
-      <div class="results-header">
-        <h1>Assessment Results</h1>
         <div class="score-display">
           <div class="score-circle" [class]="getScoreClass(results.score, assessment.passingScore)">
             <div class="score-number">{{ results.score }}/{{ assessment.totalPoints }}</div>
@@ -159,7 +157,6 @@
             </mat-chip>
           </div>
         </div>
-      </div>
 
       <mat-card class="results-summary">
         <mat-card-content>

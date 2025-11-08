@@ -7,7 +7,9 @@ import { MatTableModule } from '@angular/material/table';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { CommonModule } from '@angular/common';
+import { AssessmentResultDetailDialogComponent } from './assessment-result-detail-dialog.component';
 
 interface AssessmentResult {
   id: number;
@@ -50,7 +52,8 @@ interface DetailedResult {
     MatTableModule,
     MatTabsModule,
     MatProgressBarModule,
-    MatTooltipModule
+    MatTooltipModule,
+    MatDialogModule
   ],
   templateUrl: './assessment-results.component.html',
   styleUrls: ['./assessment-results.component.scss']
@@ -106,6 +109,8 @@ export class AssessmentResultsComponent implements OnInit {
   selectedResult: AssessmentResult | null = null;
   detailedResults: DetailedResult[] | null = null;
   displayedColumns: string[] = ['assessment', 'score', 'status', 'submitted', 'actions'];
+
+  constructor(private dialog: MatDialog) {}
 
   ngOnInit() {
     // Load assessment results from API
@@ -216,9 +221,8 @@ export class AssessmentResultsComponent implements OnInit {
   }
 
   viewDetailedResult(result: AssessmentResult) {
-    this.selectedResult = result;
     // In real app, load detailed results from API
-    this.detailedResults = [
+    const detailedResults: DetailedResult[] = [
       {
         assessmentId: result.id,
         questionId: 1,
@@ -242,6 +246,18 @@ export class AssessmentResultsComponent implements OnInit {
         explanation: 'JavaScript has String, Number, Boolean, Object, and other data types.'
       }
     ];
+
+    this.dialog.open(AssessmentResultDetailDialogComponent, {
+      width: '900px',
+      maxWidth: '95vw',
+      maxHeight: '90vh',
+      data: {
+        result: result,
+        detailedResults: detailedResults
+      },
+      panelClass: 'assessment-result-dialog',
+      autoFocus: false
+    });
   }
 
   closeDetailedResult() {

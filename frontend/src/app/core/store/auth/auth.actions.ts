@@ -4,7 +4,7 @@ import { User } from './auth.reducer';
 // Login
 export const login = createAction(
   '[Auth] Login',
-  props<{ email: string; password: string }>()
+  props<{ email: string; password: string; role?: string }>()
 );
 
 export const loginSuccess = createAction(

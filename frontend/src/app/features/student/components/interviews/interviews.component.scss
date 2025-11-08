@@ -5,23 +5,6 @@
       margin: 0 auto;
     }
 
-    .interviews-header {
-      text-align: center;
-      margin-bottom: 40px;
-    }
-
-    .interviews-header h1 {
-      font-size: 2.5rem;
-      font-weight: 300;
-      margin-bottom: 16px;
-      color: #333;
-    }
-
-    .interviews-header p {
-      font-size: 1.2rem;
-      color: #666;
-    }
-
     .interviews-content {
       display: grid;
       gap: 32px;
@@ -36,13 +19,19 @@
     }
 
     .interview-card {
-      margin-bottom: 16px;
-      transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+      margin-bottom: 24px;
+      border-radius: 16px;
+      box-shadow: 0 2px 16px 0 rgba(60, 72, 88, 0.10), 0 1.5px 4px 0 rgba(60, 72, 88, 0.08);
+      background: linear-gradient(135deg, #f8fafc 80%, #e3f2fd 100%);
+      border: 1px solid #e3e8ee;
+      overflow: hidden;
+      transition: transform 0.2s cubic-bezier(.4,0,.2,1), box-shadow 0.2s cubic-bezier(.4,0,.2,1);
     }
 
     .interview-card:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      transform: translateY(-4px) scale(1.02);
+      box-shadow: 0 8px 24px rgba(25, 118, 210, 0.18), 0 2px 8px rgba(60, 72, 88, 0.10);
+      border-color: #90caf9;
     }
 
     .interview-card.past {
@@ -51,15 +40,19 @@
 
     .interview-details {
       display: grid;
-      gap: 12px;
+      gap: 16px;
+      padding: 8px 0 0 0;
     }
 
     .detail-row {
       display: flex;
       align-items: center;
-      gap: 8px;
-      font-size: 14px;
-      color: #666;
+      gap: 10px;
+      font-size: 15px;
+      color: #374151;
+      background: #f1f5f9;
+      border-radius: 6px;
+      padding: 6px 12px;
     }
 
     .detail-row mat-icon {
@@ -70,45 +63,57 @@
 
     .interview-type {
       display: flex;
-      gap: 8px;
+      gap: 10px;
       flex-wrap: wrap;
+      margin-top: 8px;
     }
 
     .mat-mdc-chip {
-      font-size: 12px;
-      font-weight: 500;
+      font-size: 13px;
+      font-weight: 600;
+      border-radius: 8px;
+      padding: 0 10px;
+      box-shadow: 0 1px 4px rgba(60, 72, 88, 0.08);
+      letter-spacing: 0.5px;
     }
 
     .mat-mdc-chip.technical {
       background-color: #e3f2fd;
       color: #1976d2;
+      border: 1px solid #90caf9;
     }
 
     .mat-mdc-chip.hr {
       background-color: #f3e5f5;
       color: #7b1fa2;
+      border: 1px solid #ce93d8;
     }
 
     .mat-mdc-chip.final {
       background-color: #e8f5e8;
       color: #2e7d32;
+      border: 1px solid #a5d6a7;
     }
 
     .status-chip.completed {
       background-color: #e8f5e8;
       color: #2e7d32;
+      border: 1px solid #a5d6a7;
     }
 
     .status-chip.cancelled {
       background-color: #ffebee;
       color: #d32f2f;
+      border: 1px solid #ef9a9a;
     }
 
     .interview-notes {
-      margin-top: 16px;
-      padding: 12px;
-      background-color: #f5f5f5;
-      border-radius: 4px;
+      margin-top: 18px;
+      padding: 14px;
+      background: linear-gradient(90deg, #f5f5f5 80%, #e3f2fd 100%);
+      border-radius: 8px;
+      border: 1px solid #e3e8ee;
+      box-shadow: 0 1px 4px rgba(60, 72, 88, 0.06);
     }
 
     .interview-notes h4 {
@@ -127,8 +132,12 @@
 
     .no-interviews {
       text-align: center;
-      padding: 40px;
-      color: #666;
+      padding: 48px 24px;
+      color: #90a4ae;
+      background: #f8fafc;
+      border-radius: 12px;
+      margin-top: 32px;
+      box-shadow: 0 1px 4px rgba(60, 72, 88, 0.06);
     }
 
     .no-data-icon {
@@ -137,19 +146,28 @@
       height: 64px;
       margin-bottom: 16px;
       opacity: 0.5;
+      color: #90caf9;
     }
 
     @media (max-width: 768px) {
       .interviews-container {
-        padding: 16px;
+        padding: 8px;
       }
-
+      .interview-card {
+        border-radius: 10px;
+        margin-bottom: 16px;
+      }
       .interview-details {
         gap: 8px;
+        padding: 4px 0 0 0;
       }
-
       .detail-row {
         font-size: 13px;
+        padding: 4px 8px;
+      }
+      .no-interviews {
+        padding: 32px 8px;
+        border-radius: 8px;
       }
     }
   

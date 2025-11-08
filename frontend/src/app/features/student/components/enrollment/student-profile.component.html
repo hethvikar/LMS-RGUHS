@@ -1,0 +1,384 @@
+<div class="student-profile-container">
+  <div class="page-header">
+    <mat-icon>person_add</mat-icon>
+    <div>
+      <h1>Create Your Student Profile</h1>
+      <p>Complete your profile to start enrolling in courses</p>
+    </div>
+    <div class="completion-badge">
+      <span class="percentage">{{ getCompletionPercentage() }}%</span>
+      <span class="label">Complete</span>
+    </div>
+  </div>
+
+  <mat-stepper linear #stepper>
+    <!-- Step 1: Personal Information -->
+    <mat-step [stepControl]="personalInfoForm" label="Personal Info">
+      <form [formGroup]="personalInfoForm">
+        <mat-card class="step-card">
+          <mat-card-header>
+            <mat-icon>account_circle</mat-icon>
+            <mat-card-title>Personal Information</mat-card-title>
+          </mat-card-header>
+
+          <mat-card-content>
+            <!-- Profile Picture Upload -->
+            <div class="profile-picture-section">
+              <div class="picture-preview">
+                <img *ngIf="profilePicture" [src]="profilePicture" alt="Profile Picture">
+                <mat-icon *ngIf="!profilePicture">account_circle</mat-icon>
+              </div>
+              <div class="upload-actions">
+                <input type="file" #fileInput (change)="onFileSelected($event)" accept="image/*" style="display: none;">
+                <button mat-raised-button color="primary" (click)="fileInput.click()" type="button">
+                  <mat-icon>upload</mat-icon>
+                  {{ profilePicture ? 'Change Photo' : 'Upload Photo' }}
+                </button>
+                <p class="hint">JPG, PNG or GIF. Max 2MB</p>
+              </div>
+            </div>
+
+            <div class="form-grid">
+              <mat-form-field appearance="outline">
+                <mat-label>First Name</mat-label>
+                <input matInput formControlName="firstName" placeholder="Enter first name">
+                <mat-icon matPrefix>person</mat-icon>
+                <mat-error *ngIf="personalInfoForm.get('firstName')?.hasError('required')">
+                  First name is required
+                </mat-error>
+              </mat-form-field>
+
+              <mat-form-field appearance="outline">
+                <mat-label>Last Name</mat-label>
+                <input matInput formControlName="lastName" placeholder="Enter last name">
+                <mat-icon matPrefix>person</mat-icon>
+                <mat-error *ngIf="personalInfoForm.get('lastName')?.hasError('required')">
+                  Last name is required
+                </mat-error>
+              </mat-form-field>
+
+              <mat-form-field appearance="outline">
+                <mat-label>Email</mat-label>
+                <input matInput formControlName="email" type="email" placeholder="your.email@rguhs.edu">
+                <mat-icon matPrefix>email</mat-icon>
+                <mat-error *ngIf="personalInfoForm.get('email')?.hasError('email')">
+                  Enter a valid email
+                </mat-error>
+              </mat-form-field>
+
+              <mat-form-field appearance="outline">
+                <mat-label>Phone Number</mat-label>
+                <input matInput formControlName="phone" placeholder="9876543210" maxlength="10">
+                <mat-icon matPrefix>phone</mat-icon>
+                <mat-error *ngIf="personalInfoForm.get('phone')?.hasError('pattern')">
+                  Enter valid 10-digit number
+                </mat-error>
+              </mat-form-field>
+
+              <mat-form-field appearance="outline">
+                <mat-label>Date of Birth</mat-label>
+                <input matInput [matDatepicker]="dobPicker" formControlName="dateOfBirth">
+                <mat-datepicker-toggle matSuffix [for]="dobPicker"></mat-datepicker-toggle>
+                <mat-datepicker #dobPicker></mat-datepicker>
+                <mat-icon matPrefix>calendar_today</mat-icon>
+              </mat-form-field>
+
+              <mat-form-field appearance="outline">
+                <mat-label>Gender</mat-label>
+                <mat-select formControlName="gender">
+                  <mat-option value="male">Male</mat-option>
+                  <mat-option value="female">Female</mat-option>
+                  <mat-option value="other">Other</mat-option>
+                </mat-select>
+                <mat-icon matPrefix>wc</mat-icon>
+              </mat-form-field>
+            </div>
+
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Address</mat-label>
+              <textarea matInput formControlName="address" rows="2" placeholder="Enter your full address"></textarea>
+              <mat-icon matPrefix>home</mat-icon>
+            </mat-form-field>
+
+            <div class="form-grid">
+              <mat-form-field appearance="outline">
+                <mat-label>City</mat-label>
+                <input matInput formControlName="city" placeholder="Enter city">
+                <mat-icon matPrefix>location_city</mat-icon>
+              </mat-form-field>
+
+              <mat-form-field appearance="outline">
+                <mat-label>State</mat-label>
+                <input matInput formControlName="state" placeholder="Enter state">
+                <mat-icon matPrefix>map</mat-icon>
+              </mat-form-field>
+
+              <mat-form-field appearance="outline">
+                <mat-label>Pincode</mat-label>
+                <input matInput formControlName="pincode" placeholder="560001" maxlength="6">
+                <mat-icon matPrefix>pin_drop</mat-icon>
+                <mat-error *ngIf="personalInfoForm.get('pincode')?.hasError('pattern')">
+                  Enter valid 6-digit pincode
+                </mat-error>
+              </mat-form-field>
+            </div>
+          </mat-card-content>
+
+          <mat-card-actions>
+            <button mat-raised-button color="primary" matStepperNext 
+                    [disabled]="personalInfoForm.invalid">
+              Next <mat-icon>arrow_forward</mat-icon>
+            </button>
+          </mat-card-actions>
+        </mat-card>
+      </form>
+    </mat-step>
+
+    <!-- Step 2: Academic Information -->
+    <mat-step [stepControl]="academicInfoForm" label="Academic Info">
+      <form [formGroup]="academicInfoForm">
+        <mat-card class="step-card">
+          <mat-card-header>
+            <mat-icon>school</mat-icon>
+            <mat-card-title>Academic Information</mat-card-title>
+          </mat-card-header>
+
+          <mat-card-content>
+            <div class="form-grid">
+              <mat-form-field appearance="outline">
+                <mat-label>USN (University Seat Number)</mat-label>
+                <input matInput formControlName="usn" placeholder="1RV19CS001" style="text-transform: uppercase">
+                <mat-icon matPrefix>badge</mat-icon>
+                <mat-error *ngIf="academicInfoForm.get('usn')?.hasError('pattern')">
+                  Enter valid USN (alphanumeric)
+                </mat-error>
+              </mat-form-field>
+
+              <mat-form-field appearance="outline">
+                <mat-label>Department</mat-label>
+                <mat-select formControlName="department">
+                  <mat-option *ngFor="let dept of departments" [value]="dept">
+                    {{ dept }}
+                  </mat-option>
+                </mat-select>
+                <mat-icon matPrefix>business</mat-icon>
+              </mat-form-field>
+
+              <mat-form-field appearance="outline">
+                <mat-label>Batch</mat-label>
+                <mat-select formControlName="batch">
+                  <mat-option *ngFor="let batch of batches" [value]="batch">
+                    {{ batch }}
+                  </mat-option>
+                </mat-select>
+                <mat-icon matPrefix>event</mat-icon>
+              </mat-form-field>
+
+              <mat-form-field appearance="outline">
+                <mat-label>Current Semester</mat-label>
+                <input matInput formControlName="semester" type="number" min="1" max="8" placeholder="5">
+                <mat-icon matPrefix>looks_one</mat-icon>
+              </mat-form-field>
+
+              <mat-form-field appearance="outline">
+                <mat-label>CGPA</mat-label>
+                <input matInput formControlName="cgpa" type="number" step="0.01" min="0" max="10" placeholder="8.5">
+                <mat-icon matPrefix>grade</mat-icon>
+                <mat-hint>Out of 10</mat-hint>
+              </mat-form-field>
+
+              <mat-form-field appearance="outline">
+                <mat-label>10th Percentage</mat-label>
+                <input matInput formControlName="tenthPercentage" type="number" step="0.01" min="0" max="100" placeholder="85.5">
+                <mat-icon matPrefix>school</mat-icon>
+                <mat-hint>%</mat-hint>
+              </mat-form-field>
+
+              <mat-form-field appearance="outline">
+                <mat-label>12th Percentage</mat-label>
+                <input matInput formControlName="twelfthPercentage" type="number" step="0.01" min="0" max="100" placeholder="90.5">
+                <mat-icon matPrefix>school</mat-icon>
+                <mat-hint>%</mat-hint>
+              </mat-form-field>
+
+              <mat-form-field appearance="outline">
+                <mat-label>Active Backlogs</mat-label>
+                <input matInput formControlName="backlogs" type="number" min="0" placeholder="0">
+                <mat-icon matPrefix>warning</mat-icon>
+              </mat-form-field>
+
+              <mat-form-field appearance="outline">
+                <mat-label>Academic Gap (Years)</mat-label>
+                <input matInput formControlName="academicGap" type="number" min="0" placeholder="0">
+                <mat-icon matPrefix>timelapse</mat-icon>
+              </mat-form-field>
+            </div>
+
+            <div class="eligibility-info" *ngIf="academicInfoForm.get('cgpa')?.value">
+              <mat-icon>info</mat-icon>
+              <div>
+                <strong>Placement Eligibility:</strong>
+                <p *ngIf="academicInfoForm.get('cgpa')?.value >= 6 && academicInfoForm.get('backlogs')?.value === 0">
+                  ✅ You are eligible for placement opportunities
+                </p>
+                <p *ngIf="academicInfoForm.get('cgpa')?.value < 6 || academicInfoForm.get('backlogs')?.value > 0" class="warning">
+                  ⚠️ Clear backlogs and maintain CGPA above 6.0 for placement eligibility
+                </p>
+              </div>
+            </div>
+          </mat-card-content>
+
+          <mat-card-actions>
+            <button mat-button matStepperPrevious>
+              <mat-icon>arrow_back</mat-icon> Back
+            </button>
+            <button mat-raised-button color="primary" matStepperNext 
+                    [disabled]="academicInfoForm.invalid">
+              Next <mat-icon>arrow_forward</mat-icon>
+            </button>
+          </mat-card-actions>
+        </mat-card>
+      </form>
+    </mat-step>
+
+    <!-- Step 3: Skills & Additional Info -->
+    <mat-step [stepControl]="skillsForm" label="Skills & More">
+      <form [formGroup]="skillsForm">
+        <mat-card class="step-card">
+          <mat-card-header>
+            <mat-icon>psychology</mat-icon>
+            <mat-card-title>Skills & Additional Information</mat-card-title>
+          </mat-card-header>
+
+          <mat-card-content>
+            <!-- Skills Section -->
+            <div class="skills-section">
+              <h3>Your Skills</h3>
+              <div class="skill-input-row">
+                <mat-form-field appearance="outline" class="skill-input">
+                  <mat-label>Add Skill</mat-label>
+                  <input matInput formControlName="skillInput" 
+                         [matAutocomplete]="auto"
+                         (input)="filterSkills($any($event.target).value)"
+                         placeholder="Type or select skill">
+                  <mat-icon matPrefix>code</mat-icon>
+                  <mat-autocomplete #auto="matAutocomplete" (optionSelected)="addSkill($event.option.value)">
+                    <mat-option *ngFor="let skill of filteredSkills" [value]="skill">
+                      {{ skill }}
+                    </mat-option>
+                  </mat-autocomplete>
+                </mat-form-field>
+                <button mat-icon-button color="primary" (click)="addSkill(skillsForm.get('skillInput')?.value)" type="button">
+                  <mat-icon>add_circle</mat-icon>
+                </button>
+              </div>
+
+              <div class="skills-chips">
+                <mat-chip-set>
+                  <mat-chip *ngFor="let skill of selectedSkills" 
+                           (removed)="removeSkill(skill)"
+                           [removable]="true">
+                    {{ skill }}
+                    <mat-icon matChipRemove>cancel</mat-icon>
+                  </mat-chip>
+                </mat-chip-set>
+                <p class="hint" *ngIf="selectedSkills.length === 0">Add up to 15 skills relevant to your field</p>
+                <p class="hint" *ngIf="selectedSkills.length > 0">{{ selectedSkills.length }}/15 skills added</p>
+              </div>
+            </div>
+
+            <!-- Certifications Section -->
+            <div class="certifications-section">
+              <h3>Certifications</h3>
+              <div class="cert-input-row">
+                <mat-form-field appearance="outline">
+                  <mat-label>Certification Name</mat-label>
+                  <input matInput formControlName="certificationName" placeholder="AWS Certified Developer">
+                  <mat-icon matPrefix>verified</mat-icon>
+                </mat-form-field>
+
+                <mat-form-field appearance="outline">
+                  <mat-label>Issuing Organization</mat-label>
+                  <input matInput formControlName="certificationIssuer" placeholder="Amazon Web Services">
+                  <mat-icon matPrefix>business</mat-icon>
+                </mat-form-field>
+
+                <mat-form-field appearance="outline" class="year-field">
+                  <mat-label>Year</mat-label>
+                  <input matInput formControlName="certificationYear" type="number" 
+                         min="2000" max="2025" placeholder="2024">
+                  <mat-icon matPrefix>event</mat-icon>
+                </mat-form-field>
+
+                <button mat-icon-button color="primary" (click)="addCertification()" type="button">
+                  <mat-icon>add_circle</mat-icon>
+                </button>
+              </div>
+
+              <div class="certifications-list" *ngIf="certifications.length > 0">
+                <div *ngFor="let cert of certifications; let i = index" class="cert-item">
+                  <mat-icon class="cert-icon">verified</mat-icon>
+                  <div class="cert-details">
+                    <strong>{{ cert.name }}</strong>
+                    <span>{{ cert.issuer }} • {{ cert.year }}</span>
+                  </div>
+                  <button mat-icon-button (click)="removeCertification(i)" type="button">
+                    <mat-icon>delete</mat-icon>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Social Links -->
+            <h3>Social & Professional Links</h3>
+            <div class="form-grid">
+              <mat-form-field appearance="outline">
+                <mat-label>LinkedIn Profile</mat-label>
+                <input matInput formControlName="linkedin" placeholder="https://linkedin.com/in/yourprofile">
+                <mat-icon matPrefix>link</mat-icon>
+              </mat-form-field>
+
+              <mat-form-field appearance="outline">
+                <mat-label>GitHub Profile</mat-label>
+                <input matInput formControlName="github" placeholder="https://github.com/yourusername">
+                <mat-icon matPrefix>code</mat-icon>
+              </mat-form-field>
+
+              <mat-form-field appearance="outline">
+                <mat-label>Portfolio Website</mat-label>
+                <input matInput formControlName="portfolio" placeholder="https://yourportfolio.com">
+                <mat-icon matPrefix>web</mat-icon>
+              </mat-form-field>
+            </div>
+
+            <!-- Bio & Career Objective -->
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Short Bio</mat-label>
+              <textarea matInput formControlName="bio" rows="3" 
+                        placeholder="Tell us about yourself in a few sentences..." maxlength="500"></textarea>
+              <mat-icon matPrefix>info</mat-icon>
+              <mat-hint align="end">{{ skillsForm.get('bio')?.value?.length || 0 }}/500</mat-hint>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Career Objective</mat-label>
+              <textarea matInput formControlName="careerObjective" rows="4" 
+                        placeholder="What are your career goals and aspirations?" maxlength="1000"></textarea>
+              <mat-icon matPrefix>flag</mat-icon>
+              <mat-hint align="end">{{ skillsForm.get('careerObjective')?.value?.length || 0 }}/1000</mat-hint>
+            </mat-form-field>
+          </mat-card-content>
+
+          <mat-card-actions>
+            <button mat-button matStepperPrevious>
+              <mat-icon>arrow_back</mat-icon> Back
+            </button>
+            <button mat-raised-button color="accent" (click)="saveProfile()" type="button">
+              <mat-icon>save</mat-icon> Save Profile & Continue
+            </button>
+          </mat-card-actions>
+        </mat-card>
+      </form>
+    </mat-step>
+  </mat-stepper>
+</div>

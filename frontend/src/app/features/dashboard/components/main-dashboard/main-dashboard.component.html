@@ -6,46 +6,55 @@
       </div>
 
       <div class="dashboard-grid">
-        <mat-card class="dashboard-card gradient-blue">
+        <mat-card class="dashboard-card professional-card students-card">
           <mat-card-header>
+            <div mat-card-avatar class="card-icon students-icon">
+              <mat-icon>school</mat-icon>
+            </div>
             <mat-card-title>Students</mat-card-title>
-            <mat-icon>school</mat-icon>
+            <mat-card-subtitle>Student Management</mat-card-subtitle>
           </mat-card-header>
           <mat-card-content>
             <p>Manage student profiles and applications</p>
           </mat-card-content>
           <mat-card-actions>
-            <button mat-raised-button (click)="navigateTo('/student/dashboard')">
+            <button mat-raised-button color="primary" (click)="navigateTo('/student/dashboard')">
               View Students
             </button>
           </mat-card-actions>
         </mat-card>
 
-        <mat-card class="dashboard-card gradient-green">
+        <mat-card class="dashboard-card professional-card companies-card">
           <mat-card-header>
+            <div mat-card-avatar class="card-icon companies-icon">
+              <mat-icon>business</mat-icon>
+            </div>
             <mat-card-title>Companies</mat-card-title>
-            <mat-icon>business</mat-icon>
+            <mat-card-subtitle>Company Management</mat-card-subtitle>
           </mat-card-header>
           <mat-card-content>
             <p>Manage company profiles and job postings</p>
           </mat-card-content>
           <mat-card-actions>
-            <button mat-raised-button (click)="navigateTo('/company/dashboard')">
+            <button mat-raised-button color="primary" (click)="navigateTo('/company/dashboard')">
               View Companies
             </button>
           </mat-card-actions>
         </mat-card>
 
-        <mat-card class="dashboard-card gradient-orange">
+        <mat-card class="dashboard-card professional-card lms-card">
           <mat-card-header>
+            <div mat-card-avatar class="card-icon lms-icon">
+              <mat-icon>menu_book</mat-icon>
+            </div>
             <mat-card-title>LMS</mat-card-title>
-            <mat-icon>menu_book</mat-icon>
+            <mat-card-subtitle>Learning Management</mat-card-subtitle>
           </mat-card-header>
           <mat-card-content>
             <p>Access learning management system</p>
           </mat-card-content>
           <mat-card-actions>
-            <button mat-raised-button (click)="navigateTo('/lms/dashboard')">
+            <button mat-raised-button color="primary" (click)="navigateTo('/lms/dashboard')">
               Access LMS
             </button>
           </mat-card-actions>

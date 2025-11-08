@@ -53,6 +53,21 @@ import { MatButtonModule } from '@angular/material/button';
             <span matListItemTitle>Assessment Assignment</span>
           </a>
           
+          <a mat-list-item routerLink="/admin/company-verification" routerLinkActive="active">
+            <mat-icon matListItemIcon>verified</mat-icon>
+            <span matListItemTitle>Company Verification</span>
+          </a>
+          
+          <a mat-list-item routerLink="/admin/candidate-search" routerLinkActive="active">
+            <mat-icon matListItemIcon>manage_search</mat-icon>
+            <span matListItemTitle>Candidate Search</span>
+          </a>
+          
+          <a mat-list-item routerLink="/admin/request-tracker" routerLinkActive="active">
+            <mat-icon matListItemIcon>track_changes</mat-icon>
+            <span matListItemTitle>Request Tracker</span>
+          </a>
+          
           <a mat-list-item routerLink="/admin/user-activity" routerLinkActive="active">
             <mat-icon matListItemIcon>analytics</mat-icon>
             <span matListItemTitle>User Activity</span>

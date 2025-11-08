@@ -1,0 +1,313 @@
+.apply-dialog-container {
+  display: flex;
+  flex-direction: column;
+  max-height: 90vh;
+
+  .dialog-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: 20px 24px;
+    border-bottom: 1px solid #e2e8f0;
+
+    h2 {
+      margin: 0;
+      font-size: 24px;
+      font-weight: 600;
+      color: #1a202c;
+    }
+
+    .company-name {
+      margin: 4px 0 0 0;
+      color: #667eea;
+      font-size: 16px;
+      font-weight: 500;
+    }
+
+    .close-button {
+      margin-top: -8px;
+    }
+  }
+
+  mat-dialog-content {
+    flex: 1;
+    overflow-y: auto;
+    padding: 24px;
+
+    form {
+      .mat-stepper-horizontal {
+        background: transparent;
+      }
+
+      .step-content {
+        padding: 24px 0;
+
+        .full-width {
+          width: 100%;
+          margin-bottom: 16px;
+        }
+
+        .section-label {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          font-size: 16px;
+          font-weight: 600;
+          color: #2d3748;
+          margin-bottom: 12px;
+
+          mat-icon {
+            color: #667eea;
+          }
+
+          .required {
+            color: #e53e3e;
+          }
+        }
+
+        // Resume Upload Section
+        .resume-upload-section {
+          margin-bottom: 20px;
+
+          .upload-area {
+            border: 2px dashed #cbd5e0;
+            border-radius: 12px;
+            padding: 40px 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: #f7fafc;
+
+            &:hover {
+              border-color: #667eea;
+              background: #edf2f7;
+            }
+
+            mat-icon {
+              font-size: 48px;
+              width: 48px;
+              height: 48px;
+              color: #667eea;
+              margin-bottom: 12px;
+            }
+
+            p {
+              margin: 0 0 8px 0;
+              font-size: 16px;
+              font-weight: 500;
+              color: #2d3748;
+            }
+
+            small {
+              color: #718096;
+              font-size: 14px;
+            }
+          }
+
+          .file-preview {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 16px;
+            background: #edf2f7;
+            border-radius: 8px;
+            border: 1px solid #cbd5e0;
+
+            > mat-icon {
+              font-size: 32px;
+              width: 32px;
+              height: 32px;
+              color: #667eea;
+            }
+
+            .file-info {
+              flex: 1;
+
+              .file-name {
+                margin: 0 0 4px 0;
+                font-weight: 600;
+                color: #2d3748;
+                font-size: 14px;
+              }
+
+              .file-size {
+                margin: 0;
+                color: #718096;
+                font-size: 12px;
+              }
+            }
+
+            button {
+              color: #e53e3e;
+            }
+          }
+        }
+
+        // Availability Section
+        .availability-section {
+          margin-bottom: 20px;
+
+          .radio-group {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            padding: 12px 0;
+
+            mat-radio-button {
+              margin: 4px 0;
+            }
+          }
+        }
+
+        // Review Section
+        .review-section {
+          background: #f7fafc;
+          border-radius: 12px;
+          padding: 20px;
+          margin-bottom: 20px;
+
+          h3 {
+            margin: 0 0 16px 0;
+            font-size: 18px;
+            font-weight: 600;
+            color: #1a202c;
+            border-bottom: 2px solid #667eea;
+            padding-bottom: 8px;
+          }
+
+          .review-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid #e2e8f0;
+
+            &:last-child {
+              border-bottom: none;
+            }
+
+            strong {
+              color: #4a5568;
+              font-size: 14px;
+            }
+
+            span {
+              color: #2d3748;
+              font-weight: 500;
+              font-size: 14px;
+              text-align: right;
+            }
+          }
+        }
+
+        // Terms Section
+        .terms-section {
+          background: #fff5e6;
+          border: 1px solid #ffd699;
+          border-radius: 8px;
+          padding: 16px;
+          margin-bottom: 20px;
+
+          mat-checkbox {
+            ::ng-deep .mat-checkbox-label {
+              font-size: 14px;
+              line-height: 1.6;
+              color: #2d3748;
+
+              a {
+                color: #667eea;
+                text-decoration: none;
+                font-weight: 500;
+
+                &:hover {
+                  text-decoration: underline;
+                }
+              }
+            }
+          }
+
+          mat-error {
+            display: block;
+            margin-top: 8px;
+            font-size: 12px;
+          }
+        }
+
+        // Step Actions
+        .step-actions {
+          display: flex;
+          justify-content: space-between;
+          gap: 12px;
+          margin-top: 24px;
+          padding-top: 20px;
+          border-top: 1px solid #e2e8f0;
+
+          button {
+            min-width: 120px;
+
+            &:only-child {
+              margin-left: auto;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  mat-progress-bar {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+  }
+
+  // Responsive Design
+  @media (max-width: 600px) {
+    .dialog-header {
+      flex-direction: column;
+      gap: 12px;
+
+      .close-button {
+        position: absolute;
+        top: 12px;
+        right: 12px;
+      }
+    }
+
+    mat-dialog-content {
+      padding: 16px;
+
+      form .step-content {
+        padding: 16px 0;
+
+        .step-actions {
+          flex-direction: column;
+
+          button {
+            width: 100%;
+          }
+        }
+      }
+    }
+  }
+}
+
+// Override Material Stepper Styles
+::ng-deep {
+  .mat-stepper-horizontal-line {
+    border-top-color: #cbd5e0 !important;
+  }
+
+  .mat-step-header {
+    .mat-step-icon {
+      background-color: #cbd5e0 !important;
+    }
+
+    .mat-step-icon-selected {
+      background-color: #667eea !important;
+    }
+
+    .mat-step-icon-state-done {
+      background-color: #48bb78 !important;
+    }
+  }
+}

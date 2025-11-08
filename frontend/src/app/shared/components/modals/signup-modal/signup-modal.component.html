@@ -1,0 +1,213 @@
+<!-- Modal Backdrop -->
+<div class="modal-backdrop" @backdropAnimation (click)="onBackdropClick($event)">
+  <!-- Modal Container -->
+  <div class="modal-container" @modalAnimation>
+    <!-- Close Button -->
+    <button class="modal-close" (click)="closeModal()" aria-label="Close modal">
+      <span class="material-icons">close</span>
+    </button>
+
+    <!-- Modal Header -->
+    <div class="modal-header">
+      <div class="modal-logo">
+        <span class="material-icons">person_add</span>
+      </div>
+      <h2 class="modal-title">Create Account</h2>
+      <p class="modal-subtitle">Join us and start your journey</p>
+    </div>
+
+    <!-- User Type Selection -->
+    <div class="user-type-selector">
+      <button *ngFor="let type of userTypes"
+              [class.active]="selectedUserType === type.value"
+              (click)="selectUserType(type.value)"
+              class="user-type-btn">
+        <span class="material-icons">{{ type.icon }}</span>
+        <span>{{ type.label }}</span>
+      </button>
+    </div>
+
+    <!-- Signup Form -->
+    <form [formGroup]="signupForm" (ngSubmit)="onSubmit()" class="modal-form">
+      <!-- Error Message -->
+      <div class="error-alert" *ngIf="errorMessage">
+        <span class="material-icons">error_outline</span>
+        <span>{{ errorMessage }}</span>
+      </div>
+
+      <!-- Full Name Field -->
+      <div class="form-group">
+        <label for="fullName" class="form-label">
+          <span class="material-icons">person</span>
+          Full Name
+        </label>
+        <input
+          id="fullName"
+          type="text"
+          formControlName="fullName"
+          class="form-control"
+          [class.invalid]="isFieldInvalid('fullName')"
+          placeholder="Enter your full name"
+          autocomplete="name"
+        />
+        <span class="error-message" *ngIf="isFieldInvalid('fullName')">
+          {{ getErrorMessage('fullName') }}
+        </span>
+      </div>
+
+      <!-- Email Field -->
+      <div class="form-group">
+        <label for="email" class="form-label">
+          <span class="material-icons">email</span>
+          Email Address
+        </label>
+        <input
+          id="email"
+          type="email"
+          formControlName="email"
+          class="form-control"
+          [class.invalid]="isFieldInvalid('email')"
+          placeholder="Enter your email"
+          autocomplete="email"
+        />
+        <span class="error-message" *ngIf="isFieldInvalid('email')">
+          {{ getErrorMessage('email') }}
+        </span>
+      </div>
+
+      <!-- Phone Field -->
+      <div class="form-group">
+        <label for="phone" class="form-label">
+          <span class="material-icons">phone</span>
+          Phone Number
+        </label>
+        <input
+          id="phone"
+          type="tel"
+          formControlName="phone"
+          class="form-control"
+          [class.invalid]="isFieldInvalid('phone')"
+          placeholder="Enter 10-digit phone number"
+          autocomplete="tel"
+        />
+        <span class="error-message" *ngIf="isFieldInvalid('phone')">
+          {{ getErrorMessage('phone') }}
+        </span>
+      </div>
+
+      <!-- Password Field -->
+      <div class="form-group">
+        <label for="password" class="form-label">
+          <span class="material-icons">lock</span>
+          Password
+        </label>
+        <div class="password-input-wrapper">
+          <input
+            id="password"
+            [type]="showPassword ? 'text' : 'password'"
+            formControlName="password"
+            class="form-control"
+            [class.invalid]="isFieldInvalid('password')"
+            placeholder="Create a strong password"
+            autocomplete="new-password"
+          />
+          <button
+            type="button"
+            class="password-toggle"
+            (click)="togglePasswordVisibility('password')"
+            aria-label="Toggle password visibility"
+          >
+            <span class="material-icons">
+              {{ showPassword ? 'visibility_off' : 'visibility' }}
+            </span>
+          </button>
+        </div>
+        <span class="error-message" *ngIf="isFieldInvalid('password')">
+          {{ getErrorMessage('password') }}
+        </span>
+      </div>
+
+      <!-- Confirm Password Field -->
+      <div class="form-group">
+        <label for="confirmPassword" class="form-label">
+          <span class="material-icons">lock_clock</span>
+          Confirm Password
+        </label>
+        <div class="password-input-wrapper">
+          <input
+            id="confirmPassword"
+            [type]="showConfirmPassword ? 'text' : 'password'"
+            formControlName="confirmPassword"
+            class="form-control"
+            [class.invalid]="isFieldInvalid('confirmPassword') || signupForm.hasError('passwordMismatch')"
+            placeholder="Re-enter your password"
+            autocomplete="new-password"
+          />
+          <button
+            type="button"
+            class="password-toggle"
+            (click)="togglePasswordVisibility('confirmPassword')"
+            aria-label="Toggle confirm password visibility"
+          >
+            <span class="material-icons">
+              {{ showConfirmPassword ? 'visibility_off' : 'visibility' }}
+            </span>
+          </button>
+        </div>
+        <span class="error-message" *ngIf="isFieldInvalid('confirmPassword') || (signupForm.hasError('passwordMismatch') && signupForm.get('confirmPassword')?.touched)">
+          {{ getErrorMessage('confirmPassword') }}
+        </span>
+      </div>
+
+      <!-- Terms & Conditions -->
+      <div class="form-group">
+        <label class="checkbox-label">
+          <input type="checkbox" formControlName="agreeToTerms" />
+          <span>
+            I agree to the 
+            <a href="/terms" target="_blank" class="link-text">Terms of Service</a> 
+            and 
+            <a href="/privacy" target="_blank" class="link-text">Privacy Policy</a>
+          </span>
+        </label>
+        <span class="error-message" *ngIf="signupForm.get('agreeToTerms')?.touched && signupForm.get('agreeToTerms')?.invalid">
+          You must agree to the terms and conditions
+        </span>
+      </div>
+
+      <!-- Submit Button -->
+      <button type="submit" class="btn-primary" [disabled]="isLoading">
+        <span *ngIf="!isLoading">Create Account</span>
+        <span *ngIf="isLoading" class="loading-spinner"></span>
+        <span *ngIf="isLoading">Creating Account...</span>
+      </button>
+
+      <!-- Divider -->
+      <div class="divider">
+        <span>OR</span>
+      </div>
+
+      <!-- Social Signup Buttons -->
+      <div class="social-login">
+        <button type="button" class="social-btn google">
+          <span class="material-icons">google</span>
+          <span>Sign up with Google</span>
+        </button>
+        <button type="button" class="social-btn microsoft">
+          <span class="material-icons">business</span>
+          <span>Sign up with Microsoft</span>
+        </button>
+      </div>
+
+      <!-- Login Link -->
+      <div class="modal-footer">
+        <p>
+          Already have an account?
+          <button type="button" class="link-btn highlighted" (click)="onLoginClick()">
+            Sign In
+          </button>
+        </p>
+      </div>
+    </form>
+  </div>
+</div>

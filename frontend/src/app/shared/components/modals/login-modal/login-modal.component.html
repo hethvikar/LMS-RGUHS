@@ -1,0 +1,138 @@
+<!-- Modal Backdrop -->
+<div class="modal-backdrop" @backdropAnimation (click)="onBackdropClick($event)">
+  <!-- Modal Container -->
+  <div class="modal-container" @modalAnimation>
+    <!-- Close Button -->
+    <button class="modal-close" (click)="closeModal()" aria-label="Close modal">
+      <span class="material-icons">close</span>
+    </button>
+
+    <!-- Modal Header -->
+    <div class="modal-header">
+      <div class="modal-logo">
+        <span class="material-icons">account_circle</span>
+      </div>
+      <h2 class="modal-title">Welcome Back!</h2>
+      <p class="modal-subtitle">Sign in to access your account</p>
+    </div>
+
+    <!-- User Type Selection -->
+    <div class="user-type-selector">
+      <button *ngFor="let type of userTypes"
+              [class.active]="selectedUserType === type.value"
+              (click)="selectUserType(type.value)"
+              class="user-type-btn">
+        <span class="material-icons">{{ type.icon }}</span>
+        <span>{{ type.label }}</span>
+      </button>
+    </div>
+
+    <!-- Login Form -->
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="modal-form">
+      <!-- Error Message -->
+      <div class="error-alert" *ngIf="errorMessage">
+        <span class="material-icons">error_outline</span>
+        <span>{{ errorMessage }}</span>
+      </div>
+
+      <!-- Email Field -->
+      <div class="form-group">
+        <label for="email" class="form-label">
+          <span class="material-icons">email</span>
+          Email Address
+        </label>
+        <input
+          id="email"
+          type="email"
+          formControlName="email"
+          class="form-control"
+          [class.invalid]="isFieldInvalid('email')"
+          placeholder="Enter your email"
+          autocomplete="email"
+        />
+        <span class="error-message" *ngIf="isFieldInvalid('email')">
+          {{ getErrorMessage('email') }}
+        </span>
+      </div>
+
+      <!-- Password Field -->
+      <div class="form-group">
+        <label for="password" class="form-label">
+          <span class="material-icons">lock</span>
+          Password
+        </label>
+        <div class="password-input-wrapper">
+          <input
+            id="password"
+            [type]="hidePassword ? 'password' : 'text'"
+            formControlName="password"
+            class="form-control"
+            [class.invalid]="isFieldInvalid('password')"
+            placeholder="Enter your password"
+            autocomplete="current-password"
+          />
+          <button
+            type="button"
+            class="password-toggle"
+            (click)="togglePasswordVisibility()"
+            aria-label="Toggle password visibility"
+          >
+            <span class="material-icons">
+              {{ hidePassword ? 'visibility' : 'visibility_off' }}
+            </span>
+          </button>
+        </div>
+        <span class="error-message" *ngIf="isFieldInvalid('password')">
+          {{ getErrorMessage('password') }}
+        </span>
+      </div>
+
+      <!-- Remember Me & Forgot Password -->
+      <div class="form-options">
+        <label class="checkbox-label">
+          <input type="checkbox" formControlName="rememberMe" />
+          <span>Remember me</span>
+        </label>
+        <button type="button" class="link-btn" (click)="onForgotPassword()">
+          Forgot Password?
+        </button>
+      </div>
+
+      <!-- Submit Button -->
+      <button type="submit" mat-raised-button color="primary" class="btn-primary" [disabled]="isLoading">
+        <mat-icon *ngIf="isLoading">
+          <mat-spinner diameter="20"></mat-spinner>
+        </mat-icon>
+        <span *ngIf="!isLoading">Sign In</span>
+        <span *ngIf="isLoading">Signing In...</span>
+      </button>
+
+      <!-- Divider -->
+      <div class="divider">
+        <span>OR</span>
+      </div>
+
+      <!-- Social Login Buttons -->
+      <div class="social-login">
+        <button type="button" class="social-btn google">
+          <span class="material-icons">google</span>
+          <span>Continue with Google</span>
+        </button>
+        <button type="button" class="social-btn microsoft">
+          <span class="material-icons">business</span>
+          <span>Continue with Microsoft</span>
+        </button>
+      </div>
+
+      <!-- Sign Up Link -->
+      <div class="modal-footer">
+        <p>
+          Don't have an account?
+          <button type="button" class="link-btn highlighted" (click)="onSignupClick()">
+            Sign Up Now
+          </button>
+        </p>
+      </div>
+    </form>
+  </div>
+</div>

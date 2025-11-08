@@ -67,22 +67,6 @@
   border: 1px solid rgba(255, 255, 255, 0.3);
 }
 
-.header-content h1 {
-  font-size: 2.5rem;
-  font-weight: 700;
-  margin-bottom: 8px;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
-
-.header-content p {
-  font-size: 1.2rem;
-  color: #666;
-  margin: 0;
-}
-
 .header-actions {
   display: flex;
   gap: 12px;

@@ -1,0 +1,262 @@
+<div class="apply-dialog-container">
+  <!-- Header -->
+  <div class="dialog-header">
+    <div>
+      <h2 mat-dialog-title>Apply for {{ job.title }}</h2>
+      <p class="company-name">{{ job.company }}</p>
+    </div>
+    <button mat-icon-button (click)="onCancel()" class="close-button">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+
+  <!-- Content -->
+  <mat-dialog-content>
+    <form [formGroup]="applicationForm">
+      <mat-stepper #stepper linear>
+        <!-- Step 1: Basic Information -->
+        <mat-step [stepControl]="applicationForm">
+          <ng-template matStepLabel>Basic Information</ng-template>
+          
+          <div class="step-content">
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Full Name</mat-label>
+              <input matInput formControlName="fullName" placeholder="John Doe">
+              <mat-icon matPrefix>person</mat-icon>
+              <mat-error>{{ getErrorMessage('fullName') }}</mat-error>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Email Address</mat-label>
+              <input matInput type="email" formControlName="email" placeholder="john.doe@example.com">
+              <mat-icon matPrefix>email</mat-icon>
+              <mat-error>{{ getErrorMessage('email') }}</mat-error>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Phone Number</mat-label>
+              <input matInput formControlName="phone" placeholder="9876543210" maxlength="10">
+              <mat-icon matPrefix>phone</mat-icon>
+              <mat-error>{{ getErrorMessage('phone') }}</mat-error>
+            </mat-form-field>
+
+            <div class="step-actions">
+              <button mat-raised-button color="primary" matStepperNext>
+                Next
+                <mat-icon>arrow_forward</mat-icon>
+              </button>
+            </div>
+          </div>
+        </mat-step>
+
+        <!-- Step 2: Professional Information -->
+        <mat-step [stepControl]="applicationForm">
+          <ng-template matStepLabel>Professional Information</ng-template>
+          
+          <div class="step-content">
+            <!-- Resume Upload -->
+            <div class="resume-upload-section">
+              <label class="section-label">
+                <mat-icon>description</mat-icon>
+                Upload Resume <span class="required">*</span>
+              </label>
+              
+              <div class="upload-area" *ngIf="!selectedResume" (click)="fileInput.click()">
+                <mat-icon>cloud_upload</mat-icon>
+                <p>Click to upload or drag and drop</p>
+                <small>PDF, DOC, or DOCX (Max 5MB)</small>
+              </div>
+
+              <div class="file-preview" *ngIf="selectedResume">
+                <mat-icon>description</mat-icon>
+                <div class="file-info">
+                  <p class="file-name">{{ resumePreview }}</p>
+                  <p class="file-size">{{ formatFileSize(selectedResume.size) }}</p>
+                </div>
+                <button mat-icon-button (click)="removeResume()" type="button">
+                  <mat-icon>close</mat-icon>
+                </button>
+              </div>
+
+              <input #fileInput type="file" accept=".pdf,.doc,.docx" (change)="onResumeSelect($event)" hidden>
+              <mat-error *ngIf="applicationForm.get('resume')?.touched && applicationForm.get('resume')?.invalid">
+                Resume is required
+              </mat-error>
+            </div>
+
+            <!-- Cover Letter -->
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Cover Letter</mat-label>
+              <textarea matInput formControlName="coverLetter" rows="6" 
+                        placeholder="Tell us why you're interested in this position..."></textarea>
+              <mat-icon matPrefix>edit</mat-icon>
+              <mat-hint>Explain your interest and qualifications (optional)</mat-hint>
+            </mat-form-field>
+
+            <!-- LinkedIn Profile -->
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>LinkedIn Profile</mat-label>
+              <input matInput formControlName="linkedinProfile" placeholder="https://linkedin.com/in/yourprofile">
+              <mat-icon matPrefix>link</mat-icon>
+              <mat-error>{{ getErrorMessage('linkedinProfile') }}</mat-error>
+            </mat-form-field>
+
+            <!-- Portfolio URL -->
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Portfolio / Website</mat-label>
+              <input matInput formControlName="portfolioUrl" placeholder="https://yourportfolio.com">
+              <mat-icon matPrefix>language</mat-icon>
+              <mat-error>{{ getErrorMessage('portfolioUrl') }}</mat-error>
+            </mat-form-field>
+
+            <div class="step-actions">
+              <button mat-button matStepperPrevious>
+                <mat-icon>arrow_back</mat-icon>
+                Back
+              </button>
+              <button mat-raised-button color="primary" matStepperNext>
+                Next
+                <mat-icon>arrow_forward</mat-icon>
+              </button>
+            </div>
+          </div>
+        </mat-step>
+
+        <!-- Step 3: Additional Information -->
+        <mat-step [stepControl]="applicationForm">
+          <ng-template matStepLabel>Additional Information</ng-template>
+          
+          <div class="step-content">
+            <!-- Expected Salary -->
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Expected Salary (Annual)</mat-label>
+              <input matInput type="number" formControlName="expectedSalary" placeholder="e.g., 1000000">
+              <span matPrefix>₹&nbsp;</span>
+              <mat-icon matSuffix>payments</mat-icon>
+              <mat-hint>Leave blank if negotiable</mat-hint>
+              <mat-error>{{ getErrorMessage('expectedSalary') }}</mat-error>
+            </mat-form-field>
+
+            <!-- Availability -->
+            <div class="availability-section">
+              <label class="section-label">
+                <mat-icon>event_available</mat-icon>
+                When can you join? <span class="required">*</span>
+              </label>
+              <mat-radio-group formControlName="availability" class="radio-group">
+                <mat-radio-button *ngFor="let option of availabilityOptions" [value]="option.value">
+                  {{ option.label }}
+                </mat-radio-button>
+              </mat-radio-group>
+              <mat-error *ngIf="applicationForm.get('availability')?.touched && applicationForm.get('availability')?.invalid">
+                Please select your availability
+              </mat-error>
+            </div>
+
+            <!-- Notice Period -->
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Current Notice Period (if applicable)</mat-label>
+              <input matInput formControlName="noticePeriod" placeholder="e.g., 30 days, 2 months">
+              <mat-icon matPrefix>schedule</mat-icon>
+            </mat-form-field>
+
+            <!-- Willing to Relocate -->
+            <mat-checkbox formControlName="willingToRelocate" class="full-width">
+              I am willing to relocate for this position
+            </mat-checkbox>
+
+            <!-- Additional Information -->
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Additional Information</mat-label>
+              <textarea matInput formControlName="additionalInfo" rows="4" 
+                        placeholder="Any other information you'd like to share..."></textarea>
+              <mat-icon matPrefix>info</mat-icon>
+            </mat-form-field>
+
+            <div class="step-actions">
+              <button mat-button matStepperPrevious>
+                <mat-icon>arrow_back</mat-icon>
+                Back
+              </button>
+              <button mat-raised-button color="primary" matStepperNext>
+                Review
+                <mat-icon>arrow_forward</mat-icon>
+              </button>
+            </div>
+          </div>
+        </mat-step>
+
+        <!-- Step 4: Review & Submit -->
+        <mat-step>
+          <ng-template matStepLabel>Review & Submit</ng-template>
+          
+          <div class="step-content">
+            <div class="review-section">
+              <h3>Application Summary</h3>
+              
+              <div class="review-item">
+                <strong>Job:</strong>
+                <span>{{ job.title }} at {{ job.company }}</span>
+              </div>
+
+              <div class="review-item">
+                <strong>Full Name:</strong>
+                <span>{{ applicationForm.get('fullName')?.value }}</span>
+              </div>
+
+              <div class="review-item">
+                <strong>Email:</strong>
+                <span>{{ applicationForm.get('email')?.value }}</span>
+              </div>
+
+              <div class="review-item">
+                <strong>Phone:</strong>
+                <span>{{ applicationForm.get('phone')?.value }}</span>
+              </div>
+
+              <div class="review-item" *ngIf="selectedResume">
+                <strong>Resume:</strong>
+                <span>{{ resumePreview }}</span>
+              </div>
+
+              <div class="review-item" *ngIf="applicationForm.get('expectedSalary')?.value">
+                <strong>Expected Salary:</strong>
+                <span>₹{{ applicationForm.get('expectedSalary')?.value | number }}</span>
+              </div>
+
+              <div class="review-item">
+                <strong>Availability:</strong>
+                <span>{{ applicationForm.get('availability')?.value }}</span>
+              </div>
+            </div>
+
+            <!-- Terms and Conditions -->
+            <div class="terms-section">
+              <mat-checkbox formControlName="termsAccepted">
+                I confirm that all information provided is accurate and I agree to the 
+                <a href="#" target="_blank">terms and conditions</a>
+              </mat-checkbox>
+              <mat-error *ngIf="applicationForm.get('termsAccepted')?.touched && applicationForm.get('termsAccepted')?.invalid">
+                You must accept the terms and conditions
+              </mat-error>
+            </div>
+
+            <div class="step-actions">
+              <button mat-button matStepperPrevious [disabled]="submitting">
+                <mat-icon>arrow_back</mat-icon>
+                Back
+              </button>
+              <button mat-raised-button color="primary" (click)="onSubmit()" [disabled]="applicationForm.invalid || submitting">
+                <mat-icon>send</mat-icon>
+                {{ submitting ? 'Submitting...' : 'Submit Application' }}
+              </button>
+            </div>
+          </div>
+        </mat-step>
+      </mat-stepper>
+    </form>
+  </mat-dialog-content>
+
+  <!-- Progress Bar -->
+  <mat-progress-bar mode="indeterminate" *ngIf="submitting"></mat-progress-bar>
+</div>

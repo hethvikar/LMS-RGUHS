@@ -1,0 +1,479 @@
+<!-- Navigation Header -->
+<header class="main-header">
+  <nav class="navbar">
+    <div class="nav-container">
+      <!-- Logo -->
+      <div class="logo-section">
+        <!-- <img src="assets/images/rguhs-logo.png" alt="RGUHS Logo" class="logo" (error)="onImageError($event)"> -->
+        <div class="logo-text">
+          <h1>RGUHS Placement Cell</h1>
+          <p>Empowering Careers, Building Futures</p>
+        </div>
+      </div>
+
+      <!-- Navigation Menu -->
+      <ul class="nav-menu">
+        <li><a (click)="scrollToSection('home')" class="nav-link" [class.active]="activeSection === 'home'">Home</a></li>
+        <li><a (click)="scrollToSection('gallery')" class="nav-link" [class.active]="activeSection === 'gallery'">Gallery</a></li>
+        <li><a (click)="scrollToSection('placements')" class="nav-link" [class.active]="activeSection === 'placements'">Placements</a></li>
+        <li><a (click)="scrollToSection('companies')" class="nav-link" [class.active]="activeSection === 'companies'">Companies</a></li>
+        <li><a (click)="scrollToSection('testimonials')" class="nav-link" [class.active]="activeSection === 'testimonials'">Testimonials</a></li>
+        <!-- <li><a (click)="scrollToSection('certificates')" class="nav-link" [class.active]="activeSection === 'certificates'">Certificates</a></li> -->
+      </ul>
+
+      <!-- Action Buttons -->
+      <div class="nav-actions">
+        <button (click)="openLoginModal()" class="btn btn-outline">Login</button>
+        <button (click)="openSignupModal()" class="btn btn-primary">Sign Up</button>
+      </div>
+
+      <!-- Mobile Menu Toggle -->
+      <button class="mobile-menu-toggle" aria-label="Toggle menu">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+  </nav>
+</header>
+
+<!-- Hero Section -->
+<section id="home" class="hero-section" @fadeIn>
+  <div class="hero-overlay"></div>
+  <div class="hero-content">
+    <h1 class="hero-title">Welcome to RGUHS Placement Cell</h1>
+    <p class="hero-subtitle">Connecting Talent with Opportunity</p>
+    
+    <!-- Statistics Cards -->
+    <div class="stats-grid">
+      <div class="stat-card glass-effect">
+        <div class="stat-icon">🎓</div>
+        <div class="stat-number">{{ stats.totalStudentsPlaced }}+</div>
+        <div class="stat-label">Students Placed</div>
+      </div>
+      <div class="stat-card glass-effect">
+        <div class="stat-icon">💰</div>
+        <div class="stat-number">{{ stats.averagePackage }}</div>
+        <div class="stat-label">Average Package</div>
+      </div>
+      <div class="stat-card glass-effect">
+        <div class="stat-icon">🏆</div>
+        <div class="stat-number">{{ stats.highestPackage }}</div>
+        <div class="stat-label">Highest Package</div>
+      </div>
+      <div class="stat-card glass-effect">
+        <div class="stat-icon">🏢</div>
+        <div class="stat-number">{{ stats.companiesVisited }}+</div>
+        <div class="stat-label">Companies Visited</div>
+      </div>
+    </div>
+
+    <!-- CTA Buttons -->
+    <div class="hero-cta">
+      <button (click)="openSignupModal()" class="btn btn-large btn-primary">Get Started</button>
+      <button (click)="scrollToSection('placements')" class="btn btn-large btn-secondary">View Success Stories</button>
+    </div>
+
+    <!-- Role-based Login Options -->
+    <div class="role-login-section">
+      <p class="role-login-text">Already have an account? Login as:</p>
+      <div class="role-login-buttons">
+        <button (click)="openStudentLoginModal()" class="btn btn-role student-btn">
+          <mat-icon>school</mat-icon>
+          <span>Student Login</span>
+        </button>
+        <button (click)="openCompanyLoginModal()" class="btn btn-role company-btn">
+          <mat-icon>business</mat-icon>
+          <span>Company Login</span>
+        </button>
+        <button (click)="openAdminLoginModal()" class="btn btn-role admin-btn">
+          <mat-icon>admin_panel_settings</mat-icon>
+          <span>Admin Login</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Animated Background Elements -->
+  <div class="hero-shapes">
+    <div class="shape shape-1"></div>
+    <div class="shape shape-2"></div>
+    <div class="shape shape-3"></div>
+  </div>
+</section>
+
+<!-- Placement Gallery Section -->
+<section id="gallery" class="gallery-section" @fadeIn>
+  <div class="section-container">
+    <div class="section-header">
+      <h2 class="section-title">Placement Gallery</h2>
+      <p class="section-subtitle">Capturing Moments of Success and Achievement</p>
+    </div>
+
+    <div class="gallery-carousel-wrapper" 
+         (mouseenter)="stopGalleryAutoScroll()" 
+         (mouseleave)="startGalleryAutoScroll()">
+      
+      <!-- Previous Button -->
+      <button class="gallery-nav-btn gallery-prev" (click)="previousGallerySlide()" aria-label="Previous gallery slide">
+        <mat-icon>chevron_left</mat-icon>
+      </button>
+
+      <!-- Gallery Grid (4 items visible) -->
+      <div class="gallery-carousel-track">
+        <div class="gallery-grid" [@carouselAnimation]="galleryCurrentIndex">
+          <div class="gallery-item" *ngFor="let photo of visibleGalleryPhotos; trackBy: trackById" @slideIn>
+            <div class="gallery-image-wrapper">
+              <img [src]="photo.url" [alt]="photo.alt" class="gallery-image" (error)="onImageError($event)">
+              <div class="gallery-overlay">
+                <h3 class="gallery-caption">{{ photo.caption }}</h3>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Next Button -->
+      <button class="gallery-nav-btn gallery-next" (click)="nextGallerySlide()" aria-label="Next gallery slide">
+        <mat-icon>chevron_right</mat-icon>
+      </button>
+    </div>
+
+    <!-- Gallery Indicators -->
+    <div class="gallery-indicators">
+      <button 
+        *ngFor="let photo of placementPhotos; let i = index" 
+        class="gallery-indicator" 
+        [class.active]="i === galleryCurrentIndex"
+        (click)="galleryCurrentIndex = i"
+        [attr.aria-label]="'Go to slide ' + (i + 1)">
+      </button>
+    </div>
+  </div>
+</section>
+
+<!-- Selected Students Carousel Section -->
+<section id="placements" class="students-section" @fadeIn>
+  <div class="section-container">
+    <div class="section-header">
+      <h2 class="section-title">Our Star Performers</h2>
+      <p class="section-subtitle">Meet Our Successfully Placed Students</p>
+    </div>
+
+    <div class="carousel-container">
+      <!-- Carousel Controls -->
+      <button class="carousel-btn carousel-btn-prev" (click)="previousStudent()" aria-label="Previous student">
+        <span class="material-icons">chevron_left</span>
+      </button>
+
+      <!-- Student Cards -->
+      <div class="student-carousel">
+        <div class="student-card glass-effect" 
+             *ngFor="let student of getVisibleStudents(); trackBy: trackById"
+             @slideIn>
+          <div class="student-card-header">
+            <div class="student-photo-wrapper">
+              <div class="student-photo">
+                {{ student.name }}
+              </div>
+              <div class="student-badge">Placed</div>
+            </div>
+          </div>
+          
+          <div class="student-card-body">
+            <p class="student-course">{{ student.course }} - {{ student.year }}</p>
+            
+            <div class="placement-details">
+              <div class="detail-row">
+                <span class="detail-icon material-icons">business</span>
+                <span class="detail-text">{{ student.company }}</span>
+              </div>
+              <div class="detail-row">
+                <span class="detail-icon material-icons">payments</span>
+                <span class="detail-text package-highlight">{{ student.package }}</span>
+              </div>
+            </div>
+
+            <div class="student-testimonial">
+              <span class="quote-icon">"</span>
+              <p>{{ student.testimonial }}</p>
+              <span class="quote-icon">"</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <button class="carousel-btn carousel-btn-next" (click)="nextStudent()" aria-label="Next student">
+        <span class="material-icons">chevron_right</span>
+      </button>
+    </div>
+
+    <!-- Carousel Indicators -->
+    <div class="carousel-indicators">
+      <button *ngFor="let student of selectedStudents; let i = index"
+              [class.active]="i === currentStudentIndex"
+              (click)="goToStudent(i)"
+              [attr.aria-label]="'Go to student ' + (i + 1)"
+              class="indicator-dot">
+      </button>
+    </div>
+  </div>
+</section>
+
+<!-- Registered Companies Section -->
+<section id="companies" class="companies-section" @fadeIn>
+  <div class="section-container">
+    <div class="section-header">
+      <h2 class="section-title">Our Recruiting Partners</h2>
+      <p class="section-subtitle">Leading Companies Trust Our Talent</p>
+    </div>
+
+    <div class="companies-grid">
+      <div class="company-card glass-effect" 
+           *ngFor="let company of companies; trackBy: trackById"
+           @slideIn>
+        <div class="company-logo-wrapper" [ngClass]="getCompanyGradientClass(company.id)">
+          <img [src]="company.logo" [alt]="company.name" class="company-logo" (error)="onImageError($event)">
+        </div>
+        <h3 class="company-name">{{ company.name }}</h3>
+        <p class="company-industry">{{ company.industry }}</p>
+        <a [href]="sanitizeUrl(company.website)" 
+           target="_blank" 
+           rel="noopener noreferrer" 
+           class="company-link">
+          Visit Website
+          <span class="material-icons">open_in_new</span>
+        </a>
+      </div>
+    </div>
+
+    <div class="section-cta">
+      <button (click)="openSignupModal()" class="btn btn-large btn-primary">
+        Register Your Company
+        <span class="material-icons">arrow_forward</span>
+      </button>
+    </div>
+  </div>
+</section>
+
+<!-- Testimonials Section -->
+<section id="testimonials" class="testimonials-section" @fadeIn>
+  <div class="section-container">
+    <div class="section-header">
+      <h2 class="section-title">Student Testimonials</h2>
+      <p class="section-subtitle">Hear From Our Successful Alumni</p>
+    </div>
+
+    <div class="testimonial-carousel">
+      <button class="carousel-btn carousel-btn-prev" (click)="previousTestimonial()" aria-label="Previous testimonial">
+        <span class="material-icons">chevron_left</span>
+      </button>
+
+      <div class="testimonial-wrapper">
+        <div class="testimonial-card glass-effect" 
+             *ngIf="testimonials[currentTestimonialIndex]"
+             @fadeIn>
+          <div class="testimonial-header">
+            <img [src]="testimonials[currentTestimonialIndex].photo" 
+                 [alt]="testimonials[currentTestimonialIndex].name"
+                 class="testimonial-photo"
+                 (error)="onImageError($event)">
+            <div class="testimonial-info">
+              <h3 class="testimonial-name">{{ testimonials[currentTestimonialIndex].name }}</h3>
+              <p class="testimonial-role">{{ testimonials[currentTestimonialIndex].role }}</p>
+            </div>
+          </div>
+
+          <div class="testimonial-rating">
+            <span class="star-icon material-icons" 
+                  *ngFor="let star of getStarArray(testimonials[currentTestimonialIndex].rating)">
+              star
+            </span>
+          </div>
+
+          <div class="testimonial-content">
+            <p class="testimonial-text">"{{ testimonials[currentTestimonialIndex].text }}"</p>
+          </div>
+
+          <div class="testimonial-date">
+            {{ testimonials[currentTestimonialIndex].date | date: 'MMMM yyyy' }}
+          </div>
+        </div>
+      </div>
+
+      <button class="carousel-btn carousel-btn-next" (click)="nextTestimonial()" aria-label="Next testimonial">
+        <span class="material-icons">chevron_right</span>
+      </button>
+    </div>
+
+    <div class="carousel-indicators">
+      <button *ngFor="let testimonial of testimonials; let i = index"
+              [class.active]="i === currentTestimonialIndex"
+              (click)="currentTestimonialIndex = i"
+              [attr.aria-label]="'Go to testimonial ' + (i + 1)"
+              class="indicator-dot">
+      </button>
+    </div>
+  </div>
+</section>
+
+<!-- Certificates & Achievements Section -->
+<!-- <section id="certificates" class="certificates-section" @fadeIn>
+  <div class="section-container">
+    <div class="section-header">
+      <h2 class="section-title">Certifications & Achievements</h2>
+      <p class="section-subtitle">Recognized Excellence in Education and Placements</p>
+    </div>
+
+    <div class="certificates-grid">
+      <div class="certificate-card glass-effect" 
+           *ngFor="let certificate of certificates; trackBy: trackById"
+           @slideIn>
+        <div class="certificate-image-wrapper">
+          <img [src]="certificate.image" 
+               [alt]="certificate.title" 
+               class="certificate-image"
+               (error)="onImageError($event)">
+          <div class="certificate-badge">
+            <span class="material-icons">verified</span>
+          </div>
+        </div>
+        <div class="certificate-content">
+          <h3 class="certificate-title">{{ certificate.title }}</h3>
+          <p class="certificate-description">{{ certificate.description }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section> -->
+
+<!-- Call to Action Section -->
+<section class="cta-section" @fadeIn>
+  <div class="cta-container glass-effect">
+    <h2 class="cta-title">Ready to Start Your Career Journey?</h2>
+    <p class="cta-subtitle">Join thousands of successful students who found their dream jobs through our platform</p>
+    
+    <div class="cta-buttons">
+      <button (click)="openSignupModal()" class="btn btn-large btn-light">
+        <span class="material-icons">person_add</span>
+        Register Now
+      </button>
+      <button (click)="openLoginModal()" class="btn btn-large btn-outline-light">
+        <span class="material-icons">login</span>
+        Sign In
+      </button>
+    </div>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer class="main-footer">
+  <div class="footer-container">
+    <div class="footer-grid">
+      <!-- About Section -->
+      <div class="footer-column">
+        <h3 class="footer-heading">About RGUHS Placement Cell</h3>
+        <p class="footer-text">
+          Dedicated to bridging the gap between academia and industry, 
+          providing exceptional placement opportunities for our students.
+        </p>
+        <div class="social-links">
+          <a href="#" class="social-link" aria-label="Facebook">
+            <span class="material-icons">facebook</span>
+          </a>
+          <a href="#" class="social-link" aria-label="Twitter">
+            <span class="material-icons">chat</span>
+          </a>
+          <a href="#" class="social-link" aria-label="LinkedIn">
+            <span class="material-icons">work</span>
+          </a>
+          <a href="#" class="social-link" aria-label="Instagram">
+            <span class="material-icons">photo_camera</span>
+          </a>
+        </div>
+      </div>
+
+      <!-- Quick Links -->
+      <div class="footer-column">
+        <h3 class="footer-heading">Quick Links</h3>
+        <ul class="footer-links">
+          <li><a (click)="scrollToSection('home')">Home</a></li>
+          <li><a (click)="scrollToSection('gallery')">Gallery</a></li>
+          <li><a (click)="scrollToSection('placements')">Placements</a></li>
+          <li><a (click)="scrollToSection('companies')">Companies</a></li>
+          <li><a routerLink="/about">About Us</a></li>
+          <li><a routerLink="/contact">Contact</a></li>
+        </ul>
+      </div>
+
+      <!-- For Students -->
+      <div class="footer-column">
+        <h3 class="footer-heading">For Students</h3>
+        <ul class="footer-links">
+          <li><a (click)="openLoginModal()">Login</a></li>
+          <li><a (click)="openSignupModal()">Sign Up</a></li>
+          <li><a routerLink="/student/dashboard">Dashboard</a></li>
+          <li><a routerLink="/student/jobs">Browse Jobs</a></li>
+          <li><a routerLink="/student/profile">My Profile</a></li>
+        </ul>
+      </div>
+
+      <!-- For Companies -->
+      <div class="footer-column">
+        <h3 class="footer-heading">For Companies</h3>
+        <ul class="footer-links">
+          <li><a (click)="openSignupModal()">Register</a></li>
+          <li><a (click)="openLoginModal()">Login</a></li>
+          <li><a routerLink="/company/dashboard">Dashboard</a></li>
+          <li><a routerLink="/company/post-job">Post a Job</a></li>
+          <li><a routerLink="/company/candidates">View Candidates</a></li>
+        </ul>
+      </div>
+
+      <!-- Contact Info -->
+      <div class="footer-column">
+        <h3 class="footer-heading">Contact Us</h3>
+        <div class="contact-info">
+          <div class="contact-item">
+            <span class="material-icons">location_on</span>
+            <span>RGUHS Campus, Bangalore, Karnataka</span>
+          </div>
+          <div class="contact-item">
+            <span class="material-icons">email</span>
+            <span>placements&#64;rguhs.edu.in</span>
+          </div>
+          <div class="contact-item">
+            <span class="material-icons">phone</span>
+            <span>+91-80-XXXX-XXXX</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <p class="copyright">&copy; 2024 RGUHS Placement Cell. All Rights Reserved.</p>
+      <div class="footer-legal">
+        <a routerLink="/privacy">Privacy Policy</a>
+        <span>|</span>
+        <a routerLink="/terms">Terms of Service</a>
+        <span>|</span>
+        <a routerLink="/sitemap">Sitemap</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<!-- Login Modal -->
+<app-login-modal 
+  *ngIf="showLoginModal"
+  [preselectedRole]="selectedLoginRole"
+  (close)="closeLoginModal()"
+  (switchToSignup)="switchToSignup()">
+</app-login-modal>
+
+<!-- Signup Modal -->
+<app-signup-modal 
+  *ngIf="showSignupModal"
+  (close)="closeSignupModal()"
+  (switchToLogin)="switchToLogin()">
+</app-signup-modal>

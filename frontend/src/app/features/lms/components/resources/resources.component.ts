@@ -6,7 +6,10 @@ import { MatChipsModule } from '@angular/material/chips';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { CommonModule } from '@angular/common';
+import { ResourceUploadDialogComponent, ResourceUploadData } from './resource-upload-dialog.component';
 
 interface Resource {
   id: number;
@@ -34,7 +37,9 @@ interface Resource {
     MatChipsModule,
     MatGridListModule,
     MatTabsModule,
-    MatTooltipModule
+    MatTooltipModule,
+    MatDialogModule,
+    MatSnackBarModule
   ],
   templateUrl: './resources.component.html',
   styleUrls: ['./resources.component.scss']
@@ -119,6 +124,11 @@ export class LmsResourcesComponent implements OnInit {
     }
   ];
 
+  constructor(
+    private dialog: MatDialog,
+    private snackBar: MatSnackBar
+  ) {}
+
   ngOnInit() {
     // Load resources from API
   }
@@ -177,7 +187,48 @@ export class LmsResourcesComponent implements OnInit {
   }
 
   uploadResource() {
-    console.log('Upload new resource');
-    // Open upload dialog
+    const dialogRef = this.dialog.open(ResourceUploadDialogComponent, {
+      width: '600px',
+      maxWidth: '90vw',
+      maxHeight: '90vh',
+      disableClose: false,
+      autoFocus: true,
+      data: {}
+    });
+
+    dialogRef.afterClosed().subscribe((result: ResourceUploadData) => {
+      if (result) {
+        // Add the new resource to the list
+        const newResource: Resource = {
+          id: this.resources.length + 1,
+          title: result.title,
+          description: result.description,
+          type: result.type,
+          category: result.category,
+          courseName: result.courseName,
+          uploadDate: new Date(),
+          downloads: 0,
+          tags: result.tags,
+          fileSize: result.file ? this.formatFileSize(result.file.size) : undefined,
+          downloadUrl: result.file?.name || '',
+          viewUrl: result.file?.name || ''
+        };
+
+        this.resources.unshift(newResource); // Add to beginning of array
+        
+        this.snackBar.open(`Resource "${result.title}" uploaded successfully!`, 'Close', {
+          duration: 3000,
+          panelClass: 'success-snackbar'
+        });
+      }
+    });
+  }
+
+  private formatFileSize(bytes: number): string {
+    if (bytes === 0) return '0 Bytes';
+    const k = 1024;
+    const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
   }
 }

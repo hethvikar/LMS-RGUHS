@@ -5,23 +5,6 @@
       margin: 0 auto;
     }
 
-.applications-header {
-  text-align: center;
-  margin-bottom: 32px;
-}
-
-.applications-header h1 {
-  font-size: 2.5rem;
-  font-weight: 300;
-  margin-bottom: 16px;
-  color: #333;
-}
-
-.applications-header p {
-  font-size: 1.2rem;
-  color: #666;
-}
-
 .stats-cards {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
@@ -31,73 +14,70 @@
 
 .stat-card {
   text-align: center;
-  border-radius: 12px;
+  border-radius: 12px !important;
   overflow: hidden;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  transition: transform 0.2s, box-shadow 0.2s;
+  transition: all 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
 
   &:hover {
     transform: translateY(-4px);
-    box-shadow: 0 8px 12px rgba(0, 0, 0, 0.15);
   }
 
   mat-card-content {
-    padding: 20px 16px !important;
+    padding: 24px 20px !important;
+    flex-grow: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  // Gradient card styling
+  &.gradient-card {
+    border: none;
+    color: white;
+
+    .stat-content {
+      .stat-icon {
+        background: rgba(255, 255, 255, 0.2) !important;
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        backdrop-filter: blur(10px);
+        
+        mat-icon {
+          color: white !important;
+        }
+      }
+
+      .stat-info {
+        h3, p {
+          color: white !important;
+        }
+      }
+    }
   }
 }
 
-.stat-card.gradient-blue {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
+// Enhanced gradient card effects
+.stats-cards {
+  .stat-card.gradient-card {
+    position: relative;
+    overflow: hidden;
 
-  mat-icon,
-  .stat-info h3,
-  .stat-info p {
-    color: white;
-  }
-}
+    &::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(45deg, rgba(255,255,255,0.1) 0%, transparent 50%);
+      pointer-events: none;
+    }
 
-.stat-card.gradient-orange {
-  background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-  color: white;
-
-  mat-icon,
-  .stat-info h3,
-  .stat-info p {
-    color: white;
-  }
-}
-
-.stat-card.gradient-purple {
-  background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
-  color: white;
-
-  mat-icon,
-  .stat-info h3,
-  .stat-info p {
-    color: white;
-  }
-}
-
-.stat-card.gradient-green {
-  background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
-  color: white;
-
-  mat-icon,
-  .stat-info h3,
-  .stat-info p {
-    color: white;
-  }
-}
-
-.stat-card.gradient-red {
-  background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
-  color: white;
-
-  mat-icon,
-  .stat-info h3,
-  .stat-info p {
-    color: white;
+    &:hover {
+      transform: translateY(-6px) scale(1.02);
+    }
   }
 }
 
@@ -106,30 +86,43 @@
   align-items: center;
   justify-content: center;
   gap: 16px;
+  width: 100%;
 
-  mat-icon {
-    font-size: 40px;
-    width: 40px;
-    height: 40px;
+  .stat-icon {
+    width: 56px;
+    height: 56px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+
+    mat-icon {
+      font-size: 28px;
+      width: 28px;
+      height: 28px;
+    }
   }
 }
 
 .stat-info {
   text-align: left;
+  flex-grow: 1;
 
   h3 {
-    margin: 0;
-    font-size: 2rem;
+    margin: 0 0 4px 0;
+    font-size: 2.2rem;
     font-weight: 700;
     line-height: 1;
   }
 
   p {
-    margin: 4px 0 0 0;
-    font-size: 0.85rem;
+    margin: 0;
+    font-size: 0.875rem;
     text-transform: uppercase;
     letter-spacing: 0.5px;
     opacity: 0.9;
+    font-weight: 500;
   }
 }
 
@@ -140,8 +133,38 @@
 
 .applications-card {
   margin-bottom: 24px;
-  border-radius: 12px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  border-radius: 12px !important;
+  border: none;
+  
+  &.gradient-card {
+    mat-card-header {
+      padding: 24px 24px 16px;
+      
+      mat-card-title {
+        color: white !important;
+        font-size: 1.5rem;
+        font-weight: 600;
+      }
+    }
+
+    mat-card-content {
+      padding: 0 24px 24px;
+      
+      .applications-table {
+        background: rgba(255, 255, 255, 0.95);
+        border-radius: 8px;
+        overflow: hidden;
+        backdrop-filter: blur(10px);
+      }
+
+      .no-applications {
+        background: rgba(255, 255, 255, 0.95);
+        border-radius: 12px;
+        margin: 16px 0;
+        backdrop-filter: blur(10px);
+      }
+    }
+  }
 }
 
 .applications-table {
