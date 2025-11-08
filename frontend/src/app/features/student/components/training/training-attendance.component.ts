@@ -11,6 +11,7 @@ import { MatSnackBarModule, MatSnackBar } from '@angular/material/snack-bar';
 import { MatBadgeModule } from '@angular/material/badge';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatMenuModule } from '@angular/material/menu';
 
 interface TrainingSession {
   id: number;
@@ -58,7 +59,8 @@ interface AttendanceStats {
     MatSnackBarModule,
     MatBadgeModule,
     MatProgressBarModule,
-    MatTooltipModule
+    MatTooltipModule,
+    MatMenuModule
   ],
   templateUrl: './training-attendance.component.html',
   styleUrls: ['./training-attendance.component.scss']
@@ -223,7 +225,7 @@ export class TrainingAttendanceComponent implements OnInit {
     }
   ];
 
-  displayedColumns = ['session', 'topic', 'date', 'time', 'mode', 'status', 'actions'];
+  displayedColumns = ['sessionNumber', 'topic', 'date', 'mode', 'status', 'attendance', 'actions'];
 
   constructor(
     private dialog: MatDialog,
@@ -258,6 +260,10 @@ export class TrainingAttendanceComponent implements OnInit {
       requiredPercentage,
       eligible
     };
+  }
+
+  getOverallStats(): AttendanceStats {
+    return this.getAttendanceStats();
   }
 
   getOverallAttendanceStats(): AttendanceStats {
@@ -337,5 +343,17 @@ export class TrainingAttendanceComponent implements OnInit {
     const completed = courseSessions.filter(s => s.status === 'completed').length;
     const total = courseSessions[0]?.totalSessions || 0;
     return total > 0 ? (completed / total) * 100 : 0;
+  }
+
+  viewSessionDetails(session: TrainingSession) {
+    this.snackBar.open(`Viewing details for: ${session.topic}`, 'Close', { duration: 3000 });
+    // In production, this would open a detailed dialog
+  }
+
+  downloadMaterials(session: TrainingSession) {
+    if (session.materials && session.materials.length > 0) {
+      this.snackBar.open(`Downloading ${session.materials.length} materials...`, 'Close', { duration: 3000 });
+      // In production, this would download the actual materials
+    }
   }
 }

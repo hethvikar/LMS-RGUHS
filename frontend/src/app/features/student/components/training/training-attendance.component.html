@@ -1,0 +1,290 @@
+<div class="training-attendance-container">
+  <div class="header">
+    <h1>
+      <mat-icon>event_available</mat-icon>
+      Training Attendance
+    </h1>
+    <p class="subtitle">Track your training session attendance and progress</p>
+  </div>
+
+  <!-- Attendance Summary -->
+  <mat-card class="attendance-summary">
+    <mat-card-header>
+      <mat-card-title>
+        <mat-icon>analytics</mat-icon>
+        Attendance Summary
+      </mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <div class="stats-grid">
+        <div class="stat-item">
+          <div class="stat-value">{{ getOverallStats().attended }}</div>
+          <div class="stat-label">Sessions Attended</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-value">{{ getOverallStats().totalSessions }}</div>
+          <div class="stat-label">Total Sessions</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-value">{{ getOverallStats().percentage }}%</div>
+          <div class="stat-label">Attendance Rate</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-badge" [class.eligible]="getOverallStats().eligible">
+            {{ getOverallStats().eligible ? 'Eligible' : 'Not Eligible' }}
+          </div>
+          <div class="stat-label">Certificate Status</div>
+        </div>
+      </div>
+      <mat-progress-bar 
+        mode="determinate" 
+        [value]="getOverallStats().percentage"
+        [color]="getOverallStats().percentage >= getOverallStats().requiredPercentage ? 'primary' : 'warn'">
+      </mat-progress-bar>
+      <p class="requirement-text">
+        Minimum {{ getOverallStats().requiredPercentage }}% attendance required for certificate eligibility
+      </p>
+    </mat-card-content>
+  </mat-card>
+
+  <!-- Sessions Tabs -->
+  <mat-card class="sessions-card">
+    <mat-tab-group>
+      <!-- Upcoming Sessions -->
+      <mat-tab label="Upcoming Sessions" [disabled]="getUpcomingSessions().length === 0">
+        <div class="sessions-content">
+          <div *ngIf="getUpcomingSessions().length === 0" class="no-sessions">
+            <mat-icon>event_busy</mat-icon>
+            <p>No upcoming sessions scheduled</p>
+          </div>
+          
+          <div *ngFor="let session of getUpcomingSessions()" class="session-card upcoming">
+            <div class="session-header">
+              <div class="course-info">
+                <h3>{{ session.courseName }}</h3>
+                <span class="session-number">Session {{ session.sessionNumber }}/{{ session.totalSessions }}</span>
+              </div>
+              <mat-chip-set>
+                <mat-chip [color]="session.mode === 'online' ? 'primary' : 'accent'">
+                  <mat-icon>{{ session.mode === 'online' ? 'videocam' : 'location_on' }}</mat-icon>
+                  {{ session.mode | titlecase }}
+                </mat-chip>
+                <mat-chip color="primary">{{ session.status | titlecase }}</mat-chip>
+              </mat-chip-set>
+            </div>
+            
+            <div class="session-details">
+              <h4>{{ session.topic }}</h4>
+              <div class="session-meta">
+                <div class="meta-item">
+                  <mat-icon>calendar_today</mat-icon>
+                  <span>{{ session.date | date:'fullDate' }}</span>
+                </div>
+                <div class="meta-item">
+                  <mat-icon>schedule</mat-icon>
+                  <span>{{ session.startTime }} - {{ session.endTime }}</span>
+                </div>
+                <div class="meta-item" *ngIf="session.mode === 'offline' && session.venue">
+                  <mat-icon>location_on</mat-icon>
+                  <span>{{ session.venue }}</span>
+                </div>
+                <div class="meta-item">
+                  <mat-icon>person</mat-icon>
+                  <span>{{ session.instructor }}</span>
+                </div>
+              </div>
+            </div>
+            
+            <div class="session-actions">
+              <button mat-raised-button color="primary" 
+                      *ngIf="session.mode === 'online' && session.meetingLink"
+                      (click)="joinSession(session)">
+                <mat-icon>videocam</mat-icon>
+                Join Session
+              </button>
+              <button mat-button color="primary" (click)="viewSessionDetails(session)">
+                <mat-icon>info</mat-icon>
+                View Details
+              </button>
+            </div>
+          </div>
+        </div>
+      </mat-tab>
+
+      <!-- Completed Sessions -->
+      <mat-tab label="Completed Sessions">
+        <div class="sessions-content">
+          <div *ngIf="getCompletedSessions().length === 0" class="no-sessions">
+            <mat-icon>history</mat-icon>
+            <p>No completed sessions yet</p>
+          </div>
+          
+          <div *ngFor="let session of getCompletedSessions()" class="session-card completed">
+            <div class="session-header">
+              <div class="course-info">
+                <h3>{{ session.courseName }}</h3>
+                <span class="session-number">Session {{ session.sessionNumber }}/{{ session.totalSessions }}</span>
+              </div>
+              <mat-chip-set>
+                <mat-chip [color]="session.attended ? 'primary' : 'warn'">
+                  <mat-icon>{{ session.attended ? 'check_circle' : 'cancel' }}</mat-icon>
+                  {{ session.attended ? 'Present' : 'Absent' }}
+                </mat-chip>
+                <mat-chip [color]="session.mode === 'online' ? 'primary' : 'accent'">
+                  {{ session.mode | titlecase }}
+                </mat-chip>
+              </mat-chip-set>
+            </div>
+            
+            <div class="session-details">
+              <h4>{{ session.topic }}</h4>
+              <div class="session-meta">
+                <div class="meta-item">
+                  <mat-icon>calendar_today</mat-icon>
+                  <span>{{ session.date | date:'mediumDate' }}</span>
+                </div>
+                <div class="meta-item">
+                  <mat-icon>schedule</mat-icon>
+                  <span>{{ session.duration }} minutes</span>
+                </div>
+                <div class="meta-item">
+                  <mat-icon>person</mat-icon>
+                  <span>{{ session.instructor }}</span>
+                </div>
+              </div>
+            </div>
+            
+            <div class="session-actions">
+              <button mat-button color="primary" 
+                      *ngIf="session.materials && session.materials.length > 0"
+                      (click)="downloadMaterials(session)"
+                      [matBadge]="session.materials.length" 
+                      matBadgeColor="accent">
+                <mat-icon>download</mat-icon>
+                Materials
+              </button>
+              <button mat-button color="primary" 
+                      *ngIf="session.recordingAvailable && session.recordingUrl"
+                      (click)="watchRecording(session)">
+                <mat-icon>play_circle</mat-icon>
+                Recording
+              </button>
+              <button mat-button color="primary" (click)="viewSessionDetails(session)">
+                <mat-icon>info</mat-icon>
+                Details
+              </button>
+            </div>
+          </div>
+        </div>
+      </mat-tab>
+
+      <!-- All Sessions -->
+      <mat-tab label="All Sessions">
+        <div class="sessions-content">
+          <div class="sessions-table">
+            <table mat-table [dataSource]="sessions" class="sessions-data-table">
+              <!-- Session Number Column -->
+              <ng-container matColumnDef="sessionNumber">
+                <th mat-header-cell *matHeaderCellDef>Session</th>
+                <td mat-cell *matCellDef="let session">{{ session.sessionNumber }}/{{ session.totalSessions }}</td>
+              </ng-container>
+
+              <!-- Topic Column -->
+              <ng-container matColumnDef="topic">
+                <th mat-header-cell *matHeaderCellDef>Topic</th>
+                <td mat-cell *matCellDef="let session">
+                  <div class="topic-cell">
+                    <span class="topic-title">{{ session.topic }}</span>
+                    <span class="course-name">{{ session.courseName }}</span>
+                  </div>
+                </td>
+              </ng-container>
+
+              <!-- Date Column -->
+              <ng-container matColumnDef="date">
+                <th mat-header-cell *matHeaderCellDef>Date & Time</th>
+                <td mat-cell *matCellDef="let session">
+                  <div class="date-cell">
+                    <span>{{ session.date | date:'shortDate' }}</span>
+                    <span class="time">{{ session.startTime }}</span>
+                  </div>
+                </td>
+              </ng-container>
+
+              <!-- Mode Column -->
+              <ng-container matColumnDef="mode">
+                <th mat-header-cell *matHeaderCellDef>Mode</th>
+                <td mat-cell *matCellDef="let session">
+                  <mat-chip [color]="session.mode === 'online' ? 'primary' : 'accent'">
+                    <mat-icon>{{ session.mode === 'online' ? 'videocam' : 'location_on' }}</mat-icon>
+                    {{ session.mode | titlecase }}
+                  </mat-chip>
+                </td>
+              </ng-container>
+
+              <!-- Status Column -->
+              <ng-container matColumnDef="status">
+                <th mat-header-cell *matHeaderCellDef>Status</th>
+                <td mat-cell *matCellDef="let session">
+                  <mat-chip [color]="getStatusColor(session.status)">
+                    {{ session.status | titlecase }}
+                  </mat-chip>
+                </td>
+              </ng-container>
+
+              <!-- Attendance Column -->
+              <ng-container matColumnDef="attendance">
+                <th mat-header-cell *matHeaderCellDef>Attendance</th>
+                <td mat-cell *matCellDef="let session">
+                  <mat-chip *ngIf="session.attendanceMarked" 
+                           [color]="session.attended ? 'primary' : 'warn'">
+                    <mat-icon>{{ session.attended ? 'check_circle' : 'cancel' }}</mat-icon>
+                    {{ session.attended ? 'Present' : 'Absent' }}
+                  </mat-chip>
+                  <span *ngIf="!session.attendanceMarked" class="not-marked">Not Marked</span>
+                </td>
+              </ng-container>
+
+              <!-- Actions Column -->
+              <ng-container matColumnDef="actions">
+                <th mat-header-cell *matHeaderCellDef>Actions</th>
+                <td mat-cell *matCellDef="let session">
+                  <button mat-icon-button [matMenuTriggerFor]="sessionMenu" color="primary">
+                    <mat-icon>more_vert</mat-icon>
+                  </button>
+                  <mat-menu #sessionMenu="matMenu">
+                    <button mat-menu-item (click)="viewSessionDetails(session)">
+                      <mat-icon>info</mat-icon>
+                      View Details
+                    </button>
+                    <button mat-menu-item 
+                            *ngIf="session.materials && session.materials.length > 0"
+                            (click)="downloadMaterials(session)">
+                      <mat-icon>download</mat-icon>
+                      Download Materials
+                    </button>
+                    <button mat-menu-item 
+                            *ngIf="session.recordingAvailable && session.recordingUrl"
+                            (click)="watchRecording(session)">
+                      <mat-icon>play_circle</mat-icon>
+                      Watch Recording
+                    </button>
+                    <button mat-menu-item 
+                            *ngIf="session.mode === 'online' && session.meetingLink && session.status === 'upcoming'"
+                            (click)="joinSession(session)">
+                      <mat-icon>videocam</mat-icon>
+                      Join Session
+                    </button>
+                  </mat-menu>
+                </td>
+              </ng-container>
+
+              <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+              <tr mat-row *matRowDef="let session; columns: displayedColumns;"></tr>
+            </table>
+          </div>
+        </div>
+      </mat-tab>
+    </mat-tab-group>
+  </mat-card>
+</div>

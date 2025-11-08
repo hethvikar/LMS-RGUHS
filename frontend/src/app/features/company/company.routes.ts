@@ -33,6 +33,11 @@ export const COMPANY_ROUTES: Routes = [
       {
         path: 'liveinterview',
         loadComponent: () => import('./components/interviews/live-interview.component').then(m => m.LiveInterviewComponent)
+      },
+      {
+        path: 'screening',
+        loadComponent: () => import('./components/screening/candidate-screening.component').then(m => m.CandidateScreeningComponent),
+        data: { breadcrumb: 'Candidate Screening', icon: 'people_outline' }
       }
     ]
   }

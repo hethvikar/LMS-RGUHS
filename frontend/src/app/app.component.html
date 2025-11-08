@@ -5,4 +5,7 @@
     <router-outlet></router-outlet>
   </main>
   <app-footer *ngIf="!isLoginPage && (isAuthenticated$ | async)"></app-footer>
+  
+  <!-- Live Chat - Available globally for authenticated users -->
+  <app-live-chat *ngIf="!isLoginPage && (isAuthenticated$ | async)"></app-live-chat>
 </div>

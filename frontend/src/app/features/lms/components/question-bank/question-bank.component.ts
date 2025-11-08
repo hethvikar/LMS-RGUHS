@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators, FormArray } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -216,7 +217,7 @@ export class QuestionBankComponent implements OnInit {
     { value: 'hard', label: 'Hard' }
   ];
 
-  constructor(private fb: FormBuilder, private dialog: MatDialog) {
+  constructor(private fb: FormBuilder, private dialog: MatDialog, private route: ActivatedRoute) {
     this.questionForm = this.fb.group({
       type: ['multiple-choice', [Validators.required]],
       question: ['', [Validators.required, Validators.minLength(5)]],
@@ -234,6 +235,15 @@ export class QuestionBankComponent implements OnInit {
   ngOnInit() {
     this.initializeForm();
     this.loadMockData();
+    
+    // Check if we should open the create dialog automatically
+    this.route.queryParams.subscribe(params => {
+      if (params['action'] === 'create') {
+        setTimeout(() => {
+          this.openCreateDialog();
+        }, 500); // Small delay to ensure component is fully initialized
+      }
+    });
   }
 
   onGridReady(params: GridReadyEvent) {

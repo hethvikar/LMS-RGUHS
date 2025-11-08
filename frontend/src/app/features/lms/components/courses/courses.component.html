@@ -2,7 +2,11 @@
     <div class="courses-container">
       <div class="courses-header">
         <div class="header-actions">
-          <button mat-raised-button color="accent" (click)="createNewCourse()">
+          <button 
+            *ngIf="canCreateCourse()" 
+            mat-raised-button 
+            color="accent" 
+            (click)="createNewCourse()">
             Create Course
           </button>
           <button mat-raised-button color="primary" (click)="browseAllCourses()">
@@ -146,10 +150,14 @@
                           {{ course.category }}
                         </mat-chip>
                       </div>
+                      <div class="course-price" *ngIf="course.price">
+                        <span class="price-label">Price:</span>
+                        <span class="price-amount">₹{{ course.price }}</span>
+                      </div>
                     </mat-card-content>
                     <mat-card-actions>
                       <button mat-raised-button color="primary" (click)="enrollInCourse(course)">
-                        
+                        <mat-icon>payment</mat-icon>
                         Enroll Now
                       </button>
                       <button mat-button (click)="viewCourseDetails(course)">

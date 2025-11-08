@@ -9,12 +9,13 @@ import { AppState } from './core/store';
 import * as AuthActions from './core/store/auth/auth.actions';
 import { HeaderComponent } from './shared/components/header/header.component';
 import { FooterComponent } from './shared/components/footer/footer.component';
+import { LiveChatComponent } from './shared/components/live-chat/live-chat.component';
 import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, HeaderComponent, FooterComponent, CommonModule],
+  imports: [RouterOutlet, HeaderComponent, FooterComponent, LiveChatComponent, CommonModule],
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
 })

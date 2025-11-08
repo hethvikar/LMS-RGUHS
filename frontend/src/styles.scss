@@ -416,3 +416,7 @@ mat-card[class*="gradient-"] button:hover {
     border-radius: 12px;
   }
 }
+
+.mat-expansion-panel-body {
+    padding: 0 4px 16px !important;
+}

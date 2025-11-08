@@ -349,6 +349,10 @@ export class CourseEnrollmentComponent implements OnInit {
     return this.cart.reduce((sum, course) => sum + course.fee, 0);
   }
 
+  isInCart(course: Course): boolean {
+    return this.cart.some(c => c.id === course.id);
+  }
+
   proceedToPayment() {
     if (this.cart.length === 0) {
       this.snackBar.open('Please add courses to cart', 'Close', { duration: 3000 });

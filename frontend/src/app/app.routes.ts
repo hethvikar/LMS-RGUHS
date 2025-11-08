@@ -18,13 +18,6 @@ export const routes: Routes = [
     pathMatch: 'full'
   },
   {
-    path: 'dashboard',
-    loadChildren: () => import('./features/dashboard/dashboard.routes').then(m => m.DASHBOARD_ROUTES),
-    canActivate: [AuthGuard],
-    canActivateChild: [AuthGuard],
-    data: { breadcrumb: 'Dashboard', icon: 'dashboard' }
-  },
-  {
     path: 'student',
     loadChildren: () => import('./features/student/student.routes').then(m => m.STUDENT_ROUTES),
     canActivate: [AuthGuard],
@@ -51,6 +44,21 @@ export const routes: Routes = [
     canActivate: [AuthGuard],
     canActivateChild: [AuthGuard],
     data: { breadcrumb: 'Administration', icon: 'admin_panel_settings' }
+  },
+  {
+    path: 'dashboard',
+    loadComponent: () => import('./shared/components/dashboard-redirect/dashboard-redirect.component').then(m => m.DashboardRedirectComponent),
+    canActivate: [AuthGuard]
+  },
+  {
+    path: 'help',
+    loadComponent: () => import('./shared/components/help/help.component').then(m => m.HelpComponent),
+    data: { breadcrumb: 'Help & Support', icon: 'help' }
+  },
+  {
+    path: 'report-issue',
+    loadComponent: () => import('./shared/components/report-issue/report-issue.component').then(m => m.ReportIssueComponent),
+    data: { breadcrumb: 'Report Issue', icon: 'bug_report' }
   },
   {
     path: '**',

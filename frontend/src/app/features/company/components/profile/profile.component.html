@@ -1,10 +1,6 @@
 
     <div class="profile-container">
-      <div class="profile-header">
-        <h1>Company Profile</h1>
-        <p>Manage your company information and branding</p>
-      </div>
-
+      
       <div class="profile-content">
         <mat-card class="profile-card">
           <mat-card-header>
@@ -100,6 +96,25 @@
                   <textarea matInput formControlName="address" rows="3" placeholder="Company address..."></textarea>
                 </mat-form-field>
               </div>
+
+              <!-- Company Benefits Section -->
+              <div class="benefits-section">
+                <h4>Company Benefits</h4>
+                <mat-chip-set>
+                  <mat-chip *ngFor="let benefit of benefitsList" [removable]="true" (removed)="removeBenefit(benefit)">
+                    {{ benefit }}
+                    <mat-icon matChipRemove>cancel</mat-icon>
+                  </mat-chip>
+                </mat-chip-set>
+                <mat-form-field appearance="outline" class="add-benefit-field">
+                  <mat-label>Add New Benefit</mat-label>
+                  <input matInput [(ngModel)]="newBenefit" (keyup.enter)="addBenefit()" placeholder="Enter a benefit">
+                </mat-form-field>
+                <button mat-button color="primary" (click)="addBenefit()">
+                  <mat-icon>add</mat-icon>
+                  Add Benefit
+                </button>
+              </div>
             </form>
           </mat-card-content>
           <mat-card-actions>
@@ -108,29 +123,6 @@
               Update Profile
             </button>
           </mat-card-actions>
-        </mat-card>
-
-        <mat-card class="benefits-card">
-          <mat-card-header>
-            <mat-card-title>Company Benefits</mat-card-title>
-            
-          </mat-card-header>
-          <mat-card-content>
-            <mat-chip-set>
-              <mat-chip *ngFor="let benefit of benefitsList" [removable]="true" (removed)="removeBenefit(benefit)">
-                {{ benefit }}
-                
-              </mat-chip>
-            </mat-chip-set>
-            <mat-form-field appearance="outline" class="add-benefit-field">
-              <mat-label>Add New Benefit</mat-label>
-              <input matInput [(ngModel)]="newBenefit" (keyup.enter)="addBenefit()" placeholder="Enter a benefit">
-            </mat-form-field>
-            <button mat-button color="primary" (click)="addBenefit()">
-              
-              Add Benefit
-            </button>
-          </mat-card-content>
         </mat-card>
       </div>
     </div>

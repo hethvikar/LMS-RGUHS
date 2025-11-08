@@ -37,6 +37,44 @@ export class CompanyProfileComponent implements OnInit {
   benefitsList: string[] = ['Health Insurance', 'Paid Time Off', 'Remote Work', 'Professional Development'];
   newBenefit = '';
 
+  // Suggested benefits for quick addition
+  suggestedBenefits: string[] = [
+    'Dental Coverage',
+    'Vision Insurance', 
+    'Retirement Plan',
+    'Flexible Schedule',
+    'Work from Home',
+    'Gym Membership',
+    'Learning Budget',
+    'Stock Options',
+    'Parental Leave',
+    'Mental Health Support'
+  ];
+
+  // Benefit categories with icons
+  benefitIcons: { [key: string]: string } = {
+    'Health Insurance': 'local_hospital',
+    'Dental Coverage': 'local_hospital',
+    'Vision Insurance': 'visibility',
+    'Paid Time Off': 'beach_access',
+    'Remote Work': 'home',
+    'Work from Home': 'home',
+    'Professional Development': 'school',
+    'Learning Budget': 'school',
+    'Retirement Plan': 'savings',
+    'Flexible Schedule': 'schedule',
+    'Gym Membership': 'fitness_center',
+    'Stock Options': 'trending_up',
+    'Parental Leave': 'child_care',
+    'Mental Health Support': 'psychology'
+  };
+
+  // Original form values for reset functionality
+  originalFormValues: any = {};
+  
+  // Loading states
+  isUpdatingProfile = false;
+
   // Verification status and loading states
   verificationStatus: { [key: string]: 'pending' | 'verified' | 'failed' | null } = {
     website: null,
@@ -74,7 +112,7 @@ export class CompanyProfileComponent implements OnInit {
 
   loadProfile() {
     // Mock data - in real app, this would come from API
-    this.profileForm.patchValue({
+    const profileData = {
       companyName: 'Tech Solutions Inc.',
       industry: 'Information Technology',
       website: 'https://techsolutions.com',
@@ -85,7 +123,12 @@ export class CompanyProfileComponent implements OnInit {
       contactPhone: '+1-234-567-8900',
       description: 'Leading technology solutions provider specializing in software development and digital transformation.',
       address: '123 Tech Street, Silicon Valley, CA 94000'
-    });
+    };
+
+    this.profileForm.patchValue(profileData);
+    
+    // Store original values for reset functionality
+    this.originalFormValues = { ...profileData };
 
     // Set initial verification status (in real app, this would come from API)
     this.verificationStatus = {
@@ -93,24 +136,98 @@ export class CompanyProfileComponent implements OnInit {
       'gst': 'verified',
       'registration': 'verified'
     };
+
+    // Initialize suggested benefits (filter out already existing benefits)
+    this.suggestedBenefits = [
+      'Dental Coverage',
+      'Vision Insurance', 
+      'Retirement Plan',
+      'Flexible Schedule',
+      'Work from Home',
+      'Gym Membership',
+      'Learning Budget',
+      'Stock Options',
+      'Parental Leave',
+      'Mental Health Support'
+    ].filter(benefit => !this.benefitsList.includes(benefit));
   }
 
   updateProfile() {
     if (this.profileForm.valid) {
-      console.log('Updating company profile:', this.profileForm.value);
-      // Here you would call the API to update the profile
+      this.isUpdatingProfile = true;
+      
+      // Simulate API call with timeout
+      setTimeout(() => {
+        console.log('Updating company profile:', {
+          ...this.profileForm.value,
+          benefits: this.benefitsList
+        });
+        
+        // Update original values to reflect saved state
+        this.originalFormValues = { ...this.profileForm.value };
+        
+        this.isUpdatingProfile = false;
+        
+        // Show success message (in real app, handle API response)
+        alert('Profile updated successfully!');
+      }, 2000);
+    } else {
+      // Mark all fields as touched to show validation errors
+      this.profileForm.markAllAsTouched();
+      alert('Please fill in all required fields correctly.');
     }
   }
 
   addBenefit() {
-    if (this.newBenefit.trim() && !this.benefitsList.includes(this.newBenefit.trim())) {
-      this.benefitsList.push(this.newBenefit.trim());
+    const benefit = this.newBenefit.trim();
+    if (benefit && !this.benefitsList.includes(benefit)) {
+      if (benefit.length > 50) {
+        alert('Benefit description is too long. Please keep it under 50 characters.');
+        return;
+      }
+      
+      this.benefitsList.push(benefit);
       this.newBenefit = '';
+      this.updateSuggestedBenefits();
+    } else if (this.benefitsList.includes(benefit)) {
+      alert('This benefit is already added.');
     }
   }
 
   removeBenefit(benefit: string) {
     this.benefitsList = this.benefitsList.filter(b => b !== benefit);
+    this.updateSuggestedBenefits();
+  }
+
+  addSuggestedBenefit(benefit: string) {
+    if (!this.benefitsList.includes(benefit)) {
+      this.benefitsList.push(benefit);
+      this.updateSuggestedBenefits();
+    }
+  }
+
+  updateSuggestedBenefits() {
+    // Filter out benefits that are already added
+    this.suggestedBenefits = this.suggestedBenefits.filter(benefit => 
+      !this.benefitsList.includes(benefit)
+    );
+  }
+
+  trackByBenefit(index: number, benefit: string): string {
+    return benefit;
+  }
+
+  getBenefitIcon(benefit: string): string {
+    return this.benefitIcons[benefit] || 'card_giftcard';
+  }
+
+  resetForm() {
+    if (confirm('Are you sure you want to reset all changes? This will revert to the last saved version.')) {
+      this.profileForm.patchValue(this.originalFormValues);
+      this.benefitsList = ['Health Insurance', 'Paid Time Off', 'Remote Work', 'Professional Development'];
+      this.newBenefit = '';
+      this.updateSuggestedBenefits();
+    }
   }
 
   // Verification methods

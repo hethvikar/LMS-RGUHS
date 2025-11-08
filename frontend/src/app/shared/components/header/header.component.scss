@@ -653,3 +653,22 @@
     height: 20px;
   }
 }
+
+/* Change Password Dialog Styles */
+::ng-deep .change-password-dialog-panel {
+  .mat-mdc-dialog-container {
+    overflow: hidden !important;
+    padding: 0 !important;
+  }
+  
+  .mat-mdc-dialog-content {
+    overflow: hidden !important;
+    max-height: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+  
+  .mat-mdc-dialog-surface {
+    overflow: hidden !important;
+  }
+}

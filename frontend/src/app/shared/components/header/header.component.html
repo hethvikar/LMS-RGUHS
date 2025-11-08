@@ -75,17 +75,21 @@
       </div>
     </div>
     <mat-divider></mat-divider>
-    <button mat-menu-item routerLink="/profile">
+    <button mat-menu-item [routerLink]="getProfileRoute()">
       <mat-icon>person</mat-icon>
       <span>Profile</span>
     </button>
-    <button mat-menu-item routerLink="/settings">
-      <mat-icon>settings</mat-icon>
-      <span>Settings</span>
+    <button mat-menu-item *ngIf="isStudent()" (click)="openChangePassword()">
+      <mat-icon>lock</mat-icon>
+      <span>Change Password</span>
     </button>
     <button mat-menu-item routerLink="/help">
       <mat-icon>help</mat-icon>
       <span>Help & Support</span>
+    </button>
+    <button mat-menu-item routerLink="/report-issue">
+      <mat-icon>bug_report</mat-icon>
+      <span>Report Issue</span>
     </button>
     <mat-divider></mat-divider>
     <button mat-menu-item (click)="logout()">

@@ -90,18 +90,27 @@ export class LoginModalComponent implements OnInit {
       rememberMe: [false]
     });
 
-    // Check if user is already logged in
-    const token = localStorage.getItem('authToken');
-    if (token) {
-      this.router.navigate(['/dashboard']);
-      this.closeModal();
-    }
+    // Check if user is already logged in with valid token and role
+    this.checkExistingAuth();
   }
 
   ngOnInit(): void {
+    // Check if user is already logged in with valid token and role
+    this.checkExistingAuth();
+    
     // Set preselected role if provided
     if (this.preselectedRole && this.userTypes.some(type => type.value === this.preselectedRole)) {
       this.selectedUserType = this.preselectedRole;
+    }
+  }
+
+  private checkExistingAuth(): void {
+    const authCheck = this.authService.isAuthenticatedWithValidRole();
+    
+    if (authCheck.isValid && authCheck.user && authCheck.shouldRedirect) {
+      // User is already authenticated with valid role, redirect to appropriate dashboard
+      this.redirectBasedOnRole(authCheck.user.role);
+      this.closeModal();
     }
   }
 

@@ -15,6 +15,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatSnackBarModule, MatSnackBar } from '@angular/material/snack-bar';
 import { MatBadgeModule } from '@angular/material/badge';
 import { MatExpansionModule } from '@angular/material/expansion';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 import { CandidateDetailDialogComponent } from './candidate-detail-dialog.component';
 import { RequestMoreProfilesDialogComponent } from './request-more-profiles-dialog.component';
 
@@ -69,7 +70,8 @@ interface JobRequest {
     MatTooltipModule,
     MatSnackBarModule,
     MatBadgeModule,
-    MatExpansionModule
+    MatExpansionModule,
+    MatCheckboxModule
   ],
   templateUrl: './candidate-screening.component.html',
   styleUrls: ['./candidate-screening.component.scss']

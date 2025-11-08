@@ -29,49 +29,846 @@
 
     .profile-card {
       margin-bottom: 24px;
+      border-radius: 16px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+      overflow: hidden;
+      background: linear-gradient(135deg, #ffffff 0%, #f8fffe 100%);
+      border: 1px solid rgba(33, 150, 243, 0.1);
+      transition: all 0.3s ease;
+      position: relative;
+
+      &:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+        border-color: rgba(33, 150, 243, 0.2);
+      }
+
+      &::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: linear-gradient(90deg, #2196f3, #21cbf3, #03dac6);
+        z-index: 1;
+      }
+    }
+
+    // Enhanced Mat Card Title Styling
+    ::ng-deep .profile-card {
+      .mat-mdc-card-header {
+        background: linear-gradient(135deg, #f8fbff 0%, #e8f4fd 100%);
+        padding: 24px 32px;
+        border-bottom: 1px solid rgba(33, 150, 243, 0.1);
+        position: relative;
+        overflow: hidden;
+
+        &::before {
+          content: '';
+          position: absolute;
+          top: 0;
+          left: 0;
+          right: 0;
+          height: 3px;
+          background: linear-gradient(90deg, #2196f3, #21cbf3, #03dac6);
+        }
+
+        &::after {
+          content: '';
+          position: absolute;
+          top: -50px;
+          right: -50px;
+          width: 100px;
+          height: 100px;
+          background: radial-gradient(circle, rgba(33, 150, 243, 0.1) 0%, transparent 70%);
+          border-radius: 50%;
+        }
+
+        .mat-mdc-card-title {
+          font-size: 1.75rem !important;
+          font-weight: 600 !important;
+          background: linear-gradient(135deg, #1976d2, #2196f3, #21cbf3);
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+          background-clip: text;
+          margin: 0 !important;
+          padding: 0 !important;
+          position: relative;
+          display: flex;
+          align-items: center;
+          gap: 16px;
+          letter-spacing: -0.5px;
+          text-shadow: none;
+          
+          &::before {
+            content: '🏢';
+            font-size: 1.5rem;
+            background: linear-gradient(135deg, #2196f3, #21cbf3);
+            padding: 8px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 12px rgba(33, 150, 243, 0.3);
+            animation: titleIconPulse 3s ease-in-out infinite;
+          }
+
+          &::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 60px;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, transparent 0%, #2196f3 20%, #21cbf3 80%, transparent 100%);
+            border-radius: 2px;
+            animation: titleUnderlineExpand 2s ease-out;
+          }
+        }
+
+        .mat-mdc-card-subtitle {
+          color: #666 !important;
+          font-size: 0.95rem !important;
+          font-weight: 400 !important;
+          margin: 8px 0 0 60px !important;
+          opacity: 0.8;
+          font-style: italic;
+        }
+      }
+    }
+
+    // Keyframe animations for the title
+    @keyframes titleIconPulse {
+      0%, 100% {
+        transform: scale(1);
+        box-shadow: 0 4px 12px rgba(33, 150, 243, 0.3);
+      }
+      50% {
+        transform: scale(1.05);
+        box-shadow: 0 6px 16px rgba(33, 150, 243, 0.4);
+      }
+    }
+
+    @keyframes titleUnderlineExpand {
+      0% {
+        transform: scaleX(0);
+        opacity: 0;
+      }
+      50% {
+        opacity: 1;
+      }
+      100% {
+        transform: scaleX(1);
+        opacity: 0.8;
+      }
+    }
+
+    // Additional hover effects for the card header
+    ::ng-deep .profile-card:hover {
+      .mat-mdc-card-header {
+        .mat-mdc-card-title::before {
+          animation-duration: 1.5s;
+          transform: scale(1.1);
+          box-shadow: 0 6px 20px rgba(33, 150, 243, 0.4);
+        }
+
+        .mat-mdc-card-title::after {
+          background: linear-gradient(90deg, transparent 0%, #21cbf3 10%, #2196f3 50%, #1976d2 90%, transparent 100%);
+          height: 4px;
+          animation: titleShimmer 2s ease-in-out;
+        }
+      }
+    }
+
+    @keyframes titleShimmer {
+      0% {
+        transform: scaleX(0);
+        opacity: 0.5;
+      }
+      50% {
+        transform: scaleX(1);
+        opacity: 1;
+      }
+      100% {
+        transform: scaleX(1);
+        opacity: 0.8;
+      }
+    }
+
+    // Responsive design for mat-card-title
+    @media (max-width: 768px) {
+      ::ng-deep .profile-card {
+        .mat-mdc-card-header {
+          padding: 20px 16px;
+
+          .mat-mdc-card-title {
+            font-size: 1.4rem !important;
+            flex-direction: column;
+            text-align: center;
+            gap: 12px;
+
+            &::before {
+              font-size: 1.2rem;
+              padding: 6px;
+            }
+
+            &::after {
+              left: 0;
+              right: 0;
+              margin-top: 8px;
+            }
+          }
+
+          .mat-mdc-card-subtitle {
+            margin: 8px 0 0 0 !important;
+            text-align: center;
+            font-size: 0.85rem !important;
+          }
+        }
+      }
+    }
+
+    @media (max-width: 480px) {
+      ::ng-deep .profile-card {
+        .mat-mdc-card-header {
+          padding: 16px 12px;
+
+          .mat-mdc-card-title {
+            font-size: 1.25rem !important;
+
+            &::before {
+              font-size: 1rem;
+              padding: 4px;
+            }
+          }
+        }
+      }
+    }
+
+    // Company Header Styling
+    .company-header {
+      background: linear-gradient(135deg, #f8fbff 0%, #e8f4fd 100%);
+      padding: 24px 32px 20px;
+      border-bottom: 1px solid rgba(33, 150, 243, 0.1);
+      position: relative;
+
+      .header-content {
+        display: flex;
+        align-items: center;
+        gap: 20px;
+        position: relative;
+        z-index: 2;
+
+        .header-icon {
+          width: 64px;
+          height: 64px;
+          background: linear-gradient(135deg, #2196f3, #21cbf3);
+          border-radius: 16px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          box-shadow: 0 8px 24px rgba(33, 150, 243, 0.3);
+          position: relative;
+
+          &::before {
+            content: '';
+            position: absolute;
+            inset: -2px;
+            background: linear-gradient(135deg, #2196f3, #21cbf3, #03dac6);
+            border-radius: 18px;
+            z-index: -1;
+            opacity: 0.7;
+          }
+
+          mat-icon {
+            font-size: 32px;
+            width: 32px;
+            height: 32px;
+            color: white;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+          }
+        }
+
+        .header-text {
+          flex: 1;
+
+          .company-title {
+            font-size: 1.75rem;
+            font-weight: 600;
+            background: linear-gradient(135deg, #1976d2, #2196f3);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin: 0 0 8px 0;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+          }
+
+          .company-subtitle {
+            color: #666;
+            font-size: 1rem;
+            font-weight: 400;
+            margin: 0;
+            opacity: 0.8;
+          }
+        }
+      }
+
+      .header-decoration {
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 200px;
+        height: 100%;
+        background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse"><path d="M 10 0 L 0 0 0 10" fill="none" stroke="%23e3f2fd" stroke-width="1"/></pattern></defs><rect width="100" height="100" fill="url(%23grid)" opacity="0.3"/></svg>');
+        opacity: 0.1;
+        pointer-events: none;
+      }
+    }
+
+    // Company Content Styling
+    .company-content {
+      padding: 32px;
+      background: white;
+      position: relative;
+
+      &::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        width: calc(100% - 64px);
+        height: 1px;
+        background: linear-gradient(90deg, transparent 0%, rgba(33, 150, 243, 0.2) 20%, rgba(33, 150, 243, 0.2) 80%, transparent 100%);
+      }
     }
 
     .profile-form {
       display: flex;
       flex-direction: column;
-      gap: 16px;
+      gap: 32px;
+      position: relative;
+    }
+
+    // Form Section Styling
+    .form-section {
+      background: linear-gradient(135deg, #fafbff 0%, #f8f9ff 100%);
+      border-radius: 12px;
+      padding: 24px;
+      border: 1px solid rgba(33, 150, 243, 0.1);
+      position: relative;
+      transition: all 0.3s ease;
+
+      &:hover {
+        box-shadow: 0 4px 16px rgba(33, 150, 243, 0.08);
+        transform: translateY(-2px);
+      }
+
+      &::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 3px;
+        background: linear-gradient(90deg, #2196f3, #21cbf3);
+        border-radius: 12px 12px 0 0;
+      }
+    }
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 20px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid rgba(33, 150, 243, 0.1);
+
+      .section-icon {
+        width: 24px;
+        height: 24px;
+        font-size: 24px;
+        color: #2196f3;
+        background: rgba(33, 150, 243, 0.1);
+        border-radius: 6px;
+        padding: 4px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .section-title {
+        margin: 0;
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: #1976d2;
+      }
     }
 
     .form-row {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 16px;
+      gap: 20px;
+      align-items: start;
+
+      // Add subtle animation when form fields appear
+      opacity: 0;
+      transform: translateY(10px);
+      animation: slideInUp 0.5s ease-out forwards;
+
+      &:nth-child(1) { animation-delay: 0.1s; }
+      &:nth-child(2) { animation-delay: 0.2s; }
+      &:nth-child(3) { animation-delay: 0.3s; }
+      &:nth-child(4) { animation-delay: 0.4s; }
+      &:nth-child(5) { animation-delay: 0.5s; }
+      &:nth-child(6) { animation-delay: 0.6s; }
+    }
+
+    @keyframes slideInUp {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    // Additional micro-animations
+    @keyframes fadeInScale {
+      0% {
+        opacity: 0;
+        transform: scale(0.95);
+      }
+      100% {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+
+    @keyframes shimmer {
+      0% {
+        background-position: -200px 0;
+      }
+      100% {
+        background-position: calc(200px + 100%) 0;
+      }
+    }
+
+    // Loading shimmer effect for form fields
+    mat-form-field.loading {
+      .mat-mdc-form-field-wrapper::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(
+          90deg,
+          transparent 0%,
+          rgba(255, 255, 255, 0.4) 50%,
+          transparent 100%
+        );
+        background-size: 200px 100%;
+        animation: shimmer 1.5s infinite;
+        border-radius: inherit;
+        z-index: 1;
+      }
+    }
+
+    // Staggered animation for form sections
+    .form-section {
+      animation: fadeInScale 0.6s ease-out;
+
+      &:nth-child(1) { animation-delay: 0.1s; }
+      &:nth-child(2) { animation-delay: 0.2s; }
+      &:nth-child(3) { animation-delay: 0.3s; }
+      &:nth-child(4) { animation-delay: 0.4s; }
     }
 
     .full-width {
       grid-column: 1 / -1;
     }
 
-    .benefits-card {
-      margin-top: 24px;
+    // Enhanced Form Field Styling
+    mat-form-field {
+      position: relative;
+      
+      &.mat-form-field-appearance-outline {
+        .mat-mdc-form-field-wrapper {
+          background: linear-gradient(135deg, #ffffff 0%, #f8fffe 100%);
+          border-radius: 12px;
+          transition: all 0.3s ease;
+          box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+
+          &:hover {
+            box-shadow: 0 4px 16px rgba(33, 150, 243, 0.1);
+            transform: translateY(-1px);
+          }
+        }
+
+        &.mat-focused .mat-mdc-form-field-wrapper {
+          box-shadow: 0 6px 20px rgba(33, 150, 243, 0.15);
+          transform: translateY(-2px);
+        }
+
+        .mat-mdc-form-field-outline {
+          .mat-mdc-form-field-outline-start,
+          .mat-mdc-form-field-outline-gap,
+          .mat-mdc-form-field-outline-end {
+            border-color: rgba(33, 150, 243, 0.2);
+            transition: border-color 0.3s ease;
+          }
+        }
+
+        &.mat-focused .mat-mdc-form-field-outline {
+          .mat-mdc-form-field-outline-start,
+          .mat-mdc-form-field-outline-gap,
+          .mat-mdc-form-field-outline-end {
+            border-color: #2196f3;
+            border-width: 2px;
+          }
+        }
+
+        .mat-mdc-form-field-label {
+          color: #666;
+          font-weight: 500;
+          
+          &.mat-focused {
+            color: #2196f3;
+          }
+        }
+
+        .mat-mdc-input-element {
+          color: #333;
+          font-weight: 400;
+          
+          &::placeholder {
+            color: #999;
+            font-style: italic;
+          }
+        }
+
+        // Special styling for textarea
+        .mat-mdc-input-element[rows] {
+          resize: vertical;
+          min-height: 100px;
+        }
+
+        // Hint styling
+        .mat-mdc-form-field-hint {
+          color: #666;
+          font-size: 0.8rem;
+          opacity: 0.8;
+        }
+
+        // Prefix icon styling
+        .mat-mdc-form-field-icon-prefix {
+          margin-right: 12px;
+          
+          mat-icon {
+            color: #2196f3;
+            font-size: 20px;
+            width: 20px;
+            height: 20px;
+            opacity: 0.8;
+            transition: all 0.3s ease;
+          }
+        }
+
+        &.mat-focused .mat-mdc-form-field-icon-prefix mat-icon {
+          opacity: 1;
+          color: #1976d2;
+          transform: scale(1.1);
+        }
+
+        // Input field enhancements
+        .mat-mdc-input-element {
+          &:focus {
+            outline: none;
+          }
+        }
+      }
     }
 
-    .add-benefit-field {
-      width: 300px;
-      margin-top: 16px;
+    // Special styling for full-width fields
+    .full-width {
+      mat-form-field {
+        .mat-mdc-form-field-wrapper {
+          background: linear-gradient(135deg, #ffffff 0%, #f8fffe 100%);
+          
+          &:hover {
+            background: linear-gradient(135deg, #fafbff 0%, #f0f4ff 100%);
+          }
+        }
+      }
     }
 
-    mat-chip {
-      margin: 4px;
+    // Benefits Section Styles
+    .benefits-section {
+      margin-top: 32px;
+      padding: 24px;
+      background: linear-gradient(135deg, #f8f9ff 0%, #f0f4ff 100%);
+      border-radius: 12px;
+      border: 1px solid #e3f2fd;
+      position: relative;
+      overflow: hidden;
+
+      &::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: linear-gradient(90deg, #2196f3, #21cbf3);
+      }
     }
 
-    // Verification status styles
-    .mat-icon.verified {
-      color: #4caf50 !important; // Green for verified
+    .benefits-header {
+      margin-bottom: 24px;
+      text-align: center;
+
+      .benefits-title {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 12px;
+        font-size: 1.4rem;
+        font-weight: 500;
+        color: #1976d2;
+        margin: 0 0 8px 0;
+
+        mat-icon {
+          font-size: 1.6rem;
+          width: 1.6rem;
+          height: 1.6rem;
+          color: #2196f3;
+        }
+      }
+
+      .benefits-subtitle {
+        color: #666;
+        font-size: 0.95rem;
+        margin: 0;
+        font-style: italic;
+      }
     }
 
-    .mat-icon.failed {
-      color: #f44336 !important; // Red for failed
+    .benefits-display {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
     }
 
-    .mat-icon.pending {
-      color: #ff9800 !important; // Orange for pending
-      animation: spin 2s linear infinite;
+    .benefits-chips-container {
+      .benefits-chip-set {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        min-height: 48px;
+        padding: 16px;
+        background: white;
+        border-radius: 8px;
+        border: 2px dashed #e0e0e0;
+        transition: all 0.3s ease;
+
+        &:hover {
+          border-color: #2196f3;
+          background: #fafbff;
+        }
+
+        .benefit-chip {
+          background: linear-gradient(135deg, #2196f3, #21cbf3);
+          color: white;
+          font-weight: 500;
+          transition: all 0.3s ease;
+          box-shadow: 0 2px 8px rgba(33, 150, 243, 0.3);
+
+          &:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(33, 150, 243, 0.4);
+          }
+
+          mat-icon {
+            color: rgba(255, 255, 255, 0.9);
+
+            &[matChipRemove] {
+              transition: all 0.2s ease;
+
+              &:hover {
+                color: #ff5722;
+                transform: scale(1.1);
+              }
+            }
+          }
+        }
+      }
+    }
+
+    .add-benefit-container {
+      .add-benefit-field {
+        width: 100%;
+        
+        .mat-mdc-form-field-wrapper {
+          background: white;
+          border-radius: 8px;
+        }
+
+        button[matSuffix] {
+          color: #2196f3;
+          transition: all 0.3s ease;
+
+          &:hover:not(:disabled) {
+            color: #1976d2;
+            transform: scale(1.1);
+          }
+
+          &:disabled {
+            color: #ccc;
+          }
+        }
+      }
+    }
+
+    .suggested-benefits {
+      margin-top: 20px;
+      padding: 16px;
+      background: white;
+      border-radius: 8px;
+      border: 1px solid #e8f5e8;
+
+      .suggested-title {
+        font-size: 1rem;
+        font-weight: 500;
+        color: #388e3c;
+        margin: 0 0 12px 0;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+
+        &::before {
+          content: '💡';
+          font-size: 1.2rem;
+        }
+      }
+
+      .suggested-chips {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+
+        .suggested-chip {
+          background: #f1f8e9;
+          color: #388e3c;
+          border: 1px solid #c8e6c9;
+          cursor: pointer;
+          transition: all 0.3s ease;
+          font-size: 0.9rem;
+
+          &:hover:not([disabled]) {
+            background: #4caf50;
+            color: white;
+            transform: translateY(-1px);
+            box-shadow: 0 2px 8px rgba(76, 175, 80, 0.3);
+          }
+
+          &[disabled] {
+            background: #f5f5f5;
+            color: #999;
+            cursor: not-allowed;
+            opacity: 0.6;
+          }
+
+          mat-icon {
+            font-size: 1rem;
+            width: 1rem;
+            height: 1rem;
+          }
+        }
+      }
+    }
+
+    // Profile Actions
+    .profile-actions {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px 24px;
+      background: #fafafa;
+      border-top: 1px solid #e0e0e0;
+      gap: 16px;
+
+      .update-btn {
+        background: linear-gradient(135deg, #4caf50, #66bb6a);
+        color: white;
+        font-weight: 500;
+        padding: 12px 24px;
+        border-radius: 8px;
+        box-shadow: 0 3px 10px rgba(76, 175, 80, 0.3);
+        transition: all 0.3s ease;
+
+        &:hover {
+          transform: translateY(-2px);
+          box-shadow: 0 5px 15px rgba(76, 175, 80, 0.4);
+        }
+
+        mat-icon {
+          margin-right: 8px;
+        }
+      }
+
+      .reset-btn {
+        color: #ff9800;
+        border-color: #ff9800;
+        padding: 12px 20px;
+        border-radius: 8px;
+        transition: all 0.3s ease;
+
+        &:hover {
+          background: #fff3e0;
+          transform: translateY(-1px);
+        }
+
+        mat-icon {
+          margin-right: 8px;
+        }
+      }
+    }
+
+    // Enhanced Verification Status Styles
+    button[matSuffix] {
+      .mat-icon.verified {
+        color: #4caf50 !important;
+        background: rgba(76, 175, 80, 0.15) !important;
+        border-radius: 50%;
+        padding: 2px;
+        animation: verifiedPulse 2s ease-in-out infinite;
+        box-shadow: 0 2px 8px rgba(76, 175, 80, 0.3);
+        position: relative;
+        z-index: 1;
+      }
+
+      .mat-icon.failed {
+        color: #f44336 !important;
+        background: rgba(244, 67, 54, 0.15) !important;
+        border-radius: 50%;
+        padding: 2px;
+        animation: failedShake 0.5s ease-in-out;
+        box-shadow: 0 2px 8px rgba(244, 67, 54, 0.3);
+        position: relative;
+        z-index: 1;
+      }
+
+      .mat-icon.pending {
+        color: #ff9800 !important;
+        background: rgba(255, 152, 0, 0.15) !important;
+        border-radius: 50%;
+        padding: 2px;
+        animation: spin 2s linear infinite;
+        box-shadow: 0 2px 8px rgba(255, 152, 0, 0.3);
+        position: relative;
+        z-index: 1;
+      }
     }
 
     @keyframes spin {
@@ -79,25 +876,340 @@
       100% { transform: rotate(360deg); }
     }
 
-    // Verification button styles
-    mat-form-field button[matSuffix] {
-      margin-right: 8px;
+    @keyframes verifiedPulse {
+      0%, 100% { 
+        box-shadow: 0 0 0 0 rgba(76, 175, 80, 0.4);
+        transform: scale(1);
+      }
+      50% { 
+        box-shadow: 0 0 0 8px rgba(76, 175, 80, 0);
+        transform: scale(1.05);
+      }
     }
 
-    // Form field with verification
-    mat-form-field {
+    @keyframes failedShake {
+      0%, 100% { transform: translateX(0); }
+      25% { transform: translateX(-2px); }
+      75% { transform: translateX(2px); }
+    }
+
+    // Enhanced Verification Button Styles
+    mat-form-field button[matSuffix] {
+      margin: 0;
+      margin-right: 4px;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      min-width: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s ease;
+      background: rgba(33, 150, 243, 0.05);
+      border: 2px solid transparent;
+      position: relative;
+      top: -2px;
+      
+      &:hover:not(:disabled) {
+        background: rgba(33, 150, 243, 0.1);
+        transform: scale(1.05);
+        border-color: rgba(33, 150, 243, 0.2);
+      }
+
+      &:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+        background: rgba(0, 0, 0, 0.03);
+      }
+
+      mat-icon {
+        font-size: 18px;
+        width: 18px;
+        height: 18px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+    }
+
+    // Form field with verification enhancements
+    ::ng-deep mat-form-field {
+      .mat-mdc-form-field-flex {
+        align-items: center;
+      }
+
       .mat-mdc-form-field-icon-suffix {
         align-items: center;
+        position: relative;
+        display: flex;
+        height: 100%;
+        padding-left: 8px;
+
+        &::before {
+          content: '';
+          position: absolute;
+          left: 0;
+          top: 25%;
+          bottom: 25%;
+          width: 1px;
+          background: rgba(33, 150, 243, 0.2);
+        }
+      }
+
+      // Special styling for fields with verification
+      &.has-verification {
+        .mat-mdc-form-field-infix {
+          padding-right: 8px;
+        }
+        
+        .mat-mdc-form-field-flex {
+          padding-right: 8px;
+        }
+
+        .mat-mdc-form-field-icon-suffix {
+          min-width: 48px;
+          justify-content: center;
+        }
+      }
+
+      // Ensure proper spacing between input and suffix
+      .mat-mdc-form-field-infix {
+        position: relative;
+      }
+
+      // Fix outline interference with suffix buttons
+      &.mat-form-field-appearance-outline {
+        .mat-mdc-form-field-outline {
+          .mat-mdc-form-field-outline-end {
+            border-radius: 0 4px 4px 0;
+          }
+        }
+
+        .mat-mdc-form-field-icon-suffix {
+          margin-right: -8px;
+          
+          button[matSuffix] {
+            margin-right: 8px;
+            z-index: 10;
+            position: relative;
+          }
+        }
+      }
+    }
+
+    // Additional responsive fixes for verification buttons
+    @media (max-width: 768px) {
+      ::ng-deep mat-form-field {
+        button[matSuffix] {
+          width: 36px;
+          height: 36px;
+          min-width: 36px;
+
+          mat-icon {
+            font-size: 16px;
+            width: 16px;
+            height: 16px;
+          }
+        }
+
+        &.has-verification {
+          .mat-mdc-form-field-icon-suffix {
+            min-width: 44px;
+          }
+        }
+      }
+    }
+
+    // Empty state for benefits
+    .benefits-chip-set:empty::before {
+      content: 'No benefits added yet. Start by adding some benefits to attract candidates!';
+      color: #999;
+      font-style: italic;
+      font-size: 0.9rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 60px;
+      text-align: center;
+      padding: 16px;
+    }
+
+    // Animation for new chips
+    .benefit-chip {
+      animation: slideInScale 0.3s ease-out;
+    }
+
+    @keyframes slideInScale {
+      0% {
+        opacity: 0;
+        transform: translateY(10px) scale(0.8);
+      }
+      100% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    // Hover effect for the entire benefits section
+    .benefits-section:hover {
+      box-shadow: 0 4px 20px rgba(33, 150, 243, 0.1);
+      transform: translateY(-2px);
+      transition: all 0.3s ease;
+    }
+
+    // Responsive Design
+    @media (max-width: 1024px) {
+      .form-row {
+        grid-template-columns: 1fr;
+        gap: 12px;
+      }
+
+      .profile-actions {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 12px;
+
+        .update-btn,
+        .reset-btn {
+          width: 100%;
+          justify-content: center;
+        }
       }
     }
 
     @media (max-width: 768px) {
-      .form-row {
-        grid-template-columns: 1fr;
-      }
-
       .profile-container {
         padding: 16px;
+      }
+
+      .company-header {
+        padding: 20px 24px 16px;
+
+        .header-content {
+          flex-direction: column;
+          text-align: center;
+          gap: 16px;
+
+          .header-icon {
+            width: 56px;
+            height: 56px;
+
+            mat-icon {
+              font-size: 28px;
+              width: 28px;
+              height: 28px;
+            }
+          }
+
+          .header-text {
+            .company-title {
+              font-size: 1.5rem;
+            }
+
+            .company-subtitle {
+              font-size: 0.9rem;
+            }
+          }
+        }
+      }
+
+      .company-content {
+        padding: 24px 20px;
+      }
+
+      .form-section {
+        padding: 20px 16px;
+
+        .section-header {
+          margin-bottom: 16px;
+
+          .section-title {
+            font-size: 1rem;
+          }
+        }
+      }
+
+      .benefits-section {
+        padding: 16px;
+        margin-top: 24px;
+      }
+
+      .benefits-header .benefits-title {
+        font-size: 1.2rem;
+        flex-direction: column;
+        gap: 8px;
+      }
+
+      .suggested-chips {
+        gap: 6px;
+
+        .suggested-chip {
+          font-size: 0.8rem;
+          padding: 6px 12px;
+        }
+      }
+
+      .benefits-chips-container .benefits-chip-set {
+        padding: 12px;
+        gap: 6px;
+
+        .benefit-chip {
+          font-size: 0.85rem;
+        }
+      }
+    }
+
+    @media (max-width: 480px) {
+      .profile-container {
+        padding: 12px;
+      }
+
+      .benefits-section {
+        padding: 12px;
+        margin-top: 16px;
+      }
+
+      .benefits-header {
+        margin-bottom: 16px;
+
+        .benefits-title {
+          font-size: 1.1rem;
+        }
+
+        .benefits-subtitle {
+          font-size: 0.85rem;
+        }
+      }
+
+      .profile-actions {
+        padding: 16px;
+      }
+    }
+
+    // Focus states for accessibility
+    .suggested-chip:focus,
+    .benefit-chip:focus {
+      outline: 2px solid #2196f3;
+      outline-offset: 2px;
+    }
+
+    // Loading state for update button
+    .update-btn.loading {
+      position: relative;
+      color: transparent;
+
+      &::after {
+        content: '';
+        position: absolute;
+        width: 20px;
+        height: 20px;
+        border: 2px solid transparent;
+        border-top: 2px solid white;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
       }
     }
   

@@ -2,13 +2,17 @@ import { Component, OnInit } from '@angular/core';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { MatChipsModule } from '@angular/material/chips';
+import { MatIconModule } from '@angular/material/icon';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { CommonModule } from '@angular/common';
+import { AuthService } from '../../../../core/services/auth.service';
 import { BrowseCoursesDialogComponent } from './browse-courses-dialog.component';
 import { CourseDetailsDialogComponent } from './course-details-dialog.component';
 import { CourseFormDialogComponent } from './course-form-dialog.component';
+import { PaymentModalComponent } from './payment-modal.component';
 
 interface Course {
   id: number;
@@ -20,6 +24,8 @@ interface Course {
   maxStudents: number;
   status: 'active' | 'upcoming' | 'completed';
   category: string;
+  price?: number;
+  currency?: string;
   progress?: number;
   enrolledDate?: Date;
   completionDate?: Date;
@@ -37,15 +43,21 @@ interface Course {
     MatCardModule,
     MatButtonModule,
     MatChipsModule,
+    MatIconModule,
     MatProgressBarModule,
     MatTabsModule,
-    MatDialogModule
+    MatDialogModule,
+    MatSnackBarModule
   ],
   templateUrl: './courses.component.html',
   styleUrls: ['./courses.component.scss']
 })
 export class LmsCoursesComponent implements OnInit {
-  constructor(private dialog: MatDialog) {}
+  constructor(
+    private dialog: MatDialog,
+    private authService: AuthService,
+    private snackBar: MatSnackBar
+  ) {}
 
   courses: Course[] = [
     {
@@ -109,6 +121,59 @@ export class LmsCoursesComponent implements OnInit {
       maxStudents: 20,
       status: 'upcoming',
       category: 'data'
+    },
+    // Available courses for enrollment (with pricing)
+    {
+      id: 6,
+      title: 'React Development Masterclass',
+      description: 'Complete guide to building modern web applications with React and Redux.',
+      instructor: 'John Smith',
+      duration: '12 weeks',
+      enrolledStudents: 25,
+      maxStudents: 40,
+      status: 'active',
+      category: 'programming',
+      price: 4999,
+      currency: 'INR'
+    },
+    {
+      id: 7,
+      title: 'Digital Marketing Fundamentals',
+      description: 'Master the basics of digital marketing, SEO, and social media marketing.',
+      instructor: 'Maria Garcia',
+      duration: '8 weeks',
+      enrolledStudents: 18,
+      maxStudents: 30,
+      status: 'active',
+      category: 'marketing',
+      price: 2999,
+      currency: 'INR'
+    },
+    {
+      id: 8,
+      title: 'Python for Data Science',
+      description: 'Learn Python programming for data analysis, visualization, and machine learning.',
+      instructor: 'Dr. Ahmed Khan',
+      duration: '10 weeks',
+      enrolledStudents: 12,
+      maxStudents: 25,
+      status: 'active',
+      category: 'data',
+      price: 5999,
+      currency: 'INR'
+    },
+    {
+      id: 9,
+      title: 'Cloud Computing with AWS',
+      description: 'Complete guide to Amazon Web Services and cloud infrastructure.',
+      instructor: 'Rachel Thompson',
+      duration: '6 weeks',
+      enrolledStudents: 8,
+      maxStudents: 20,
+      status: 'upcoming',
+      category: 'cloud',
+      price: 7999,
+      currency: 'INR'
     }
   ];
 
@@ -142,6 +207,12 @@ export class LmsCoursesComponent implements OnInit {
 
   getCategoryClass(category: string): string {
     return category.toLowerCase();
+  }
+
+  canCreateCourse(): boolean {
+    const user = this.authService.getCurrentUser();
+    // Only instructors and admins can create courses, not students
+    return user ? ['instructor', 'admin'].includes(user.role) : false;
   }
 
   continueCourse(course: Course) {
@@ -190,8 +261,50 @@ export class LmsCoursesComponent implements OnInit {
   }
 
   enrollInCourse(course: Course) {
-    console.log('Enroll in course:', course);
-    // Call enrollment API
+    // Open payment modal for course enrollment
+    const dialogRef = this.dialog.open(PaymentModalComponent, {
+      width: '600px',
+      maxWidth: '95vw',
+      maxHeight: '90vh',
+      disableClose: false,
+      data: { course }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result && result.success) {
+        // Payment successful, move course to enrolled courses
+        this.handleSuccessfulEnrollment(course, result);
+      }
+    });
+  }
+
+  private handleSuccessfulEnrollment(course: Course, paymentResult: any): void {
+    // Update the course to mark it as enrolled
+    const courseIndex = this.courses.findIndex(c => c.id === course.id);
+    if (courseIndex !== -1) {
+      this.courses[courseIndex] = {
+        ...course,
+        enrolledDate: new Date(),
+        progress: 0,
+        status: 'active'
+      };
+    }
+
+    // Show success message
+    this.snackBar.open(
+      `Successfully enrolled in "${course.title}"! Payment ID: ${paymentResult.paymentId}`, 
+      'Close', 
+      { 
+        duration: 5000,
+        panelClass: 'success-snackbar'
+      }
+    );
+
+    console.log('Enrollment successful!', {
+      course: course.title,
+      paymentId: paymentResult.paymentId,
+      amount: paymentResult.amount
+    });
   }
 
   browseAllCourses() {

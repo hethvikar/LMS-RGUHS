@@ -211,9 +211,9 @@
               <mat-icon *ngIf="course.certificateProvided" matTooltip="Certificate Provided">verified</mat-icon>
             </div>
             <button mat-raised-button color="primary" (click)="addToCart(course)"
-                    [disabled]="cart.find(c => c.id === course.id)">
-              <mat-icon>{{ cart.find(c => c.id === course.id) ? 'check' : 'add_shopping_cart' }}</mat-icon>
-              {{ cart.find(c => c.id === course.id) ? 'Added' : 'Add to Cart' }}
+                    [disabled]="isInCart(course)">
+              <mat-icon>{{ isInCart(course) ? 'check' : 'add_shopping_cart' }}</mat-icon>
+              {{ isInCart(course) ? 'Added' : 'Add to Cart' }}
             </button>
           </mat-card-actions>
         </mat-card>

@@ -196,7 +196,52 @@ export class AuthService {
   }
 
   isAuthenticated(): boolean {
+    const token = this.getToken();
+    const user = this.getUser();
+    
+    // Check if we have token and user data
+    if (!token || !user) {
+      return false;
+    }
+
+    // Check if token is not expired
+    if (this.isTokenExpired(token)) {
+      this.logout(); // Clear expired session
+      return false;
+    }
+
     return this.isAuthenticatedSubject.value;
+  }
+
+  /**
+   * Check if user is authenticated with a valid role
+   */
+  isAuthenticatedWithValidRole(): { isValid: boolean; user: User | null; shouldRedirect: boolean } {
+    const token = this.getToken();
+    const user = this.getUser();
+    
+    if (!token || !user) {
+      return { isValid: false, user: null, shouldRedirect: false };
+    }
+
+    if (this.isTokenExpired(token)) {
+      this.logout(); // Clear expired session
+      return { isValid: false, user: null, shouldRedirect: false };
+    }
+
+    // Validate role exists and is valid
+    const validRoles = ['admin', 'instructor', 'student', 'company'];
+    const userRole = String(user.role || '').toLowerCase();
+    
+    if (!validRoles.includes(userRole)) {
+      return { isValid: false, user: user, shouldRedirect: false };
+    }
+
+    return { 
+      isValid: this.isAuthenticatedSubject.value, 
+      user: user, 
+      shouldRedirect: true 
+    };
   }
 
   hasRole(role: string): boolean {

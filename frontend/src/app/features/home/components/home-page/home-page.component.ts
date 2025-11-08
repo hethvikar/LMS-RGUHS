@@ -1,9 +1,10 @@
 import { Component, OnInit, OnDestroy, PLATFORM_ID, Inject } from '@angular/core';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { trigger, state, style, transition, animate } from '@angular/animations';
 import { MatIconModule } from '@angular/material/icon';
 import { SecurityService } from '../../../../core/services/security/security.service';
+import { AuthService } from '../../../../core/services/auth.service';
 import { Meta, Title } from '@angular/platform-browser';
 import { LoginModalComponent } from '../../../../shared/components/modals/login-modal/login-modal.component';
 import { SignupModalComponent } from '../../../../shared/components/modals/signup-modal/signup-modal.component';
@@ -215,6 +216,8 @@ export class HomePageComponent implements OnInit, OnDestroy {
 
   constructor(
     private securityService: SecurityService,
+    private authService: AuthService,
+    private router: Router,
     private meta: Meta,
     private title: Title,
     @Inject(PLATFORM_ID) platformId: Object
@@ -529,14 +532,57 @@ export class HomePageComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Open login modal
+   * Open login modal - but first check if user is already authenticated
    */
   openLoginModal(role?: string): void {
+    // Check if user is already authenticated
+    if (this.checkAndRedirectIfAuthenticated()) {
+      return;
+    }
+
     this.selectedLoginRole = role;
     this.showLoginModal = true;
     this.showSignupModal = false;
     if (this.isBrowser) {
       document.body.style.overflow = 'hidden';
+    }
+  }
+
+  /**
+   * Check if user is authenticated and redirect if so
+   * @returns true if user was redirected, false otherwise
+   */
+  private checkAndRedirectIfAuthenticated(): boolean {
+    const authCheck = this.authService.isAuthenticatedWithValidRole();
+    
+    if (authCheck.isValid && authCheck.user && authCheck.shouldRedirect) {
+      // User is already authenticated with valid role, redirect to appropriate dashboard
+      this.redirectBasedOnRole(authCheck.user.role);
+      return true;
+    }
+    return false;
+  }
+
+  /**
+   * Redirect user based on their role
+   */
+  private redirectBasedOnRole(role: string): void {
+    const r = String(role || '').toLowerCase();
+    switch (r) {
+      case 'admin':
+        this.router.navigate(['/admin']);
+        break;
+      case 'instructor':
+        this.router.navigate(['/lms']);
+        break;
+      case 'student':
+        this.router.navigate(['/student/dashboard']);
+        break;
+      case 'company':
+        this.router.navigate(['/company']);
+        break;
+      default:
+        this.router.navigate(['/dashboard']);
     }
   }
 

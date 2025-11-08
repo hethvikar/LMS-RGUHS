@@ -33,85 +33,115 @@
           <mat-icon matPrefix>search</mat-icon>
         </mat-form-field>
 
-        <!-- Department Filter -->
-        <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Department</mat-label>
-          <mat-select formControlName="department" (selectionChange)="applyFilters()">
-            <mat-option value="">All Departments</mat-option>
-            <mat-option *ngFor="let dept of departments" [value]="dept">{{ dept }}</mat-option>
-          </mat-select>
-          <mat-icon matPrefix>business_center</mat-icon>
-        </mat-form-field>
+        <!-- Basic Filters Accordion -->
+        <mat-expansion-panel class="filter-accordion" [expanded]="true">
+          <mat-expansion-panel-header>
+            <mat-panel-title>
+              <mat-icon>filter_list</mat-icon>
+              <span>Basic Filters</span>
+            </mat-panel-title>
+          </mat-expansion-panel-header>
+          
+          <!-- Department Filter -->
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Department</mat-label>
+            <mat-select formControlName="department" (selectionChange)="applyFilters()">
+              <mat-option value="">All Departments</mat-option>
+              <mat-option *ngFor="let dept of departments" [value]="dept">{{ dept }}</mat-option>
+            </mat-select>
+            <mat-icon matPrefix>business_center</mat-icon>
+          </mat-form-field>
 
-        <!-- Location Filter -->
-        <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Location</mat-label>
-          <mat-select formControlName="location" (selectionChange)="applyFilters()">
-            <mat-option value="">All Locations</mat-option>
-            <mat-option *ngFor="let loc of locations" [value]="loc">{{ loc }}</mat-option>
-          </mat-select>
-          <mat-icon matPrefix>location_on</mat-icon>
-        </mat-form-field>
+          <!-- Location Filter -->
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Location</mat-label>
+            <mat-select formControlName="location" (selectionChange)="applyFilters()">
+              <mat-option value="">All Locations</mat-option>
+              <mat-option *ngFor="let loc of locations" [value]="loc">{{ loc }}</mat-option>
+            </mat-select>
+            <mat-icon matPrefix>location_on</mat-icon>
+          </mat-form-field>
+        </mat-expansion-panel>
 
-        <!-- Job Type Filter -->
-        <div class="filter-section">
-          <label class="filter-label">Job Type</label>
-          <div class="checkbox-group">
-            <mat-checkbox 
-              *ngFor="let type of jobTypes"
-              [value]="type.value"
-              [checked]="searchForm.get('types')?.value.includes(type.value)"
-              (change)="toggleType(type.value, $event.checked)">
-              {{ type.label }}
-            </mat-checkbox>
+        <!-- Job Type & Experience Accordion -->
+        <mat-expansion-panel class="filter-accordion" [expanded]="true">
+          <mat-expansion-panel-header>
+            <mat-panel-title>
+              <mat-icon>work</mat-icon>
+              <span>Job Type & Experience</span>
+            </mat-panel-title>
+          </mat-expansion-panel-header>
+          
+          <!-- Job Type Filter -->
+          <div class="filter-section">
+            <label class="filter-label">Job Type</label>
+            <div class="checkbox-group">
+              <mat-checkbox 
+                *ngFor="let type of jobTypes"
+                [value]="type.value"
+                [checked]="searchForm.get('types')?.value.includes(type.value)"
+                (change)="toggleType(type.value, $event.checked)">
+                {{ type.label }}
+              </mat-checkbox>
+            </div>
           </div>
-        </div>
 
-        <!-- Experience Level Filter -->
-        <div class="filter-section">
-          <label class="filter-label">Experience Level</label>
-          <div class="checkbox-group">
-            <mat-checkbox 
-              *ngFor="let exp of experienceLevels"
-              [value]="exp.value"
-              [checked]="searchForm.get('experienceLevels')?.value.includes(exp.value)"
-              (change)="toggleExperienceLevel(exp.value, $event.checked)">
-              {{ exp.label }}
-            </mat-checkbox>
+          <!-- Experience Level Filter -->
+          <div class="filter-section">
+            <label class="filter-label">Experience Level</label>
+            <div class="checkbox-group">
+              <mat-checkbox 
+                *ngFor="let exp of experienceLevels"
+                [value]="exp.value"
+                [checked]="searchForm.get('experienceLevels')?.value.includes(exp.value)"
+                (change)="toggleExperienceLevel(exp.value, $event.checked)">
+                {{ exp.label }}
+              </mat-checkbox>
+            </div>
           </div>
-        </div>
+        </mat-expansion-panel>
 
-        <!-- Salary Range -->
-        <div class="filter-section">
-          <label class="filter-label">Salary Range</label>
-          <div class="salary-display">
-            {{ formatSalary(searchForm.get('salaryMin')?.value) }} - {{ formatSalary(searchForm.get('salaryMax')?.value) }}
+        <!-- Salary & Preferences Accordion -->
+        <mat-expansion-panel class="filter-accordion" [expanded]="false">
+          <mat-expansion-panel-header>
+            <mat-panel-title>
+              <mat-icon>payments</mat-icon>
+              <span>Salary & Preferences</span>
+            </mat-panel-title>
+          </mat-expansion-panel-header>
+          
+          <!-- Salary Range -->
+          <div class="filter-section">
+            <label class="filter-label">Salary Range</label>
+            <div class="salary-display">
+              {{ formatSalary(searchForm.get('salaryMin')?.value) }} - {{ formatSalary(searchForm.get('salaryMax')?.value) }}
+            </div>
+            <mat-slider min="0" max="5000000" step="100000" discrete class="full-width">
+              <input matSliderStartThumb formControlName="salaryMin" (change)="applyFilters()">
+              <input matSliderEndThumb formControlName="salaryMax" (change)="applyFilters()">
+            </mat-slider>
           </div>
-          <mat-slider min="0" max="5000000" step="100000" discrete class="full-width">
-            <input matSliderStartThumb formControlName="salaryMin" (change)="applyFilters()">
-            <input matSliderEndThumb formControlName="salaryMax" (change)="applyFilters()">
-          </mat-slider>
-        </div>
 
-        <!-- Remote Work -->
-        <mat-checkbox formControlName="remoteWork" (change)="applyFilters()" class="full-width">
-          Remote Work Only
-        </mat-checkbox>
+          <!-- Remote Work -->
+          <mat-checkbox formControlName="remoteWork" (change)="applyFilters()" class="full-width">
+            Remote Work Only
+          </mat-checkbox>
 
-        <!-- Posted Within -->
-        <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Posted Within</mat-label>
-          <mat-select formControlName="postedWithin" (selectionChange)="applyFilters()">
-            <mat-option value="">Any time</mat-option>
-            <mat-option *ngFor="let option of postedWithinOptions" [value]="option.value">
-              {{ option.label }}
-            </mat-option>
-          </mat-select>
-          <mat-icon matPrefix>schedule</mat-icon>
-        </mat-form-field>
+          <!-- Posted Within -->
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Posted Within</mat-label>
+            <mat-select formControlName="postedWithin" (selectionChange)="applyFilters()">
+              <mat-option value="">Any time</mat-option>
+              <mat-option *ngFor="let option of postedWithinOptions" [value]="option.value">
+                {{ option.label }}
+              </mat-option>
+            </mat-select>
+            <mat-icon matPrefix>schedule</mat-icon>
+          </mat-form-field>
+        </mat-expansion-panel>
 
         <!-- Clear Filters Button -->
-        <button mat-stroked-button color="warn" (click)="clearFilters()" class="full-width" 
+        <button mat-stroked-button color="warn" (click)="clearFilters()" class="full-width clear-filters-btn" 
                 *ngIf="getActiveFiltersCount() > 0">
           <mat-icon>clear</mat-icon>
           Clear All Filters

@@ -60,7 +60,7 @@ export class AuthGuard implements CanActivate, CanActivateChild {
 
     // Define role-based access control (case-insensitive keys)
     const rolePermissions: { [key: string]: string[] } = {
-      admin: ['/admin', '/dashboard'],
+      admin: ['/admin', '/lms', '/dashboard'],
       instructor: ['/lms', '/dashboard'],
       student: ['/student', '/lms', '/dashboard'],
       company: ['/company', '/dashboard']
@@ -88,19 +88,24 @@ export class AuthGuard implements CanActivate, CanActivateChild {
   }
 
   private redirectToDashboard(role: string): void {
-    let dashboardUrl = '/dashboard';
+    let dashboardUrl = '/';
 
     switch (String(role || '').toLowerCase()) {
       case 'admin':
         dashboardUrl = '/admin';
         break;
       case 'instructor':
-      case 'student':
         dashboardUrl = '/lms';
+        break;
+      case 'student':
+        dashboardUrl = '/student/dashboard';
         break;
       case 'company':
         dashboardUrl = '/company';
         break;
+      default:
+        // If role is unknown, redirect to home page
+        dashboardUrl = '/';
     }
 
     this.router.navigate([dashboardUrl]);

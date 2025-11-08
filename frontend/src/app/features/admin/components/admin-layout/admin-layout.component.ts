@@ -6,6 +6,7 @@ import { MatListModule } from '@angular/material/list';
 import { MatIconModule } from '@angular/material/icon';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatButtonModule } from '@angular/material/button';
+import { MatDividerModule } from '@angular/material/divider';
 
 @Component({
   selector: 'app-admin-layout',
@@ -17,7 +18,8 @@ import { MatButtonModule } from '@angular/material/button';
     MatListModule,
     MatIconModule,
     MatToolbarModule,
-    MatButtonModule
+    MatButtonModule,
+    MatDividerModule
   ],
   template: `
     <mat-sidenav-container class="sidenav-container">
@@ -53,6 +55,11 @@ import { MatButtonModule } from '@angular/material/button';
             <span matListItemTitle>Assessment Assignment</span>
           </a>
           
+          <a mat-list-item routerLink="/admin/question-bank" routerLinkActive="active">
+            <mat-icon matListItemIcon>quiz</mat-icon>
+            <span matListItemTitle>Question Bank</span>
+          </a>
+          
           <a mat-list-item routerLink="/admin/company-verification" routerLinkActive="active">
             <mat-icon matListItemIcon>verified</mat-icon>
             <span matListItemTitle>Company Verification</span>
@@ -68,9 +75,21 @@ import { MatButtonModule } from '@angular/material/button';
             <span matListItemTitle>Request Tracker</span>
           </a>
           
-          <a mat-list-item routerLink="/admin/user-activity" routerLinkActive="active">
+          <a mat-list-item routerLink="/admin/reports" routerLinkActive="active">
             <mat-icon matListItemIcon>analytics</mat-icon>
-            <span matListItemTitle>User Activity</span>
+            <span matListItemTitle>Reports & Analytics</span>
+          </a>
+          
+          <mat-divider></mat-divider>
+          
+          <a mat-list-item routerLink="/admin/system-health" routerLinkActive="active">
+            <mat-icon matListItemIcon>health_and_safety</mat-icon>
+            <span matListItemTitle>System Health</span>
+          </a>
+          
+          <a mat-list-item routerLink="/admin/system-settings" routerLinkActive="active">
+            <mat-icon matListItemIcon>settings</mat-icon>
+            <span matListItemTitle>System Settings</span>
           </a>
         </mat-nav-list>
       </mat-sidenav>

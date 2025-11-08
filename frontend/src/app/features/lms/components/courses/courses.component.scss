@@ -309,7 +309,30 @@
 }
 
 .course-category {
-  margin-bottom: 20px;
+  margin-bottom: 16px;
+}
+
+.course-price {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px;
+  background: linear-gradient(135deg, #e8f5e8 0%, #c8e6c9 100%);
+  border-radius: 8px;
+  margin-bottom: 16px;
+  border-left: 4px solid #4caf50;
+
+  .price-label {
+    font-size: 0.9rem;
+    color: #2e7d32;
+    font-weight: 500;
+  }
+
+  .price-amount {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #1b5e20;
+  }
 }
 
 .mat-mdc-chip {
@@ -341,6 +364,18 @@
   background: linear-gradient(135deg, #fff3e0 0%, #ffe0b2 100%) !important; 
   color: #e65100 !important;
   border: 1px solid #ffb74d;
+}
+
+.mat-mdc-chip.marketing { 
+  background: linear-gradient(135deg, #fce4ec 0%, #f8bbd9 100%) !important; 
+  color: #c2185b !important;
+  border: 1px solid #f48fb1;
+}
+
+.mat-mdc-chip.cloud { 
+  background: linear-gradient(135deg, #e0f2f1 0%, #b2dfdb 100%) !important; 
+  color: #00695c !important;
+  border: 1px solid #4db6ac;
 }
 
 @media (max-width: 768px) {

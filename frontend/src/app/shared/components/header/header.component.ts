@@ -7,6 +7,7 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatDialog } from '@angular/material/dialog';
 import { CommonModule } from '@angular/common';
 import { filter, map } from 'rxjs/operators';
 import { Store } from '@ngrx/store';
@@ -15,6 +16,7 @@ import * as AuthActions from '../../../core/store/auth/auth.actions';
 import * as fromAuth from '../../../core/store/auth/auth.reducer';
 import { AppState } from '../../../core/store';
 import { BreadcrumbComponent } from '../breadcrumb/breadcrumb.component';
+import { ChangePasswordDialogComponent } from '../change-password-dialog/change-password-dialog.component';
 
 interface User {
   id: number;
@@ -82,33 +84,9 @@ export class HeaderComponent implements OnInit, OnDestroy {
   ];
 
   navigationItems: NavigationItem[] = [
-    {
-      label: 'Dashboard',
-      route: '/dashboard',
-      icon: 'dashboard',
-      roles: ['admin', 'instructor', 'student', 'company']
-    },
-    {
-      label: 'LMS',
-      route: '/lms/dashboard',
-      icon: 'school',
-      roles: ['student', 'instructor']
-    },
-    {
-      label: 'Company',
-      route: '/company',
-      icon: 'business',
-      roles: ['company']
-    },
-    {
-      label: 'Admin',
-      route: '/admin',
-      icon: 'admin_panel_settings',
-      roles: ['admin']
-    }
   ];
 
-  constructor(private router: Router, private store: Store<AppState>) {
+  constructor(private router: Router, private store: Store<AppState>, private dialog: MatDialog) {
     this.checkMobile();
     window.addEventListener('resize', () => this.checkMobile());
     this.currentUser$ = this.store.select(fromAuth.selectUser);
@@ -180,6 +158,39 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
   closeSidenav() {
     this.sidenavOpen = false;
+  }
+
+  getProfileRoute(): string {
+    if (!this.currentUser) return '/profile';
+    
+    const roleRoutes: { [key: string]: string } = {
+      'admin': '/admin/dashboard', // Admin doesn't have a profile page, redirect to dashboard
+      'instructor': '/lms/dashboard', // Instructor uses LMS dashboard
+      'student': '/student/profile',
+      'company': '/company/profile'
+    };
+    
+    return roleRoutes[this.currentUser.role] || '/profile';
+  }
+
+  isStudent(): boolean {
+    return this.currentUser?.role === 'student';
+  }
+
+  openChangePassword(): void {
+    const dialogRef = this.dialog.open(ChangePasswordDialogComponent, {
+      width: '480px',
+      maxWidth: '95vw',
+      disableClose: true,
+      hasBackdrop: true,
+      panelClass: 'change-password-dialog-panel'
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        console.log('Password changed successfully');
+      }
+    });
   }
 
   logout() {

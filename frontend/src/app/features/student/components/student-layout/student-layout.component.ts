@@ -62,6 +62,47 @@ import { MatButtonModule } from '@angular/material/button';
             <mat-icon matListItemIcon>verified</mat-icon>
             <span matListItemTitle>Placement Status</span>
           </a>
+
+          <!-- Learning Section -->
+          <div class="nav-section-header">
+            <mat-icon>school</mat-icon>
+            <span>Learning</span>
+          </div>
+          
+          <a mat-list-item routerLink="/student/courses" routerLinkActive="active">
+            <mat-icon matListItemIcon>library_books</mat-icon>
+            <span matListItemTitle>Search Courses</span>
+          </a>
+          
+          <a mat-list-item routerLink="/student/assignments" routerLinkActive="active">
+            <mat-icon matListItemIcon>assignment</mat-icon>
+            <span matListItemTitle>Assignments</span>
+          </a>
+          
+          <a mat-list-item routerLink="/student/training-attendance" routerLinkActive="active">
+            <mat-icon matListItemIcon>event_available</mat-icon>
+            <span matListItemTitle>Training Attendance</span>
+          </a>
+          
+          <a mat-list-item routerLink="/student/assessments" routerLinkActive="active">
+            <mat-icon matListItemIcon>edit_note</mat-icon>
+            <span matListItemTitle>Take Assessment</span>
+          </a>
+          
+          <a mat-list-item routerLink="/student/progress" routerLinkActive="active">
+            <mat-icon matListItemIcon>trending_up</mat-icon>
+            <span matListItemTitle>Progress</span>
+          </a>
+          
+          <a mat-list-item routerLink="/student/results" routerLinkActive="active">
+            <mat-icon matListItemIcon>assessment</mat-icon>
+            <span matListItemTitle>Results</span>
+          </a>
+          
+          <a mat-list-item routerLink="/student/certifications" routerLinkActive="active">
+            <mat-icon matListItemIcon>workspace_premium</mat-icon>
+            <span matListItemTitle>Certifications</span>
+          </a>
         </mat-nav-list>
       </mat-sidenav>
 
@@ -134,6 +175,32 @@ import { MatButtonModule } from '@angular/material/button';
 
         mat-icon {
           color: rgba(255, 255, 255, 0.8);
+        }
+      }
+
+      .nav-section-header {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 16px 16px 8px 16px;
+        margin-top: 16px;
+        font-size: 14px;
+        font-weight: 600;
+        color: rgba(255, 255, 255, 0.9);
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+
+        &:first-of-type {
+          margin-top: 8px;
+          border-top: none;
+        }
+
+        mat-icon {
+          font-size: 18px;
+          width: 18px;
+          height: 18px;
+          color: rgba(255, 255, 255, 0.7);
         }
       }
     }

@@ -221,7 +221,7 @@
               <h3>{{ candidate.candidateName }}</h3>
               <p class="position">{{ candidate.position }}</p>
               <p class="rejection-reason">
-                Failed at {{ getRoundTypeLabel(getLastCompletedRound(candidate)?.roundType) }}
+                Failed at {{ getLastCompletedRound(candidate)?.roundType ? getRoundTypeLabel(getLastCompletedRound(candidate)!.roundType) : 'Unknown Round' }}
               </p>
             </div>
             <div class="rejection-stats">
@@ -252,7 +252,7 @@
               <h3>{{ candidate.candidateName }}</h3>
               <p class="position">{{ candidate.position }}</p>
               <p class="hold-round">
-                On hold at {{ getRoundTypeLabel(candidate.rounds[candidate.currentRound - 1]?.roundType) }}
+                On hold at {{ candidate.rounds[candidate.currentRound - 1]?.roundType ? getRoundTypeLabel(candidate.rounds[candidate.currentRound - 1]!.roundType) : 'Unknown Round' }}
               </p>
             </div>
             <div class="hold-actions">

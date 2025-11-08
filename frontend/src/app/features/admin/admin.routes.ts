@@ -26,11 +26,6 @@ export const ADMIN_ROUTES: Routes = [
         data: { breadcrumb: 'User Roles', icon: 'badge' }
       },
       {
-        path: 'user-activity',
-        loadComponent: () => import('./components/user-activity/user-activity.component').then(m => m.UserActivityComponent),
-        data: { breadcrumb: 'User Activity', icon: 'monitor' }
-      },
-      {
         path: 'course-enrollment',
         loadComponent: () => import('./components/course-enrollment/course-enrollment.component').then(m => m.CourseEnrollmentComponent),
         data: { breadcrumb: 'Course Enrollment', icon: 'how_to_reg' }
@@ -39,6 +34,11 @@ export const ADMIN_ROUTES: Routes = [
         path: 'assessment-assignment',
         loadComponent: () => import('./components/assessment-assignment/assessment-assignment.component').then(m => m.AssessmentAssignmentComponent),
         data: { breadcrumb: 'Assessment Assignment', icon: 'assignment_turned_in' }
+      },
+      {
+        path: 'question-bank',
+        loadComponent: () => import('./components/question-bank/admin-question-bank.component').then(m => m.AdminQuestionBankComponent),
+        data: { breadcrumb: 'Question Bank', icon: 'quiz' }
       },
       {
         path: 'company-verification',
@@ -54,6 +54,21 @@ export const ADMIN_ROUTES: Routes = [
         path: 'request-tracker',
         loadComponent: () => import('./components/request-tracker/request-tracker.component').then(m => m.RequestTrackerComponent),
         data: { breadcrumb: 'Request Tracker', icon: 'track_changes' }
+      },
+      {
+        path: 'reports',
+        loadComponent: () => import('./components/reports/reports.component').then(m => m.AdminReportsComponent),
+        data: { breadcrumb: 'Reports & Analytics', icon: 'analytics' }
+      },
+      {
+        path: 'system-health',
+        loadComponent: () => import('./components/system-health/system-health.component').then(m => m.SystemHealthComponent),
+        data: { breadcrumb: 'System Health', icon: 'health_and_safety' }
+      },
+      {
+        path: 'system-settings',
+        loadComponent: () => import('./components/system-settings/system-settings.component').then(m => m.SystemSettingsComponent),
+        data: { breadcrumb: 'System Settings', icon: 'settings' }
       }
     ]
   }
